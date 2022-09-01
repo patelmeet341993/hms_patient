@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../controllers/firestore_controller.dart';
+import '../../utils/logger_service.dart';
+
 class HomeScreen extends StatefulWidget {
   static const String routeName = "/HomeScreen";
   const HomeScreen({Key? key}) : super(key: key);
@@ -17,7 +20,21 @@ class _HomeScreenState extends State<HomeScreen> {
           title: Text("Home Screen"),
         ),
         body: Center(
-          child: Text("Home Body"),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text("Login Body"),
+              FlatButton(
+                onPressed: () {
+                  FirestoreController().firestore.collection("temp").add({"dfgh" : "drdfgh"}).then((value) {
+                    Log().i("Document Created:${value.id}");
+                  });
+                },
+                child: Text("Add"),
+              ),
+            ],
+          ),
         ),
       ),
     );
