@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/controllers/firestore_controller.dart';
-import 'package:flutter_app/utils/logger_service.dart';
+
+import '../../controllers/firestore_controller.dart';
+import '../../utils/logger_service.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String routeName = "/LoginScreen";
