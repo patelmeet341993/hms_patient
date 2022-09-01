@@ -22,6 +22,10 @@ if (flutterVersionName == null) {
 }
 
 apply plugin: 'com.android.application'
+// START: FlutterFire Configuration
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'
+// END: FlutterFire Configuration
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
@@ -44,13 +48,39 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.friendlyitsolution.flutter_app"
+        applicationId "v"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-build-configuration.
         minSdkVersion flutter.minSdkVersion
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        multiDexEnabled true
+    }
+    
+    lintOptions {
+        checkReleaseBuilds false
+    }
+
+    flavorDimensions "app"
+    productFlavors {
+
+        prod {
+            dimension "app"
+            applicationId "com.friendlyitsolution.patient"
+            //TODO: Change Version When Deploy
+            versionCode 1
+            versionName "1.0.0"
+            resValue "string", "app_name", "Patient"
+        }
+
+        dev {
+            dimension "app"
+            applicationId "com.friendlyitsolution.patient_dev"
+            versionCode 1
+            versionName "1.0.0"
+            resValue "string", "app_name", "Patient_Dev"
+        }
     }
 
     buildTypes {
@@ -68,4 +98,5 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "androidx.multidex:multidex:2.0.1"
 }

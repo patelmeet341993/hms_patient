@@ -1,0 +1,82 @@
+{
+  "project_info": {
+    "project_number": "237890393456",
+    "project_id": "hospital-management-bf6ef",
+    "storage_bucket": "hospital-management-bf6ef.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:237890393456:android:bcfaf23f46672ea2ad6bb5",
+        "android_client_info": {
+          "package_name": "com.friendlyitsolution.doctor"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "237890393456-0vd7m47vbjhpa0a039dt0gfc07saqt8o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCpt29AHORPDG2rn14g4ZQTN6DaAOA0gtA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "237890393456-0vd7m47vbjhpa0a039dt0gfc07saqt8o.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "237890393456-apldcnje5ebnvthb3pnajcubdjfk2mv1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.friendlyitsolution.doctor"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:237890393456:android:db7b5afe0ec3aa63ad6bb5",
+        "android_client_info": {
+          "package_name": "com.friendlyitsolution.patient"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "237890393456-0vd7m47vbjhpa0a039dt0gfc07saqt8o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCpt29AHORPDG2rn14g4ZQTN6DaAOA0gtA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "237890393456-0vd7m47vbjhpa0a039dt0gfc07saqt8o.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "237890393456-apldcnje5ebnvthb3pnajcubdjfk2mv1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.friendlyitsolution.doctor"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

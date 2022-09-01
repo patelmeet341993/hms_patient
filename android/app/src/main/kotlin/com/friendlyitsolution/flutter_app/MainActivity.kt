@@ -1,4 +1,4 @@
-package com.friendlyitsolution.flutter_app
+package com.friendlyitsolution.patient
 
 import io.flutter.embedding.android.FlutterActivity
 

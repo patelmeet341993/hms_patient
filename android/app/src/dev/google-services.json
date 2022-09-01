@@ -1,0 +1,82 @@
+{
+  "project_info": {
+    "project_number": "864011699942",
+    "project_id": "hospital-management-dev",
+    "storage_bucket": "hospital-management-dev.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:864011699942:android:9e87ac8566c2d1cb86dd27",
+        "android_client_info": {
+          "package_name": "com.friendlyitsolution.doctor_dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "864011699942-on8dp35o3fif7av06hr450aqquogeev0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBGxwquKhIUlktfyQoaQb_WPL7v3D8KQxg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "864011699942-on8dp35o3fif7av06hr450aqquogeev0.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "864011699942-d4aia2ot791d7vdp5qrabohkllmumrta.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.friendlyitsolution.admin"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:864011699942:android:421f90badb668c9b86dd27",
+        "android_client_info": {
+          "package_name": "com.friendlyitsolution.patient_dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "864011699942-on8dp35o3fif7av06hr450aqquogeev0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBGxwquKhIUlktfyQoaQb_WPL7v3D8KQxg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "864011699942-on8dp35o3fif7av06hr450aqquogeev0.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "864011699942-d4aia2ot791d7vdp5qrabohkllmumrta.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.friendlyitsolution.admin"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
