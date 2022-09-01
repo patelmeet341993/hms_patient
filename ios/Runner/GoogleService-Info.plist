@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>237890393456-1ktbudgusq2ns1056aaak7r40d8ge9tp.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.237890393456-1ktbudgusq2ns1056aaak7r40d8ge9tp</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBV78gOfHP15EaUAoWWp8LTVjG5xLIfR5I</string>
+	<key>GCM_SENDER_ID</key>
+	<string>237890393456</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.friendlyitsolution.patient</string>
+	<key>PROJECT_ID</key>
+	<string>hospital-management-bf6ef</string>
+	<key>STORAGE_BUCKET</key>
+	<string>hospital-management-bf6ef.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:237890393456:ios:9a2dd55806674742ad6bb5</string>
+</dict>
+</plist>
