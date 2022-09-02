@@ -2,8 +2,11 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:patient/packages/flux/flutx.dart';
+import 'package:patient/views/common/componants/common_text.dart';
 
 import 'authentication/login_screen.dart';
+import 'common/componants/common_bold_text.dart';
 import 'homescreen/homescreen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -21,7 +24,8 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> checkLogin() async {
     await Future.delayed(Duration(seconds: 3));
 
-    if(Random().nextBool()) {
+    //if(Random().nextBool()) {
+    if(true) {
       Navigator.pushNamedAndRemoveUntil(context, HomeScreen.routeName, (route) => false);
     }
     else {
@@ -43,7 +47,22 @@ class _SplashScreenState extends State<SplashScreen> {
 
     return Scaffold(
       body: Center(
-        child: LoadingAnimationWidget.inkDrop(color: themeData.primaryColor, size: 40),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+           Container(
+               padding: EdgeInsets.all(8),
+               decoration: BoxDecoration(
+                 border: Border.all(color: Colors.black,width: 2),
+                 borderRadius: BorderRadius.circular(5)
+               ),
+               child: Icon(Icons.vaccines,color: themeData.primaryColor,size: 80)),
+           SizedBox(height: 18),
+           CommonBoldText(text: "Hospital Management \n System",fontSize: 20,textAlign: TextAlign.center,),
+
+
+          ],
+        ),
       ),
     );
   }
