@@ -41,11 +41,9 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     themeData = Theme.of(context);
 
-    return Container(
-      child: Scaffold(
-        body: Center(
-          child: LoadingAnimationWidget.inkDrop(color: themeData.primaryColor, size: 40),
-        ),
+    return Scaffold(
+      body: Center(
+        child: LoadingAnimationWidget.inkDrop(color: themeData.primaryColor, size: 40),
       ),
     );
   }
