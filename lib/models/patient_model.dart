@@ -1,8 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:equatable/equatable.dart';
 
 import '../utils/parsing_helper.dart';
 
-class PatientModel {
+class PatientModel extends Equatable {
   String id = "", name = "", profilePicture = "", mobile = "", bloodGroup = "", gender = "";
   Timestamp? dateOfBirth, createdTime;
   int totalVisits = 0;
@@ -66,4 +67,18 @@ class PatientModel {
   String toString() {
     return toMap().toString();
   }
+
+  @override
+  List<Object?> get props => [
+    id,
+    name,
+    profilePicture,
+    mobile,
+    bloodGroup,
+    gender,
+    dateOfBirth?.millisecondsSinceEpoch ?? 0,
+    createdTime?.millisecondsSinceEpoch ?? 0,
+    totalVisits,
+    active,
+  ];
 }
