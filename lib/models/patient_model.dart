@@ -47,7 +47,7 @@ class PatientModel {
     active = ParsingHelper.parseBoolMethod(map['active']);
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toMap({bool json = false}) {
     return <String, dynamic>{
       "id" : id,
       "name" : name,
@@ -56,7 +56,7 @@ class PatientModel {
       "bloodGroup" : bloodGroup,
       "gender" : gender,
       "dateOfBirth" : dateOfBirth,
-      "createdTime" : createdTime,
+      "createdTime" : json ? createdTime?.toDate().toIso8601String() : createdTime,
       "totalVisits" : totalVisits,
       "active" : active,
     };
