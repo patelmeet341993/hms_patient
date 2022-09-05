@@ -40,7 +40,7 @@ class MainApp extends StatelessWidget {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           navigatorKey: NavigationController.mainScreenNavigator,
-          title: "HMS",
+          title: "HMS Patient",
           theme: AppTheme.getThemeFromThemeMode(appThemeProvider.themeMode),
           onGenerateRoute: NavigationController.onMainGeneratedRoutes,
           navigatorObservers: [
