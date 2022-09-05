@@ -82,7 +82,7 @@ enum FxTextType {
 }
 
 class FxTextStyle {
-  static Function _fontFamily = GoogleFonts.ibmPlexSans;
+  static Function _fontFamily = GoogleFonts.catamaran;
 
   static Map<int, FontWeight> _defaultFontWeight = {
     100: FontWeight.w100,
@@ -1312,7 +1312,7 @@ class FxTextStyle {
 
   //-------------------Reset Font Styles---------------------------------
   static resetFontStyles() {
-    _fontFamily = GoogleFonts.ibmPlexSans;
+    _fontFamily = GoogleFonts.catamaran;
 
     _defaultFontWeight = {
       100: FontWeight.w100,

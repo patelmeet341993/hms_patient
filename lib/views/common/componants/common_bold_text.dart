@@ -35,7 +35,6 @@ class CommonBoldText extends StatelessWidget {
         decoration: textDecoration,
         fontSize: fontSize,
         fontWeight: fontWeight,
-        height: height,
         color: color,
       ),
     );

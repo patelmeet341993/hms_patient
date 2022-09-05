@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../utils/logger_service.dart';
 import '../views/authentication/login_screen.dart';
-import '../views/homescreen/homescreen.dart';
+import '../views/homescreen/screens/homescreen.dart';
 import '../views/splashscreen.dart';
 
 class NavigationController {

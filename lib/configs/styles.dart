@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Styles {
-  static const Color lightPrimaryColor = Color(0xff3C4EC5);
+  static const Color lightPrimaryColor = Color(0xff6d65df);
   static const Color darkPrimaryColor = Colors.blue;
 
   static Color lightPrimaryVariant = Colors.blue.shade400;
@@ -21,4 +21,14 @@ class Styles {
 
   static const Color lightAppBarColor = Color(0xffffffff);
   static const Color darkAppBarColor = Color(0xff2e343b);
+
+  //region CustomColors
+     static const Color cardColor = Color(0xfff0f0f0);
+
+
+  //endregion//
+
+
+
+
 }
