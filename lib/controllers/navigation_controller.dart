@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../utils/logger_service.dart';
 import '../views/authentication/login_screen.dart';
+import '../views/authentication/otp_screen.dart';
 import '../views/homescreen/homescreen.dart';
 import '../views/splashscreen.dart';
 
@@ -65,6 +66,14 @@ class NavigationController {
       }
       case LoginScreen.routeName: {
         page = const LoginScreen();
+        break;
+      }
+      case OtpScreen.routeName: {
+        dynamic arguments = settings.arguments;
+
+        if(arguments is String && arguments.isNotEmpty) {
+          page = OtpScreen(mobile: arguments,);
+        }
         break;
       }
       case HomeScreen.routeName: {
