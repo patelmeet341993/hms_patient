@@ -2,28 +2,49 @@ import 'package:flutter/foundation.dart';
 import 'package:patient/models/patient_model.dart';
 
 class PatientProvider extends ChangeNotifier {
-  PatientModel? _patientModel;
+  PatientModel? _currentPatient;
+  List<PatientModel> _patientModels = [];
 
-  PatientModel? getPatientModel() {
-    if(_patientModel != null) {
-      return PatientModel.fromMap(_patientModel!.toMap());
+  PatientModel? getCurrentPatient() {
+    if(_currentPatient != null) {
+      return PatientModel.fromMap(_currentPatient!.toMap());
     }
     else {
       return null;
     }
   }
 
-  void setPatientModel(PatientModel? patientModel, {bool isNotify = true}) {
+  void setCurrentPatient(PatientModel? patientModel, {bool isNotify = true}) {
     if(patientModel != null) {
-      if(_patientModel != null) {
-        _patientModel!.updateFromMap(patientModel.toMap());
-      }
-      else {
-        _patientModel = PatientModel.fromMap(patientModel.toMap());
-      }
+      _currentPatient = PatientModel.fromMap(patientModel.toMap());
     }
     else {
-      _patientModel = null;
+      _currentPatient = null;
+    }
+    if(isNotify) {
+      notifyListeners();
+    }
+  }
+
+  List<PatientModel> getPatientModels() {
+    return _patientModels.map((e) => PatientModel.fromMap(e.toMap())).toList();
+  }
+
+  void setPatientModels(List<PatientModel> patientModels, {bool isNotify = true}) {
+    _patientModels = patientModels.map((e) => PatientModel.fromMap(e.toMap())).toList();
+    if(isNotify) {
+      notifyListeners();
+    }
+  }
+
+  int get patientsLength => _patientModels.length;
+
+  void addPatientModel(PatientModel patientModel, {bool isNotify = true, int index = -1}) {
+    if(index > -1 && index <= _patientModels.length) {
+      _patientModels.insert(index, PatientModel.fromMap(patientModel.toMap()));
+    }
+    else {
+      _patientModels.add(PatientModel.fromMap(patientModel.toMap()));
     }
     if(isNotify) {
       notifyListeners();
