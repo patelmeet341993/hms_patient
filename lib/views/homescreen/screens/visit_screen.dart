@@ -4,6 +4,7 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:patient/views/common/componants/common_bold_text.dart';
 import 'package:patient/views/common/componants/common_button.dart';
 import 'package:patient/views/common/componants/common_text.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 import '../../../configs/styles.dart';
 import '../../../packages/flux/themes/text_style.dart';
@@ -19,15 +20,14 @@ class VisitScreen extends StatefulWidget {
 
 class _VisitScreenState extends State<VisitScreen> {
   late ThemeData themeData;
-  bool isFirstTimeUser = false;
+  bool isFirstTimeUser = true;
   TextEditingController searchController =  TextEditingController();
 
   List<String> messageList = [
     "Appointment Registered Successfully",
     "Doctor Has been Assigned for your Treatment",
     "Your treatment has been Completed",
-    "Payment Done Successfully"
-
+    "Payment Done Successfully",
   ];
 
   List<String> timingList = [
@@ -40,8 +40,6 @@ class _VisitScreenState extends State<VisitScreen> {
   List<bool> invoiceList = [false, false, false, true,];
   List<bool> payList = [false, false, true, false,];
 
-
-
   @override
   Widget build(BuildContext context) {
     themeData = Theme.of(context);
@@ -53,13 +51,14 @@ class _VisitScreenState extends State<VisitScreen> {
              FocusScope.of(context).requestFocus(new FocusNode());
            },
           child: Scaffold(
+            resizeToAvoidBottomInset: false,
             body: Column(
               children: [
                 SizedBox(height: 10,),
                 getTopBar(),
                 Expanded(
                   child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 15,vertical: 10),
+                      padding: EdgeInsets.symmetric(horizontal: 20,vertical: 10),
                       child: isFirstTimeUser?getForUserFirstTime():getMainPage()
                   ),
                 ),
@@ -78,7 +77,7 @@ class _VisitScreenState extends State<VisitScreen> {
 
   Widget getTopBar() {
     return  Container(
-      padding: EdgeInsets.symmetric(horizontal: 15,vertical: 10),
+      padding: EdgeInsets.symmetric(horizontal: 20,vertical: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
@@ -118,11 +117,53 @@ class _VisitScreenState extends State<VisitScreen> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Container(
+      /*  Container(
           //color: Colors.red,
             padding: EdgeInsets.symmetric(vertical: 15, horizontal:25),
             child: Image.asset("assets/extra/code.png",height: 300,)
+        ),*/
+        Container(
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey.shade400,width: 6)
+          ),
+          child: QrImage(
+            data: 'This QR code has an embedded image as well',
+            version: QrVersions.auto,
+            padding: EdgeInsets.all(5),
+            size: 320,
+            gapless: false,
+             embeddedImageEmitsError: true,
+            errorStateBuilder: (context,obj){
+              return Container(
+                padding: EdgeInsets.symmetric(horizontal: 25, vertical:10),
+                color: Colors.white,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(FeatherIcons.alertOctagon),
+                    SizedBox(height:8),
+                    CommonText(text: "Some Error in Generating Image Please Try again",textAlign: TextAlign.center),
+                    SizedBox(height:8),
+                    CommonButton(buttonName: "Try Again",
+                      onTap: (){
+
+                      },
+                      verticalPadding: 3,
+                      fontWeight: FontWeight.normal,
+                      borderRadius: 2,)
+                  ],
+                ),
+              );
+            },
+            embeddedImage: AssetImage('assets/extra/viren.jpg'),
+            embeddedImageStyle: QrEmbeddedImageStyle(
+              size: Size(80, 80),
+
+
+            ),
+          ),
         ),
+        SizedBox(height: 5,),
         CommonText(text: "( Scan Your QR Code from Receptionist )"),
       ],
     );
@@ -197,7 +238,6 @@ class _VisitScreenState extends State<VisitScreen> {
       decoration: BoxDecoration(
         color: themeData.primaryColor,
         borderRadius: BorderRadius.circular(6),
-
       ),
       child: Row(
         children: [
@@ -218,11 +258,6 @@ class _VisitScreenState extends State<VisitScreen> {
               ],
             ),
           ),
-
-
-
-
-
         ],
       ),
     );
@@ -278,20 +313,11 @@ class _VisitScreenState extends State<VisitScreen> {
                       ],
                     )
                 ),
-
-
-
               ],
             ),
 
           ),
-        )
-
-
-
-
-
-
+        ),
       ],
     );
   }

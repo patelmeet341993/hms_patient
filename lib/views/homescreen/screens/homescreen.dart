@@ -7,6 +7,7 @@ import '../../../configs/styles.dart';
 import '../../../controllers/firestore_controller.dart';
 import '../../../packages/flux/widgets/bottom_navigation_bar/bottom_navigation_bar.dart';
 import '../../../utils/logger_service.dart';
+import '../../my_prescription/screens/prescription_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String routeName = "/HomeScreen";
@@ -48,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
               iconData: Icons.house_outlined,
             ),
             FxBottomNavigationBarItem(
-              page: Container(),
+              page: MyPrescriptionScreen(),
               activeIconData: Icons.date_range,
               iconData: Icons.date_range_outlined,
             ),
