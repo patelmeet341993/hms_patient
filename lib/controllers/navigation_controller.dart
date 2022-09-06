@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:patient/views/common/screens/notification_screen.dart';
 
 import '../utils/logger_service.dart';
 import '../views/authentication/login_screen.dart';
@@ -71,6 +72,10 @@ class NavigationController {
         page = const HomeScreen();
         break;
       }
+      case NotificationScreen.routeName: {
+        page = const NotificationScreen();
+        break;
+      }
     }
 
     if (page != null) {
@@ -83,4 +88,39 @@ class NavigationController {
       );
     }
   }
+
+ /* static Route? onProfileGeneratedRoutes(RouteSettings settings) {
+    Log().d("OnProfileGeneratedRoutes called for ${settings.name}");
+
+    if(kIsWeb) {
+      if(!["/", SplashScreen.routeName].contains(settings.name) && NavigationController.checkDataAndNavigateToSplashScreen()) {
+        return null;
+      }
+    }
+
+    Log().d("First Page:$isFirst");
+    Widget? page;
+
+    switch (settings.name) {
+
+      case SplashScreen.routeName: {
+        page = const SplashScreen();
+        break;
+      }
+
+    }
+
+    if (page != null) {
+      return PageRouteBuilder(
+        pageBuilder: (c, a1, a2) => page!,
+        //transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+        transitionsBuilder: (c, anim, a2, child) => SizeTransition(sizeFactor: anim, child: child),
+        transitionDuration: const Duration(milliseconds: 0),
+        settings: settings,
+      );
+    }
+
+  }*/
+
+
 }

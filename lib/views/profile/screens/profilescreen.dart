@@ -6,6 +6,7 @@ import 'package:patient/views/common/componants/common_text.dart';
 import '../../../configs/styles.dart';
 import '../../../packages/flux/utils/spacing.dart';
 import '../../../packages/flux/widgets/container/container.dart';
+import '../../common/componants/qr_view_dialog.dart';
 
 
 class ProfileScreen extends StatefulWidget {
@@ -17,6 +18,7 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   late ThemeData themeData;
+  String userId = "123456";
 
 
   @override
@@ -55,7 +57,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
               FxSpacing.height(8),
               Divider(),
               FxSpacing.height(8),
-              _buildSingleRow(title: 'My QR Code', icon: Icons.qr_code_2),
+              _buildSingleRow(title: 'My QR Code', icon: Icons.qr_code_2,
+                onTap: (){
+                  showDialog(context: context, builder: (context){
+                    return QRCodeView(userId: userId,);
+                  });
+                },
+              ),
               FxSpacing.height(8),
               Divider(),
               FxSpacing.height(8),
@@ -74,31 +82,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
 
-  Widget _buildSingleRow({String? title, IconData? icon}) {
-    return Row(
-      children: [
-        FxContainer(
-          paddingAll: 8,
-          borderRadiusAll: 4,
-          color: Styles.cardColor,
-          child: Icon(
-            icon,
-            color: themeData.primaryColor,
-            size: 20,
+  Widget _buildSingleRow({String? title, IconData? icon,Function()? onTap}) {
+    return InkWell(
+      onTap: onTap,
+      child: Row(
+        children: [
+          FxContainer(
+            paddingAll: 8,
+            borderRadiusAll: 4,
+            color: Styles.cardColor,
+            child: Icon(
+              icon,
+              color: themeData.primaryColor,
+              size: 20,
+            ),
           ),
-        ),
-        FxSpacing.width(16),
-        Expanded(
-          child: CommonText(text: title ?? "General",fontSize: 13,fontWeight: FontWeight.w500,),
+          FxSpacing.width(16),
+          Expanded(
+            child: CommonText(text: title ?? "General",fontSize: 13,fontWeight: FontWeight.w500,),
 
-        ),
-        FxSpacing.width(16),
-        Icon(
-          Icons.keyboard_arrow_right,
-          color: Colors.black.withOpacity(.5),
-          size: 24,
-        ),
-      ],
+          ),
+          FxSpacing.width(16),
+          Icon(
+            Icons.keyboard_arrow_right,
+            color: Colors.black.withOpacity(.5),
+            size: 24,
+          ),
+        ],
+      ),
     );
   }
 

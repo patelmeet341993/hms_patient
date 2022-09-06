@@ -1,15 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:patient/controllers/navigation_controller.dart';
 import 'package:patient/views/common/componants/common_bold_text.dart';
 import 'package:patient/views/common/componants/common_button.dart';
 import 'package:patient/views/common/componants/common_text.dart';
+import 'package:patient/views/common/componants/qr_view_dialog.dart';
+import 'package:patient/views/common/screens/notification_screen.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 import '../../../configs/styles.dart';
 import '../../../packages/flux/themes/text_style.dart';
 import '../../../packages/flux/widgets/container/container.dart';
 import '../../../packages/flux/widgets/text_field/text_field.dart';
+import '../../../utils/logger_service.dart';
 
 class VisitScreen extends StatefulWidget {
   const VisitScreen({Key? key}) : super(key: key);
@@ -20,8 +24,9 @@ class VisitScreen extends StatefulWidget {
 
 class _VisitScreenState extends State<VisitScreen> {
   late ThemeData themeData;
-  bool isFirstTimeUser = true;
+  bool isFirstTimeUser = false;
   TextEditingController searchController =  TextEditingController();
+  String userId = "123456";
 
   List<String> messageList = [
     "Appointment Registered Successfully",
@@ -36,6 +41,16 @@ class _VisitScreenState extends State<VisitScreen> {
     "9:50 AM",
     "9:52 AM",
   ];
+
+  List<String> imageList = [
+    "assets/extra/viren.jp",
+    "assets/extra/viren.jg",
+    "assets/extra/viren.jpg",
+  ];
+
+ int imageNumber = 0;
+
+
 
   List<bool> invoiceList = [false, false, false, true,];
   List<bool> payList = [false, false, true, false,];
@@ -81,8 +96,7 @@ class _VisitScreenState extends State<VisitScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Expanded(
-              child: CommonBoldText(text: "Saraswati Clinic",textAlign: TextAlign.start,fontSize: 20,)),
+          Expanded(child: CommonBoldText(text: "Saraswati Clinic",textAlign: TextAlign.start,fontSize: 20,textOverFlow: TextOverflow.ellipsis,maxLines: 3,)),
           FxContainer(
             paddingAll: 7,
             borderRadiusAll: 4,
@@ -90,10 +104,15 @@ class _VisitScreenState extends State<VisitScreen> {
             child: Stack(
               clipBehavior: Clip.none,
               children: <Widget>[
-                Icon(
-                  Icons.notifications,
-                  size: 22,
-                  color: Colors.grey,
+                InkWell(
+                  onTap:(){
+                     Navigator.pushNamed(NavigationController.mainScreenNavigator.currentContext!,NotificationScreen.routeName);
+                  },
+                  child: Icon(
+                    Icons.notifications,
+                    size: 22,
+                    color: Colors.grey,
+                  ),
                 ),
                 Positioned(
                   right: 2,
@@ -114,58 +133,59 @@ class _VisitScreenState extends State<VisitScreen> {
   }
 
   Widget getForUserFirstTime() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-      /*  Container(
-          //color: Colors.red,
-            padding: EdgeInsets.symmetric(vertical: 15, horizontal:25),
-            child: Image.asset("assets/extra/code.png",height: 300,)
-        ),*/
-        Container(
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey.shade400,width: 6)
-          ),
-          child: QrImage(
-            data: 'This QR code has an embedded image as well',
-            version: QrVersions.auto,
-            padding: EdgeInsets.all(5),
-            size: 320,
-            gapless: false,
-             embeddedImageEmitsError: true,
-            errorStateBuilder: (context,obj){
-              return Container(
-                padding: EdgeInsets.symmetric(horizontal: 25, vertical:10),
-                color: Colors.white,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(FeatherIcons.alertOctagon),
-                    SizedBox(height:8),
-                    CommonText(text: "Some Error in Generating Image Please Try again",textAlign: TextAlign.center),
-                    SizedBox(height:8),
-                    CommonButton(buttonName: "Try Again",
-                      onTap: (){
-
-                      },
-                      verticalPadding: 3,
-                      fontWeight: FontWeight.normal,
-                      borderRadius: 2,)
-                  ],
-                ),
-              );
-            },
-            embeddedImage: AssetImage('assets/extra/viren.jpg'),
-            embeddedImageStyle: QrEmbeddedImageStyle(
-              size: Size(80, 80),
-
-
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            padding: EdgeInsets.all(2),
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey.shade400,width: 6)
+            ),
+            child: QrImage(
+              data: userId,
+              version: QrVersions.auto,
+              padding: EdgeInsets.zero,
+              gapless: false,
+               embeddedImageEmitsError: true,
+              errorStateBuilder: (context,obj){
+                return Container(
+                  padding: EdgeInsets.symmetric(horizontal: 25, vertical:10),
+                  color: Colors.white,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(FeatherIcons.alertOctagon),
+                      SizedBox(height:8),
+                      CommonText(text: "Some Error in Generating QR \n Please Try again",textAlign: TextAlign.center),
+                      SizedBox(height:8),
+                      CommonButton(buttonName: "Try Again",
+                        onTap: (){
+                        setState(() {});
+                         if(imageNumber<=2){
+                            imageNumber++;
+                          }
+                        },
+                        verticalPadding: 3,
+                        fontWeight: FontWeight.normal,
+                        borderRadius: 2,)
+                    ],
+                  ),
+                );
+              },
+              //embeddedImage: AssetImage('assets/extra/viren.jpg'),
+              embeddedImage: AssetImage(imageList[imageNumber]),
+              embeddedImageStyle: QrEmbeddedImageStyle(
+                size: Size(80, 80),
+              ),
+              backgroundColor: Colors.white,
             ),
           ),
-        ),
-        SizedBox(height: 5,),
-        CommonText(text: "( Scan Your QR Code from Receptionist )"),
-      ],
+          SizedBox(height: 5,),
+          CommonText(text: "( Scan Your QR Code from Receptionist )"),
+        ],
+      ),
     );
   }
 
@@ -241,9 +261,60 @@ class _VisitScreenState extends State<VisitScreen> {
       ),
       child: Row(
         children: [
-          ClipRRect(
-              borderRadius: BorderRadius.circular(4),
-              child: Image.asset("assets/extra/code.png",height: 80,width: 80,fit: BoxFit.cover,)),
+          InkWell(
+            onTap: (){
+              showDialog(context: context, builder: (context){
+                return QRCodeView(userId: userId,);
+              });
+            },
+            child: ClipRRect(
+                borderRadius: BorderRadius.circular(4),
+                child: Container(
+                  //padding: EdgeInsets.all(3),
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.white,width: 2)
+                  ),
+                  child: QrImage(
+                    data: userId,
+                    version: QrVersions.auto,
+                    padding: EdgeInsets.zero,
+                    gapless: false,
+                    size: 90,
+                    backgroundColor: Colors.white,
+                    embeddedImageEmitsError: true,
+                    errorStateBuilder: (context,obj){
+                      return Container(
+                        padding: EdgeInsets.symmetric(horizontal: 25, vertical:10),
+                        color: Colors.white,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(FeatherIcons.alertOctagon),
+                            SizedBox(height:8),
+                            CommonText(text: "Some Error in Generating Image Please Try again",textAlign: TextAlign.center),
+                            SizedBox(height:8),
+                            CommonButton(buttonName: "Try Again",
+                              onTap: (){
+                                 setState(() {});
+                              },
+                              verticalPadding: 3,
+                              fontWeight: FontWeight.normal,
+                              borderRadius: 2,)
+                          ],
+                        ),
+                      );
+                    },
+                    embeddedImage: AssetImage('assets/extra/viren.jpg'),
+                    embeddedImageStyle: QrEmbeddedImageStyle(
+                      size: Size(32, 32),
+
+
+                    ),
+                  ),
+                ),
+              //  Image.asset("assets/extra/code.png",height: 80,width: 80,fit: BoxFit.cover,)
+            ),
+          ),
           SizedBox(width: 15),
           Expanded(
             flex: 2,
