@@ -1,7 +1,7 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:patient/controllers/authentication_controller.dart';
+import 'package:patient/utils/logger_service.dart';
 
 import '../controllers/navigation_controller.dart';
 import 'authentication/login_screen.dart';
@@ -20,9 +20,11 @@ class _SplashScreenState extends State<SplashScreen> {
   late ThemeData themeData;
 
   Future<void> checkLogin() async {
-    await Future.delayed(Duration(seconds: 3));
+    // await Future.delayed(const Duration(seconds: 3));
 
-    if(Random().nextBool()) {
+    bool isUserLoggedIn = await AuthenticationController().isUserLoggedIn();
+    Log().i("isUserLoggedIn:$isUserLoggedIn");
+    if(isUserLoggedIn) {
       NavigationController.isFirst = false;
       Navigator.pushNamedAndRemoveUntil(context, HomeScreen.routeName, (route) => false);
     }
