@@ -42,16 +42,6 @@ class _VisitScreenState extends State<VisitScreen> {
     "9:52 AM",
   ];
 
-  List<String> imageList = [
-    "assets/extra/viren.jp",
-    "assets/extra/viren.jg",
-    "assets/extra/viren.jpg",
-  ];
-
- int imageNumber = 0;
-
-
-
   List<bool> invoiceList = [false, false, false, true,];
   List<bool> payList = [false, false, true, false,];
 
@@ -163,9 +153,6 @@ class _VisitScreenState extends State<VisitScreen> {
                       CommonButton(buttonName: "Try Again",
                         onTap: (){
                         setState(() {});
-                         if(imageNumber<=2){
-                            imageNumber++;
-                          }
                         },
                         verticalPadding: 3,
                         fontWeight: FontWeight.normal,
@@ -174,8 +161,7 @@ class _VisitScreenState extends State<VisitScreen> {
                   ),
                 );
               },
-              //embeddedImage: AssetImage('assets/extra/viren.jpg'),
-              embeddedImage: AssetImage(imageList[imageNumber]),
+              embeddedImage: AssetImage('assets/extra/viren.jpg'),
               embeddedImageStyle: QrEmbeddedImageStyle(
                 size: Size(80, 80),
               ),
@@ -193,16 +179,12 @@ class _VisitScreenState extends State<VisitScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: 5,),
+        SizedBox(height: 10,),
         getTextField(),
-        SizedBox(height: 20,),
-        CommonBoldText(text: "Profile Overview",textAlign: TextAlign.start,fontSize: 15,color: Colors.black.withOpacity(.9) ),
-        SizedBox(height: 12,),
-        getProfileInfo(),
-        SizedBox(height: 30,),
-        CommonBoldText(text: "My Treatment Activity",textAlign: TextAlign.start,fontSize: 15,color: Colors.black.withOpacity(.9)),
-        SizedBox(height: 18,),
+        SizedBox(height: 10,),
         Expanded(child: getMyTreatment()),
+
+
 
 
 
@@ -250,6 +232,21 @@ class _VisitScreenState extends State<VisitScreen> {
       ),
     );
 
+  }
+
+  Widget getProfileInfoBody(){
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: 10,),
+        CommonBoldText(text: "Profile Overview",textAlign: TextAlign.start,fontSize: 15,color: Colors.black.withOpacity(.9) ),
+        SizedBox(height: 12,),
+        getProfileInfo(),
+        SizedBox(height: 20,),
+        CommonBoldText(text: "My Treatment Activity",textAlign: TextAlign.start,fontSize: 15,color: Colors.black.withOpacity(.9)),
+        SizedBox(height: 18,),
+      ],
+    );
   }
 
   Widget getProfileInfo() {
@@ -336,13 +333,18 @@ class _VisitScreenState extends State<VisitScreen> {
 
   Widget getMyTreatment() {
     return ListView.builder(
-      itemCount: 4,
+      itemCount: 4 + 1,
       shrinkWrap: true,
       itemBuilder: (context,index){
+        if(index == 0){
+          return getProfileInfoBody();
+        }
+        index--;
         return Container(
             margin: EdgeInsets.only(bottom: 14),
             child: getSingleActivityTile(time: timingList[index],
-                message:  messageList[index],isInvoice: invoiceList[index],isPayment: payList[index]));
+                message:  messageList[index],isInvoice: invoiceList[index],
+                isPayment: payList[index]));
       }
     );
   }
