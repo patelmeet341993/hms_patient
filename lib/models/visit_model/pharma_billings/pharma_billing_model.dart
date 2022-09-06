@@ -82,7 +82,7 @@ class PharmaBillingModel {
   }
 
   @override
-  String toString() {
-    return toMap().toString();
+  String toString({bool json = false}) {
+    return toMap(json: json).toString();
   }
 }
