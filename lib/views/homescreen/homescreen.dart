@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:patient/controllers/navigation_controller.dart';
 import 'package:patient/controllers/patient_controller.dart';
 import 'package:patient/models/patient_model.dart';
@@ -9,6 +8,7 @@ import 'package:patient/views/common/components/loading_widget.dart';
 import 'package:provider/provider.dart';
 
 import '../../controllers/authentication_controller.dart';
+import 'components/custom_bottom_navigation_bar.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String routeName = "/HomeScreen";
@@ -45,41 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     themeData = Theme.of(context);
-    return mainBody();
-  }
-
-  Widget mainBody(){
-    return CustomBottomNavigation(
-      icons: const [
-        Icons.dashboard_outlined,
-        Icons.history,
-        Icons.file_copy_outlined
-      ],
-      activeIcons: const [
-        Icons.dashboard,
-        Icons.history,
-        Icons.file_copy
-      ],
-      screens: [
-        Container(child: const Text("Dashboard"),),
-        Container(child: const Text("History"),),
-        Container(child: const Text("Treatment"),),
-      ],
-      titles: const ["Dashboard", "History", "Treatment"],
-      color: themeData.colorScheme.onBackground,
-      activeColor: themeData.colorScheme.primary,
-      navigationBackground: themeData.backgroundColor,
-      brandTextColor: themeData.colorScheme.onBackground,
-      initialIndex: 2,
-      splashColor: themeData.splashColor,
-      highlightColor: themeData.highlightColor,
-      backButton: Container(),
-      floatingActionButton: Container(),
-      iconSize: 20,
-      activeIconSize: 20,
-      verticalDividerColor: themeData.dividerColor,
-      bottomNavigationElevation: 8,
-    );
+    return getMainBody2();
   }
 
   Widget getMainBody2() {
@@ -125,6 +91,40 @@ class _HomeScreenState extends State<HomeScreen> {
           },
         ),
       ),
+    );
+  }
+
+  Widget mainBody(){
+    return CustomBottomNavigation(
+      icons: const [
+        Icons.dashboard_outlined,
+        Icons.history,
+        Icons.file_copy_outlined
+      ],
+      activeIcons: const [
+        Icons.dashboard,
+        Icons.history,
+        Icons.file_copy
+      ],
+      screens: const [
+        Text("Dashboard"),
+        Text("History"),
+        Text("Treatment"),
+      ],
+      titles: const ["Dashboard", "History", "Treatment"],
+      color: themeData.colorScheme.onBackground,
+      activeColor: themeData.colorScheme.primary,
+      navigationBackground: themeData.backgroundColor,
+      brandTextColor: themeData.colorScheme.onBackground,
+      initialIndex: 2,
+      splashColor: themeData.splashColor,
+      highlightColor: themeData.highlightColor,
+      backButton: Container(),
+      floatingActionButton: Container(),
+      iconSize: 20,
+      activeIconSize: 20,
+      verticalDividerColor: themeData.dividerColor,
+      bottomNavigationElevation: 8,
     );
   }
 }
