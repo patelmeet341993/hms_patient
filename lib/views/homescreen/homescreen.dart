@@ -31,7 +31,12 @@ class _HomeScreenState extends State<HomeScreen> {
       if(patients.isEmpty) {
         PatientModel? patientModel = await PatientController().createPatient(mobile: authenticationProvider.mobileNumber);
 
-        await PatientController().getPatientsForMobileNumber(mobileNumber: authenticationProvider.mobileNumber);
+        if(patientModel != null) {
+          await PatientController().getPatientsForMobileNumber(mobileNumber: authenticationProvider.mobileNumber);
+        }
+        else {
+          AuthenticationController().logout(context: context, isNavigateToLogin: true);
+        }
       }
     }
   }
