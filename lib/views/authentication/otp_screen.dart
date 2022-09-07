@@ -14,7 +14,7 @@ import '../../controllers/connection_controller.dart';
 import '../../utils/logger_service.dart';
 import '../common/components/modal_progress_hud.dart';
 import '../common/components/pin_put.dart';
-import '../homescreen/homescreen.dart';
+import '../homescreen/screens/homescreen.dart';
 
 class OtpScreen extends StatefulWidget {
   final String mobile;
