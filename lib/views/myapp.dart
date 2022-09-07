@@ -1,10 +1,12 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
+import 'package:patient/providers/patient_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../configs/app_theme.dart';
 import '../controllers/navigation_controller.dart';
 import '../providers/app_theme_provider.dart';
+import '../providers/authentication_provider.dart';
 import '../providers/connection_provider.dart';
 import '../utils/logger_service.dart';
 
@@ -19,6 +21,8 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<AppThemeProvider>(create: (_) => AppThemeProvider(), lazy: false),
         ChangeNotifierProvider<ConnectionProvider>(create: (_) => ConnectionProvider(), lazy: false),
+        ChangeNotifierProvider<AuthenticationProvider>(create: (_) => AuthenticationProvider(), lazy: false),
+        ChangeNotifierProvider<PatientProvider>(create: (_) => PatientProvider(), lazy: false),
       ],
       child: MainApp(),
     );
@@ -40,7 +44,7 @@ class MainApp extends StatelessWidget {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           navigatorKey: NavigationController.mainScreenNavigator,
-          title: "HMS",
+          title: "HMS Patient",
           theme: AppTheme.getThemeFromThemeMode(appThemeProvider.themeMode),
           onGenerateRoute: NavigationController.onMainGeneratedRoutes,
           navigatorObservers: [

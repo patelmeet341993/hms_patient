@@ -1,7 +1,10 @@
+import 'package:equatable/equatable.dart';
+
 import '../utils/parsing_helper.dart';
 
-class AdminUserModel {
-  String id = "", name = "", username = "", password = "", role = "";
+class AdminUserModel extends Equatable {
+  String id = "", name = "", username = "", password = "", role = "", description = "", imageUrl = "";
+  Map<String, dynamic> scannerData = <String, dynamic>{};
 
   AdminUserModel({
     this.id = "",
@@ -9,6 +12,9 @@ class AdminUserModel {
     this.username = "",
     this.password = "",
     this.role = "",
+    this.description = "",
+    this.imageUrl = "",
+    this.scannerData = const <String, dynamic>{},
   });
 
   AdminUserModel.fromMap(Map<String, dynamic> map) {
@@ -17,6 +23,9 @@ class AdminUserModel {
     username = ParsingHelper.parseStringMethod(map['username']);
     password = ParsingHelper.parseStringMethod(map['password']);
     role = ParsingHelper.parseStringMethod(map['role']);
+    description = ParsingHelper.parseStringMethod(map['description']);
+    imageUrl = ParsingHelper.parseStringMethod(map['imageUrl']);
+    scannerData = ParsingHelper.parseMapMethod<dynamic, dynamic, String, dynamic>(map['scannerData']);
   }
 
   void updateFromMap(Map<String, dynamic> map) {
@@ -25,6 +34,9 @@ class AdminUserModel {
     username = ParsingHelper.parseStringMethod(map['username']);
     password = ParsingHelper.parseStringMethod(map['password']);
     role = ParsingHelper.parseStringMethod(map['role']);
+    description = ParsingHelper.parseStringMethod(map['description']);
+    imageUrl = ParsingHelper.parseStringMethod(map['imageUrl']);
+    scannerData = ParsingHelper.parseMapMethod<dynamic, dynamic, String, dynamic>(map['scannerData']);
   }
 
   Map<String, dynamic> toMap() {
@@ -34,6 +46,9 @@ class AdminUserModel {
       "username": username,
       "password": password,
       "role": role,
+      "description": description,
+      "imageUrl": imageUrl,
+      "scannerData": scannerData,
     };
   }
 
@@ -41,4 +56,7 @@ class AdminUserModel {
   String toString() {
     return toMap().toString();
   }
+
+  @override
+  List<Object?> get props => [id, name, username, password, role, description, imageUrl];
 }
