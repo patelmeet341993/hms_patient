@@ -6,7 +6,6 @@ import 'package:patient/views/common/screens/notification_screen.dart';
 import '../utils/logger_service.dart';
 import '../views/authentication/login_screen.dart';
 import '../views/authentication/otp_screen.dart';
-import '../views/homescreen/homescreen.dart';
 import '../views/homescreen/screens/homescreen.dart';
 import '../views/splashscreen.dart';
 
