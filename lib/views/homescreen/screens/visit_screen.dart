@@ -17,6 +17,8 @@ import '../../../packages/flux/widgets/container/container.dart';
 import '../../../packages/flux/widgets/text/text.dart';
 import '../../../packages/flux/widgets/text_field/text_field.dart';
 import '../../../utils/logger_service.dart';
+import '../../about_us/screens/about_us_screen.dart';
+import '../../treatment_history/componants/treatment_activity.dart';
 
 class VisitScreen extends StatefulWidget {
   const VisitScreen({Key? key}) : super(key: key);
@@ -63,10 +65,10 @@ class _VisitScreenState extends State<VisitScreen> {
             body: Column(
               children: [
                 SizedBox(height: 10,),
-                getTopBar(),
+                getTopBar(isOpen: true,name: "Saraswati Clinic"),
                 Expanded(
                   child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+                      padding: EdgeInsets.symmetric(horizontal: 20,),
                       child: isFirstTimeUser?getForUserFirstTime():getMainPage()
                   ),
                 ),
@@ -79,13 +81,34 @@ class _VisitScreenState extends State<VisitScreen> {
     );
   }
 
-  Widget getTopBar() {
+  Widget getTopBar({bool isOpen = true,required String name}) {
     return  Container(
       padding: EdgeInsets.symmetric(horizontal: 20,vertical: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Expanded(child: CommonBoldText(text: "Saraswati Clinic",textAlign: TextAlign.start,fontSize: 20,textOverFlow: TextOverflow.ellipsis,maxLines: 3,)),
+          Expanded(
+              child: InkWell(
+                onTap: (){
+                  Navigator.pushNamed(NavigationController.mainScreenNavigator.currentContext!,AboutUsScreen.routeName);
+                },
+                child: Row(
+                    children: [
+                        Flexible(child: CommonBoldText(text: name,textAlign: TextAlign.start,fontSize: 20,textOverFlow: TextOverflow.ellipsis,maxLines: 3,)),
+                      SizedBox(width: 5,),
+                      Container(
+                          padding: EdgeInsets.symmetric(horizontal: 4).copyWith(top: 1),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(4),
+                            border: Border.all(color: isOpen?Colors.green:Colors.grey),
+                          ),
+                          child: CommonBoldText(text: isOpen?'Open':"Closed", color: isOpen?Colors.green:Colors.grey,fontSize: 12,)
+                        ),
+                      SizedBox(width: 5,),
+                  ],
+                ),
+              )
+          ),
           FxContainer(
             paddingAll: 7,
             borderRadiusAll: 4,
@@ -233,7 +256,7 @@ class _VisitScreenState extends State<VisitScreen> {
         SizedBox(height: 12,),
         getProfileInfo(),
         SizedBox(height: 20,),
-        CommonBoldText(text: "My Treatment Activity",textAlign: TextAlign.start,fontSize: 15,color: Colors.black.withOpacity(.9)),
+        CommonBoldText(text: "Current Treatment Activity",textAlign: TextAlign.start,fontSize: 15,color: Colors.black.withOpacity(.9)),
         SizedBox(height: 18,),
       ],
     );
@@ -356,16 +379,17 @@ class _VisitScreenState extends State<VisitScreen> {
           return getProfileInfoBody();
         }
         index--;
-        return Container(
-            margin: EdgeInsets.only(bottom: 14),
-            child: getSingleActivityTile(time: timingList[index],
-                message:  messageList[index],isInvoice: invoiceList[index],
-                isPayment: payList[index]));
+        return TreatmentActivityScreen(
+          time: timingList[index],
+          message:  messageList[index],
+          isButtonVisible: index == 2 || index == 3 ? true:false,
+          buttonName: index == 2 ? "Download Invoice" : index == 3 ? "Pay Now" : "",
+        );
       }
     );
   }
 
-  Widget getSingleActivityTile({required String time,required String message,bool isPayment = false,bool isInvoice = false}){
+/*  Widget getSingleActivityTile({required String time,required String message,bool isPayment = false,bool isInvoice = false}){
     Widget getActionButton = SizedBox.shrink();
     if(isPayment){
       getActionButton = Container(
@@ -409,7 +433,7 @@ class _VisitScreenState extends State<VisitScreen> {
         ),
       ],
     );
-  }
+  }*/
 
 }
 

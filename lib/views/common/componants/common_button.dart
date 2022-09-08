@@ -4,7 +4,7 @@ import 'package:patient/views/common/componants/common_text.dart';
 
 class CommonButton extends StatelessWidget {
   String buttonName;
-  Function() onTap;
+  Function()? onTap;
   double borderRadius = 4;
   double? width;
   double verticalPadding=10,horizontalPadding=10;

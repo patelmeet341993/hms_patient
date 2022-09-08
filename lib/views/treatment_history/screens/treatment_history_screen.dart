@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:patient/views/common/componants/common_topbar.dart';
+import 'package:patient/views/treatment_history/screens/treatment_activity_detail_screen.dart';
 
 import '../../../configs/styles.dart';
+import '../../../controllers/navigation_controller.dart';
 import '../../../packages/flux/utils/spacing.dart';
 import '../../../packages/flux/widgets/container/container.dart';
 import '../../../packages/flux/widgets/text/text.dart';
@@ -35,7 +38,7 @@ class _TreatmentHistoryScreenState extends State<TreatmentHistoryScreen> {
         body: SafeArea(
           child: Column(
             children: [
-              getTopBar(),
+              CommonTopBar(title: "Treatment History"),
               SizedBox(height : 1),
               Expanded(
                 child: isEvent?Column(
@@ -46,7 +49,11 @@ class _TreatmentHistoryScreenState extends State<TreatmentHistoryScreen> {
                         padding: EdgeInsets.symmetric(horizontal: 20,vertical: 10),
                         shrinkWrap: true,
                         itemBuilder: (context,index){
-                          return getSingleEvent(newVisit: isNewVisit[index]);
+                          return InkWell(
+                              onTap: (){
+                                Navigator.pushNamed(NavigationController.mainScreenNavigator.currentContext!,TreatmentActivityDetailScreen.routeName);
+                              },
+                              child: getSingleEvent(newVisit: isNewVisit[index]));
                         }
                     )
                   ],
@@ -66,43 +73,6 @@ class _TreatmentHistoryScreenState extends State<TreatmentHistoryScreen> {
     );
   }
 
-  Widget getTopBar(){
-    return Container(
-        padding: EdgeInsets.symmetric(horizontal: 20,vertical: 10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            FxContainer(
-              paddingAll: 6,
-              borderRadiusAll: 4,
-              color: Styles.cardColor,
-              child: InkWell(
-                onTap:(){
-                  Navigator.pop(context);
-                },
-                child: Icon(
-                  FeatherIcons.chevronLeft,
-                  size: 22,
-                  color: Colors.black,
-                ),
-              ),
-            ),
-            Expanded(child: CommonBoldText(text: "Treatment History",textAlign: TextAlign.center,fontSize: 20,)),
-            FxContainer(
-              paddingAll: 6,
-              borderRadiusAll: 4,
-              color: Colors.transparent,
-              child: Icon(
-                FeatherIcons.chevronLeft,
-                size: 22,
-                color: Colors.transparent,
-              ),
-            ),
-
-          ],
-        )
-    );
-  }
 
   Widget getSingleEvent({bool newVisit = true}) {
     return Container(
@@ -111,8 +81,6 @@ class _TreatmentHistoryScreenState extends State<TreatmentHistoryScreen> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         color: Styles.cardColor,
-
-
       ),
       child: Row(
         children: [

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 class CommonBoldText extends StatelessWidget {
   String text;
   double fontSize;
-  double height;
   FontWeight fontWeight;
   Color? color;
   TextAlign? textAlign;
@@ -21,8 +20,7 @@ class CommonBoldText extends StatelessWidget {
         this.textAlign,
         this.maxLines,
         this.textDecoration,
-        this.textOverFlow,
-        this.height = 1.1});
+        this.textOverFlow,});
 
   @override
   Widget build(BuildContext context) {

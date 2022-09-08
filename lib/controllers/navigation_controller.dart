@@ -5,10 +5,12 @@ import 'package:patient/views/common/screens/notification_screen.dart';
 import 'package:patient/views/treatment_history/screens/treatment_history_screen.dart';
 
 import '../utils/logger_service.dart';
+import '../views/about_us/screens/about_us_screen.dart';
 import '../views/authentication/login_screen.dart';
 import '../views/authentication/otp_screen.dart';
 import '../views/homescreen/screens/homescreen.dart';
 import '../views/splashscreen.dart';
+import '../views/treatment_history/screens/treatment_activity_detail_screen.dart';
 
 class NavigationController {
   static NavigationController? _instance;
@@ -88,6 +90,14 @@ class NavigationController {
       }
       case TreatmentHistoryScreen.routeName: {
         page = const TreatmentHistoryScreen();
+        break;
+      }
+      case TreatmentActivityDetailScreen.routeName: {
+        page = const TreatmentActivityDetailScreen();
+        break;
+      }
+      case AboutUsScreen.routeName: {
+        page = const AboutUsScreen();
         break;
       }
     }
