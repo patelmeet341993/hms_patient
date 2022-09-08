@@ -9,7 +9,38 @@ import 'package:patient/providers/patient_provider.dart';
 import 'package:patient/utils/logger_service.dart';
 import 'package:provider/provider.dart';
 
+import '../providers/authentication_provider.dart';
+
 class PatientController {
+  Future<void> getPatientsDataForMainPage({bool isRefresh = true, bool isFromCache = false}) async {
+    Log().d("getPatientsDataForMainPage called with isRefresh:$isRefresh and isFromCache:$isFromCache");
+
+    AuthenticationProvider authenticationProvider = Provider.of(NavigationController.mainScreenNavigator.currentContext!, listen: false);
+    PatientProvider patientProvider = Provider.of(NavigationController.mainScreenNavigator.currentContext!, listen: false);
+
+    if(!isRefresh && isFromCache) {
+      if(patientProvider.patientsLength > 0 && patientProvider.getCurrentPatient() != null) {
+        Log().d("Data Already Exist");
+        return;
+      }
+    }
+
+    if(authenticationProvider.mobileNumber.isNotEmpty) {
+      List<PatientModel> patients = await getPatientsForMobileNumber(mobileNumber: authenticationProvider.mobileNumber);
+      if(patients.isEmpty) {
+        PatientModel? patientModel = await createPatient(mobile: authenticationProvider.mobileNumber);
+
+        if(patientModel != null) {
+          patientProvider.addPatientModel(patientModel);
+          patientProvider.setCurrentPatient(patientModel);
+        }
+        else {
+          patientProvider.setCurrentPatient(null);
+        }
+      }
+    }
+  }
+
   Future<PatientModel?> createPatient({required String mobile}) async {
     NewDocumentDataModel newDocumentDataModel = await DataController().getNewDocIdAndTimeStamp();
 

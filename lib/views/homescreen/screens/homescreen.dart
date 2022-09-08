@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:patient/providers/patient_provider.dart';
+import 'package:patient/utils/logger_service.dart';
 import 'package:patient/views/homescreen/screens/visit_screen.dart';
 import 'package:patient/views/profile/screens/profilescreen.dart';
 import 'package:provider/provider.dart';
@@ -24,29 +26,18 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late ThemeData themeData;
 
-  late Future<void> futureGetPatientsData;
-
-  Future<void> getPatientsData() async {
-    AuthenticationProvider authenticationProvider = Provider.of(NavigationController.mainScreenNavigator.currentContext!, listen: false);
-
-    if(authenticationProvider.mobileNumber.isNotEmpty) {
-      List<PatientModel> patients = await PatientController().getPatientsForMobileNumber(mobileNumber: authenticationProvider.mobileNumber);
-      if(patients.isEmpty) {
-        PatientModel? patientModel = await PatientController().createPatient(mobile: authenticationProvider.mobileNumber);
-
-        if(patientModel != null) {
-          await PatientController().getPatientsForMobileNumber(mobileNumber: authenticationProvider.mobileNumber);
-        }
-        else {
-          AuthenticationController().logout(context: context, isNavigateToLogin: true);
-        }
-      }
-    }
-  }
+  Future<void>? futureGetPatientsData;
 
   @override
   void initState() {
-    futureGetPatientsData = getPatientsData();
+    PatientProvider patientProvider = Provider.of(NavigationController.mainScreenNavigator.currentContext!, listen: false);
+    if(patientProvider.patientsLength > 0 && patientProvider.getCurrentPatient() != null) {
+
+    }
+    else {
+      futureGetPatientsData = PatientController().getPatientsDataForMainPage(isRefresh: false, isFromCache: true);
+    }
+    // futureGetPatientsData = PatientController().getPatientsDataForMainPage(isRefresh: false, isFromCache: true);
     super.initState();
   }
 
@@ -57,19 +48,20 @@ class _HomeScreenState extends State<HomeScreen> {
       color: themeData.backgroundColor,
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        body: FutureBuilder<void>(
+        body: futureGetPatientsData != null ? FutureBuilder(
           future: futureGetPatientsData,
-          builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            Log().i("Connection State:${snapshot.connectionState}");
             if(snapshot.connectionState == ConnectionState.done) {
               return getMainBody();
             }
             else {
-              return const Center(
+              return Center(
                 child: LoadingWidget(),
               );
             }
           },
-        ),
+        ) : getMainBody(),
       ),
     );
   }

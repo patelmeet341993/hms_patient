@@ -6,11 +6,15 @@ import 'package:provider/provider.dart';
 
 import '../../../configs/styles.dart';
 import '../../../controllers/authentication_controller.dart';
+import '../../../controllers/navigation_controller.dart';
 import '../../../models/patient_model.dart';
 import '../../../packages/flux/utils/spacing.dart';
 import '../../../packages/flux/widgets/container/container.dart';
 import '../../../providers/patient_provider.dart';
+import '../../common/componants/common_dialog.dart';
 import '../../common/componants/qr_view_dialog.dart';
+import '../../common/screens/notification_screen.dart';
+import '../../treatment_history/screens/treatment_history_screen.dart';
 
 
 class ProfileScreen extends StatefulWidget {
@@ -49,20 +53,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                     ),
                   ),
-                  FxSpacing.height(24),
-                  CommonText(text: "${currentPatient?.id ?? ""}",fontSize: 22,fontWeight: FontWeight.w600,textAlign: TextAlign.center),
-                  FxSpacing.height(4),
-                  CommonText(text: "${currentPatient?.name ?? ""}",fontSize: 22,fontWeight: FontWeight.w600,textAlign: TextAlign.center),
+                  FxSpacing.height(15),
+                  //CommonText(text: "${currentPatient?.id ?? ""}",fontSize: 22,fontWeight: FontWeight.w600,textAlign: TextAlign.center),
+                  currentPatient!.name.isNotEmpty ? FxSpacing.height(4) : SizedBox.shrink(),
+                  currentPatient!.name.isNotEmpty ? CommonText(text: "${currentPatient?.name ?? ""}",fontSize: 22,fontWeight: FontWeight.w600,textAlign: TextAlign.center):SizedBox.shrink(),
                   FxSpacing.height(4),
                   getTreatmentActiveWidget(isActive: true),
-                  FxSpacing.height(24),
+                  FxSpacing.height(20),
                   CommonText(text: "General",fontSize: 15,),
                   FxSpacing.height(24),
                   _buildSingleRow(title: 'Edit Profile Details', icon: FeatherIcons.edit2),
                   FxSpacing.height(8),
                   Divider(),
                   FxSpacing.height(8),
-                  _buildSingleRow(title: 'My Treatment History', icon: FeatherIcons.list),
+                  _buildSingleRow(title: 'My Treatment History', icon: FeatherIcons.list,
+                    onTap: (){
+                      Navigator.pushNamed(NavigationController.mainScreenNavigator.currentContext!,TreatmentHistoryScreen.routeName);
+                    },
+                  ),
                   FxSpacing.height(8),
                   Divider(),
                   FxSpacing.height(8),
@@ -76,12 +84,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   FxSpacing.height(8),
                   Divider(),
                   FxSpacing.height(8),
-                  _buildSingleRow(title: 'Notifications', icon: FeatherIcons.bell),
+                  _buildSingleRow(title: 'Notifications', icon: FeatherIcons.bell,
+                  onTap: (){
+                    Navigator.pushNamed(NavigationController.mainScreenNavigator.currentContext!,NotificationScreen.routeName);
+                  }
+                  ),
                   FxSpacing.height(8),
                   Divider(),
                   FxSpacing.height(8),
                   _buildSingleRow(title: 'Logout', icon: FeatherIcons.logOut, onTap: () {
-                    AuthenticationController().logout(context: context, isNavigateToLogin: true);
+                    showDialog(context: context, builder: (context){
+                      return CommonDialog(text: "Are you sure you want to log out ?",
+                        rightText: "Logout",
+                        leftText: "No",
+                        rightOnTap: (){
+                            AuthenticationController().logout(context: context, isNavigateToLogin: true);
+                        },
+                      );
+                    });
                   }),
                 ],
               ),

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:patient/views/common/screens/notification_screen.dart';
+import 'package:patient/views/treatment_history/screens/treatment_history_screen.dart';
 
 import '../utils/logger_service.dart';
 import '../views/authentication/login_screen.dart';
@@ -83,6 +84,10 @@ class NavigationController {
       }
       case NotificationScreen.routeName: {
         page = const NotificationScreen();
+        break;
+      }
+      case TreatmentHistoryScreen.routeName: {
+        page = const TreatmentHistoryScreen();
         break;
       }
     }

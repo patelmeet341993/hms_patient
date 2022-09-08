@@ -32,6 +32,7 @@ class CommonBoldText extends StatelessWidget {
       maxLines: maxLines,
       overflow: textOverFlow,
       style: TextStyle(
+        letterSpacing: 0.4,
         decoration: textDecoration,
         fontSize: fontSize,
         fontWeight: fontWeight,

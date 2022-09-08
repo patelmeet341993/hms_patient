@@ -7,11 +7,14 @@ import 'package:patient/views/common/componants/common_button.dart';
 import 'package:patient/views/common/componants/common_text.dart';
 import 'package:patient/views/common/componants/qr_view_dialog.dart';
 import 'package:patient/views/common/screens/notification_screen.dart';
+import 'package:patient/views/treatment_history/screens/treatment_history_screen.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 import '../../../configs/styles.dart';
 import '../../../packages/flux/themes/text_style.dart';
+import '../../../packages/flux/utils/spacing.dart';
 import '../../../packages/flux/widgets/container/container.dart';
+import '../../../packages/flux/widgets/text/text.dart';
 import '../../../packages/flux/widgets/text_field/text_field.dart';
 import '../../../utils/logger_service.dart';
 
@@ -67,10 +70,6 @@ class _VisitScreenState extends State<VisitScreen> {
                       child: isFirstTimeUser?getForUserFirstTime():getMainPage()
                   ),
                 ),
-
-
-
-
               ],
             ),
           ),
@@ -183,15 +182,6 @@ class _VisitScreenState extends State<VisitScreen> {
         getTextField(),
         SizedBox(height: 10,),
         Expanded(child: getMyTreatment()),
-
-
-
-
-
-
-
-
-
       ],
     );
   }
@@ -256,76 +246,102 @@ class _VisitScreenState extends State<VisitScreen> {
         color: themeData.primaryColor,
         borderRadius: BorderRadius.circular(6),
       ),
-      child: Row(
+      child: Column(
         children: [
-          InkWell(
-            onTap: (){
-              showDialog(context: context, builder: (context){
-                return QRCodeView(userId: userId,);
-              });
-            },
-            child: ClipRRect(
-                borderRadius: BorderRadius.circular(4),
-                child: Container(
-                  //padding: EdgeInsets.all(3),
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Colors.white,width: 2)
-                  ),
-                  child: QrImage(
-                    data: userId,
-                    version: QrVersions.auto,
-                    padding: EdgeInsets.zero,
-                    gapless: false,
-                    size: 90,
-                    backgroundColor: Colors.white,
-                    embeddedImageEmitsError: true,
-                    errorStateBuilder: (context,obj){
-                      return Container(
-                        padding: EdgeInsets.symmetric(horizontal: 25, vertical:10),
-                        color: Colors.white,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(FeatherIcons.alertOctagon),
-                            SizedBox(height:8),
-                            CommonText(text: "Some Error in Generating Image Please Try again",textAlign: TextAlign.center),
-                            SizedBox(height:8),
-                            CommonButton(buttonName: "Try Again",
-                              onTap: (){
-                                 setState(() {});
-                              },
-                              verticalPadding: 3,
-                              fontWeight: FontWeight.normal,
-                              borderRadius: 2,)
-                          ],
+          Row(
+            children: [
+              InkWell(
+                onTap: (){
+                  showDialog(context: context, builder: (context){
+                    return QRCodeView(userId: userId,);
+                  });
+                },
+                child: ClipRRect(
+                    borderRadius: BorderRadius.circular(4),
+                    child: Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.white,width: 2)
+                      ),
+                      child: QrImage(
+                        data: userId,
+                        version: QrVersions.auto,
+                        padding: EdgeInsets.zero,
+                        gapless: false,
+                        size: 80,
+                        backgroundColor: Colors.white,
+                        embeddedImageEmitsError: true,
+                        errorStateBuilder: (context,obj){
+                          return Container(
+                            padding: EdgeInsets.symmetric(horizontal: 25, vertical:10),
+                            color: Colors.white,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(FeatherIcons.alertOctagon),
+                                SizedBox(height:8),
+                                CommonText(text: "Some Error in Generating Image Please Try again",textAlign: TextAlign.center),
+                                SizedBox(height:8),
+                                CommonButton(buttonName: "Try Again",
+                                  onTap: (){
+                                     setState(() {});
+                                  },
+                                  verticalPadding: 3,
+                                  fontWeight: FontWeight.normal,
+                                  borderRadius: 2,)
+                              ],
+                            ),
+                          );
+                        },
+                        embeddedImage: AssetImage('assets/extra/viren.jpg'),
+                        embeddedImageStyle: QrEmbeddedImageStyle(
+                          size: Size(28, 28)
                         ),
-                      );
-                    },
-                    embeddedImage: AssetImage('assets/extra/viren.jpg'),
-                    embeddedImageStyle: QrEmbeddedImageStyle(
-                      size: Size(32, 32),
-
-
+                      ),
                     ),
-                  ),
+                  //  Image.asset("assets/extra/code.png",height: 80,width: 80,fit: BoxFit.cover,)
                 ),
-              //  Image.asset("assets/extra/code.png",height: 80,width: 80,fit: BoxFit.cover,)
-            ),
+              ),
+              SizedBox(width: 15),
+              Expanded(
+                flex: 2,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CommonText(text: "Viren Desai",color: Colors.white,fontSize: 17),
+                    SizedBox(height: 2,),
+                    CommonText(text: "male   23 years old",color: Colors.white,),
+                    SizedBox(height: 2,),
+                    CommonText(text: "19-04-1999",color: Colors.white,),
+                  ],
+                ),
+              ),
+            ],
           ),
-          SizedBox(width: 15),
-          Expanded(
-            flex: 2,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          SizedBox(height:10),
+          FxContainer(
+            onTap: (){
+              Navigator.pushNamed(NavigationController.mainScreenNavigator.currentContext!,TreatmentHistoryScreen.routeName);
+            },
+            padding: EdgeInsets.symmetric(vertical: 12),
+            borderRadiusAll: 4,
+            color: Color(0xffe6e1e5).withAlpha(45),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CommonText(text: "Viren Desai",color: Colors.white,fontSize: 17),
-                SizedBox(height: 2,),
-                CommonText(text: "male   23 years old",color: Colors.white,),
-                SizedBox(height: 2,),
-                CommonText(text: "19-04-1999",color: Colors.white,),
+                Icon(
+                  Icons.watch_later,
+                  color: Colors.white.withAlpha(160),
+                  size: 20,
+                ),
+                FxSpacing.width(8),
+                CommonText(text:'Treatment History',color:Colors.white,
+                  fontSize: 14,),
               ],
             ),
           ),
+
+
+
         ],
       ),
     );
@@ -394,8 +410,6 @@ class _VisitScreenState extends State<VisitScreen> {
       ],
     );
   }
-
-
 
 }
 

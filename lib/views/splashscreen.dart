@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:patient/controllers/authentication_controller.dart';
+import 'package:patient/controllers/patient_controller.dart';
 import 'package:patient/utils/logger_service.dart';
 import 'package:patient/packages/flux/flutx.dart';
 import 'package:patient/views/common/componants/common_text.dart';
@@ -27,16 +28,16 @@ class _SplashScreenState extends State<SplashScreen> {
   late ThemeData themeData;
 
   Future<void> checkLogin() async {
-    // await Future.delayed(const Duration(seconds: 3));
+     await Future.delayed(const Duration(seconds: 3));
 
     bool isUserLoggedIn = await AuthenticationController().isUserLoggedIn();
     Log().i("isUserLoggedIn:$isUserLoggedIn");
+    NavigationController.isFirst = false;
     if(isUserLoggedIn) {
-      NavigationController.isFirst = false;
+      await PatientController().getPatientsDataForMainPage();
       Navigator.pushNamedAndRemoveUntil(context, HomeScreen.routeName, (route) => false);
     }
     else {
-      NavigationController.isFirst = false;
       Navigator.pushNamedAndRemoveUntil(context, LoginScreen.routeName, (route) => false);
     }
   }
@@ -51,7 +52,9 @@ class _SplashScreenState extends State<SplashScreen> {
           statusBarIconBrightness: Platform.isIOS?Brightness.light:Brightness.dark,
         ));
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+
       checkLogin();
+
     });
   }
 
