@@ -204,11 +204,9 @@ class AppTheme {
       color: Styles.lightAppBarColor,
       iconTheme: IconThemeData(color: Styles.lightTextColor, size: 24),
     ),
-    navigationRailTheme: const NavigationRailThemeData(
-        selectedIconTheme:
-        IconThemeData(color: Styles.lightPrimaryColor, opacity: 1, size: 24),
-        unselectedIconTheme:
-        IconThemeData(color: Styles.lightTextColor, opacity: 1, size: 24),
+    navigationRailTheme: NavigationRailThemeData(
+        selectedIconTheme: IconThemeData(color: Styles.lightPrimaryColor, opacity: 1, size: 24),
+        unselectedIconTheme: IconThemeData(color: Styles.lightTextColor, opacity: 1, size: 24),
         backgroundColor: Styles.lightBackgroundColor,
         elevation: 3,
         selectedLabelTextStyle: TextStyle(color: Styles.lightPrimaryColor),
@@ -270,7 +268,7 @@ class AppTheme {
       color: Styles.lightBackgroundColor,
       textStyle: lightTextTheme.bodyText2?.merge(const TextStyle(color: Styles.lightTextColor)),
     ),
-    bottomAppBarTheme: const BottomAppBarTheme(color: Styles.lightBackgroundColor, elevation: 2),
+    bottomAppBarTheme: BottomAppBarTheme(color: Styles.lightBackgroundColor, elevation: 2),
     tabBarTheme: const TabBarTheme(
       unselectedLabelColor: Styles.lightTextColor,
       labelColor: Styles.lightPrimaryColor,
