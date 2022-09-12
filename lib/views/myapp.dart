@@ -1,6 +1,7 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:patient/providers/patient_provider.dart';
+import 'package:patient/providers/basic_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../configs/app_theme.dart';
@@ -23,6 +24,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<ConnectionProvider>(create: (_) => ConnectionProvider(), lazy: false),
         ChangeNotifierProvider<AuthenticationProvider>(create: (_) => AuthenticationProvider(), lazy: false),
         ChangeNotifierProvider<PatientProvider>(create: (_) => PatientProvider(), lazy: false),
+        ChangeNotifierProvider<BasicProvider>(create: (_) => BasicProvider(), lazy: false),
       ],
       child: MainApp(),
     );

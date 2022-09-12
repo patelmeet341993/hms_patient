@@ -11,10 +11,11 @@ import 'package:patient/views/common/components/loading_widget.dart';
 import 'package:provider/provider.dart';
 
 import '../../controllers/connection_controller.dart';
+import '../../controllers/patient_controller.dart';
 import '../../utils/logger_service.dart';
 import '../common/components/modal_progress_hud.dart';
 import '../common/components/pin_put.dart';
-import '../homescreen/homescreen.dart';
+import '../homescreen/screens/homescreen.dart';
 
 class OtpScreen extends StatefulWidget {
   final String mobile;
@@ -216,6 +217,7 @@ class _OtpScreenState extends State<OtpScreen> with MySafeState {
       authenticationProvider.setFirebaseUser(user, isNotify: false);
       authenticationProvider.setUserId(user.uid, isNotify: false);
       authenticationProvider.setMobileNumber(user.phoneNumber ?? "", isNotify: false);
+      await PatientController().getPatientsDataForMainPage();
       Navigator.pushNamedAndRemoveUntil(context, HomeScreen.routeName, (route) => false);
     }
     else {

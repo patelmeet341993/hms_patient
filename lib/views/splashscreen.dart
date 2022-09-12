@@ -1,11 +1,19 @@
+import 'dart:io';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:patient/controllers/authentication_controller.dart';
+import 'package:patient/controllers/patient_controller.dart';
 import 'package:patient/utils/logger_service.dart';
+import 'package:patient/packages/flux/flutx.dart';
+import 'package:patient/views/common/componants/common_text.dart';
 
 import '../controllers/navigation_controller.dart';
 import 'authentication/login_screen.dart';
-import 'homescreen/homescreen.dart';
+import 'common/componants/common_bold_text.dart';
+import 'homescreen/screens/homescreen.dart';
 
 class SplashScreen extends StatefulWidget {
   static const String routeName = "/SplashScreen";
@@ -20,16 +28,16 @@ class _SplashScreenState extends State<SplashScreen> {
   late ThemeData themeData;
 
   Future<void> checkLogin() async {
-    // await Future.delayed(const Duration(seconds: 3));
+     await Future.delayed(const Duration(seconds: 3));
 
     bool isUserLoggedIn = await AuthenticationController().isUserLoggedIn();
     Log().i("isUserLoggedIn:$isUserLoggedIn");
+    NavigationController.isFirst = false;
     if(isUserLoggedIn) {
-      NavigationController.isFirst = false;
+      await PatientController().getPatientsDataForMainPage();
       Navigator.pushNamedAndRemoveUntil(context, HomeScreen.routeName, (route) => false);
     }
     else {
-      NavigationController.isFirst = false;
       Navigator.pushNamedAndRemoveUntil(context, LoginScreen.routeName, (route) => false);
     }
   }
@@ -37,8 +45,16 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+    SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle(
+          statusBarColor: Colors.white,
+          statusBarBrightness: Platform.isIOS?Brightness.light:Brightness.dark,
+          statusBarIconBrightness: Platform.isIOS?Brightness.light:Brightness.dark,
+        ));
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+
       checkLogin();
+
     });
   }
 
@@ -46,9 +62,27 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     themeData = Theme.of(context);
 
-    return Scaffold(
-      body: Center(
-        child: LoadingAnimationWidget.inkDrop(color: themeData.primaryColor, size: 40),
+    return Container(
+      color: themeData.backgroundColor,
+      child: Scaffold(
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+             Container(
+                 padding: EdgeInsets.all(8),
+                 decoration: BoxDecoration(
+                   border: Border.all(color: Colors.black,width: 2),
+                   borderRadius: BorderRadius.circular(5)
+                 ),
+                 child: Icon(Icons.vaccines,color: themeData.primaryColor,size: 80)),
+             SizedBox(height: 18),
+             CommonBoldText(text: "Hospital Management \n System",fontSize: 20,textAlign: TextAlign.center,),
+
+
+            ],
+          ),
+        ),
       ),
     );
   }

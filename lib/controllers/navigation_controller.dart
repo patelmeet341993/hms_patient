@@ -1,12 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:patient/views/common/screens/notification_screen.dart';
+import 'package:patient/views/treatment_history/screens/treatment_history_screen.dart';
 
 import '../utils/logger_service.dart';
+import '../views/about_us/screens/about_us_screen.dart';
 import '../views/authentication/login_screen.dart';
 import '../views/authentication/otp_screen.dart';
-import '../views/homescreen/homescreen.dart';
+import '../views/homescreen/screens/homescreen.dart';
 import '../views/splashscreen.dart';
+import '../views/treatment_history/screens/treatment_activity_detail_screen.dart';
 
 class NavigationController {
   static NavigationController? _instance;
@@ -80,6 +84,22 @@ class NavigationController {
         page = const HomeScreen();
         break;
       }
+      case NotificationScreen.routeName: {
+        page = const NotificationScreen();
+        break;
+      }
+      case TreatmentHistoryScreen.routeName: {
+        page = const TreatmentHistoryScreen();
+        break;
+      }
+      case TreatmentActivityDetailScreen.routeName: {
+        page = const TreatmentActivityDetailScreen();
+        break;
+      }
+      case AboutUsScreen.routeName: {
+        page = const AboutUsScreen();
+        break;
+      }
     }
 
     if (page != null) {
@@ -92,4 +112,39 @@ class NavigationController {
       );
     }
   }
+
+ /* static Route? onProfileGeneratedRoutes(RouteSettings settings) {
+    Log().d("OnProfileGeneratedRoutes called for ${settings.name}");
+
+    if(kIsWeb) {
+      if(!["/", SplashScreen.routeName].contains(settings.name) && NavigationController.checkDataAndNavigateToSplashScreen()) {
+        return null;
+      }
+    }
+
+    Log().d("First Page:$isFirst");
+    Widget? page;
+
+    switch (settings.name) {
+
+      case SplashScreen.routeName: {
+        page = const SplashScreen();
+        break;
+      }
+
+    }
+
+    if (page != null) {
+      return PageRouteBuilder(
+        pageBuilder: (c, a1, a2) => page!,
+        //transitionsBuilder: (c, anim, a2, child) => FadeTransition(opacity: anim, child: child),
+        transitionsBuilder: (c, anim, a2, child) => SizeTransition(sizeFactor: anim, child: child),
+        transitionDuration: const Duration(milliseconds: 0),
+        settings: settings,
+      );
+    }
+
+  }*/
+
+
 }
