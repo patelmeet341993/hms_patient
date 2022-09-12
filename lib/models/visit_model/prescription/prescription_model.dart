@@ -2,29 +2,28 @@ import '../../../utils/parsing_helper.dart';
 import 'prescription_medicine_dose_model.dart';
 
 class PrescriptionModel {
-  String medicineName = "", totalDose = "";
+  String medicineName = "", totalDose = "", instructions = "";
   int repeatDurationDays = 1, totalDays = 0;
-  bool isOneTimeBuyMedicine = false;      ///For Cream or Soap
-  bool isLiquidMedicine = false;          ///For Syrup
+  String medicineType = "";
   List<PrescriptionMedicineDoseModel> doses = <PrescriptionMedicineDoseModel>[];
 
   PrescriptionModel({
     this.medicineName = "",
     this.totalDose = "",
+    this.instructions = "",
     this.repeatDurationDays = 1,
     this.totalDays = 0,
-    this.isOneTimeBuyMedicine = false,
-    this.isLiquidMedicine = false,
+    this.medicineType = "",
     this.doses = const <PrescriptionMedicineDoseModel>[],
   });
 
   PrescriptionModel.fromMap(Map<String, dynamic> map) {
     medicineName = ParsingHelper.parseStringMethod(map['medicineName']);
     totalDose = ParsingHelper.parseStringMethod(map['totalDose']);
+    instructions = ParsingHelper.parseStringMethod(map['instructions']);
     repeatDurationDays = ParsingHelper.parseIntMethod(map['repeatDurationDays'], defaultValue: 1);
     totalDays = ParsingHelper.parseIntMethod(map['totalDays']);
-    isOneTimeBuyMedicine = ParsingHelper.parseBoolMethod(map['isOneTimeBuyMedicine']);
-    isLiquidMedicine = ParsingHelper.parseBoolMethod(map['isLiquidMedicine']);
+    medicineType = ParsingHelper.parseStringMethod(map['medicineType']);
 
     List<PrescriptionMedicineDoseModel> dosesModelsList = <PrescriptionMedicineDoseModel>[];
     List<Map> doseMapsList = ParsingHelper.parseListMethod<dynamic, Map<dynamic, dynamic>>(map['doses']);
@@ -41,10 +40,10 @@ class PrescriptionModel {
   void updateFromMap(Map<String, dynamic> map) {
     medicineName = ParsingHelper.parseStringMethod(map['medicineName']);
     totalDose = ParsingHelper.parseStringMethod(map['totalDose']);
+    instructions = ParsingHelper.parseStringMethod(map['instructions']);
     repeatDurationDays = ParsingHelper.parseIntMethod(map['repeatDurationDays'], defaultValue: 1);
     totalDays = ParsingHelper.parseIntMethod(map['totalDays']);
-    isOneTimeBuyMedicine = ParsingHelper.parseBoolMethod(map['isOneTimeBuyMedicine']);
-    isLiquidMedicine = ParsingHelper.parseBoolMethod(map['isLiquidMedicine']);
+    medicineType = ParsingHelper.parseStringMethod(map['medicineType']);
 
     List<PrescriptionMedicineDoseModel> dosesModelsList = <PrescriptionMedicineDoseModel>[];
     List<Map> doseMapsList = ParsingHelper.parseListMethod<dynamic, Map<dynamic, dynamic>>(map['doses']);
@@ -62,11 +61,11 @@ class PrescriptionModel {
     return <String, dynamic>{
       "medicineName" : medicineName,
       "totalDose" : totalDose,
+      "instructions" : instructions,
       "repeatDurationDays" : repeatDurationDays,
       "totalDays" : totalDays,
-      "isOneTimeBuyMedicine" : isOneTimeBuyMedicine,
-      "isLiquidMedicine" : isLiquidMedicine,
-      "doses" : doses.map((e) => e.toMap()),
+      "medicineType" : medicineType,
+      "doses" : doses.map((e) => e.toMap()).toList(),
     };
   }
 
