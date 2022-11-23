@@ -43,7 +43,7 @@ dependencies:
   ############
   firebase_core: ^1.21.1
   firebase_auth: ^3.7.0 # authentication
-  cloud_firestore: ^3.4.6 # firestore database
+  cloud_firestore: ^3.4.8 # firestore database
   firebase_messaging: ^13.0.0 # notifications
   firebase_analytics: ^9.3.3 # analytics
   firebase_crashlytics: ^2.8.9 # crashlytics
