@@ -7,4 +7,14 @@ class AppStrings {
   static const String wrong_otp = "Wrong OTP";
   static const String no_internet = "No Internet";
   static const String otp_expired_please_resend = "OTP Expired, Please Resend";
+
+
+  //region firebase collections
+  static const String admin_users = "admin_users";
+  static const String patient = "patient";
+  static const String visits = "visits";
+
+
+
+  //endregion
 }

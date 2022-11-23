@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:intl/intl.dart';
+import 'package:patient/utils/my_utils.dart';
 
 import '../../../configs/styles.dart';
 import '../../../packages/flux/utils/spacing.dart';
@@ -17,8 +19,7 @@ class MyPrescriptionScreen extends StatefulWidget {
 
 class _MyPrescriptionScreenState extends State<MyPrescriptionScreen> {
   late ThemeData themeData;
-  int selectedDate = 1;
-
+  String currentMonth = DateFormat('MMMM').format(DateTime.now());
   List<String> dates = [
     "12\nTue",
     "13\nWed",
@@ -32,11 +33,39 @@ class _MyPrescriptionScreenState extends State<MyPrescriptionScreen> {
     "16\nSat",
   ];
 
+  List<String> monthsList = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
+  DateTime selectedDate = DateTime.now();
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     themeData = Theme.of(context);
-
     return Container(
       color: themeData.backgroundColor,
       child: SafeArea(
@@ -55,12 +84,15 @@ class _MyPrescriptionScreenState extends State<MyPrescriptionScreen> {
                             letterSpacing: 0,
                             color: Colors.black.withOpacity(.7),
                             fontWeight: 500),
-                        FxText.bodyLarge("13 Wed",
+                        FxText.bodyLarge(DateFormat('d MMM').format(DateTime.now()),
                             color: Colors.black,
                             fontWeight: 600),
                       ],
                     ),
-                    Container(
+                    InkWell(
+                      onTap: (){
+                        _selectDate(context);
+                      },
                       child: Icon(
                         FeatherIcons.calendar,
                         size: 22,
@@ -71,17 +103,32 @@ class _MyPrescriptionScreenState extends State<MyPrescriptionScreen> {
                 ),
               ),
               SizedBox(height: 20,),
-              SizedBox(
-                height: 90,
-                child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: 10,
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (context,index){
-                  return Container(
-                      margin: EdgeInsets.symmetric(vertical: selectedDate==index?0:10).copyWith(right: 15),
-                      child: singleDateWidget(date: dates[index], index: index));
-                }),
+              Container(
+                padding: EdgeInsets.symmetric(vertical: 0,horizontal: 10),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.all(width: 1,color: themeData.primaryColor),),
+                child: DropdownButton(
+                  value: currentMonth,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 18,
+                  ),
+                  dropdownColor: Colors.white,
+                  underline: Container(),iconEnabledColor: Colors.black,
+                  isExpanded: true,
+                  borderRadius: BorderRadius.circular(4),
+                  items: monthsList.map((String items) {
+                    return DropdownMenuItem(
+                      value: items,
+                      child: Text(items),
+                    );
+                  }).toList(),
+                  onChanged: (String? val) async{
+                    currentMonth = val!;
+                    setState(() {});
+                  },
+                ),
               ),
               SizedBox(height: 20,),
               Container(
@@ -95,9 +142,13 @@ class _MyPrescriptionScreenState extends State<MyPrescriptionScreen> {
         ),
       ),
     );
+
   }
 
-  Widget singleDateWidget({String? date, required int index}) {
+}
+
+
+/* Widget singleDateWidget({String? date, required int index}) {
     if (selectedDate == index) {
       return InkWell(
         onTap: () {
@@ -164,5 +215,4 @@ class _MyPrescriptionScreenState extends State<MyPrescriptionScreen> {
       ),
     );
   }
-
-}
+*/

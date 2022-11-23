@@ -31,6 +31,7 @@ class CommonText extends StatelessWidget {
       maxLines: maxLines,
       overflow: textOverFlow,
       style: TextStyle(
+        //height: 1,
         decoration: textDecoration,
         fontSize: fontSize,
         fontWeight: fontWeight,

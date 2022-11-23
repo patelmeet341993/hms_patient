@@ -1,9 +1,13 @@
+import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:patient/models/patient_model.dart';
 
 class PatientProvider extends ChangeNotifier {
   PatientModel? _currentPatient;
   List<PatientModel> _patientModels = [];
+  StreamSubscription<QuerySnapshot<Map<String, dynamic>>>? _querySnapshot;
 
   PatientModel? getCurrentPatient() {
     if(_currentPatient != null) {
@@ -50,4 +54,19 @@ class PatientProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  void setStreamSubscription(StreamSubscription<QuerySnapshot<Map<String, dynamic>>> querySnapshot,{bool isNotify = true}){
+    _querySnapshot = querySnapshot;
+    if(isNotify) {
+      notifyListeners();
+    }
+  }
+
+  StreamSubscription<QuerySnapshot<Map<String, dynamic>>>? get querySnapshot {
+    if(_querySnapshot != null) {
+      return _querySnapshot;
+    }
+  };
+
+
 }

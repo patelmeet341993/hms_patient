@@ -18,7 +18,7 @@ class DataController {
     String docId = "";
     Timestamp? timestamp;
 
-    await FirestoreController().firestore.collection("timestamp_collection").add({"temp_timestamp": FieldValue.serverTimestamp()}).then((DocumentReference<Map<String, dynamic>> reference) async {
+    await FirestoreController.firestore.collection("timestamp_collection").add({"temp_timestamp": FieldValue.serverTimestamp()}).then((DocumentReference<Map<String, dynamic>> reference) async {
       docId = reference.id;
 
       if(isGetTimeStamp) {

@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:patient/configs/my_print.dart';
 import 'package:uuid/uuid.dart';
+
+import '../configs/constants.dart';
 
 
 class MyUtils {
@@ -23,6 +26,27 @@ class MyUtils {
   static String getUniqueIdFromUuid() {
     return const Uuid().v1().replaceAll("-", "");
   }
+
+  String getCurrentDoseTime() {
+     DateTime currentTime = DateTime.now();
+     MyPrint.printOnConsole("Current time is hour: ${currentTime.hour} && minute: ${currentTime.minute}");
+
+    if((currentTime.hour >= 0 && currentTime.minute > 0) && (currentTime.hour < 11)){
+      return PrescriptionMedicineDoseTime.morning;
+    }else if((currentTime.hour >= 11 && currentTime.minute > 0) && (currentTime.hour < 17)){
+      return PrescriptionMedicineDoseTime.afternoon;
+     }else if(currentTime.hour >= 17 && currentTime.minute > 0 && currentTime.hour < 22){
+       return PrescriptionMedicineDoseTime.evening;
+     }else if(currentTime.hour >= 22 && currentTime.minute > 0 && currentTime.hour < 23 && currentTime.minute < 59){
+       return PrescriptionMedicineDoseTime.night;
+     }else{
+      MyPrint.printOnConsole("Time data is empty");
+      return '';
+     }
+
+  }
+
+
 }
 
 

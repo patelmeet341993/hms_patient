@@ -51,7 +51,7 @@ class PatientController {
       userMobiles: [mobile],
     );
 
-    bool isPatientCreated = await FirestoreController().firestore.collection(FirebaseNodes.patientCollection).doc(patientModel.id).set(patientModel.toMap()).then((value) {
+    bool isPatientCreated = await FirestoreController.firestore.collection(FirebaseNodes.patientCollection).doc(patientModel.id).set(patientModel.toMap()).then((value) {
       return true;
     })
     .catchError((e, s) {
@@ -74,7 +74,7 @@ class PatientController {
 
     PatientProvider patientProvider = Provider.of<PatientProvider>(NavigationController.mainScreenNavigator.currentContext!, listen: false);
 
-    QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirestoreController().firestore.collection(FirebaseNodes.patientCollection).where("userMobiles", arrayContainsAny: [mobileNumber]).get();
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirestoreController.firestore.collection(FirebaseNodes.patientCollection).where("userMobiles", arrayContainsAny: [mobileNumber]).get();
     Log().i("Patient Documents Length For Mobile Number '${mobileNumber}' :${querySnapshot.docs.length}");
 
     for (DocumentSnapshot<Map<String, dynamic>> documentSnapshot in querySnapshot.docs) {

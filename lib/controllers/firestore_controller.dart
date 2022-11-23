@@ -10,5 +10,5 @@ class FirestoreController {
 
   FirestoreController._();
 
-  FirebaseFirestore firestore = FirebaseFirestore.instance;
+  static FirebaseFirestore firestore = FirebaseFirestore.instance;
 }

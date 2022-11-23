@@ -256,6 +256,10 @@ class _VisitScreenState extends State<VisitScreen> {
         SizedBox(height: 12,),
         getProfileInfo(),
         SizedBox(height: 20,),
+        CommonBoldText(text: "Upcoming Dose",textAlign: TextAlign.start,fontSize: 14,color: Colors.black.withOpacity(.9)),
+        SizedBox(height: 5,),
+        getNextDoseDetail(),
+        SizedBox(height: 20,),
         CommonBoldText(text: "Current Treatment Activity",textAlign: TextAlign.start,fontSize: 15,color: Colors.black.withOpacity(.9)),
         SizedBox(height: 18,),
       ],
@@ -315,10 +319,10 @@ class _VisitScreenState extends State<VisitScreen> {
                             ),
                           );
                         },
-                        embeddedImage: AssetImage('assets/extra/viren.jpg'),
-                        embeddedImageStyle: QrEmbeddedImageStyle(
-                          size: Size(28, 28)
-                        ),
+                        //embeddedImage: AssetImage('assets/extra/viren.jpg'),
+                        //embeddedImageStyle: QrEmbeddedImageStyle(
+                        //size: Size(28, 28)
+                        //),
                       ),
                     ),
                   //  Image.asset("assets/extra/code.png",height: 80,width: 80,fit: BoxFit.cover,)
@@ -362,9 +366,6 @@ class _VisitScreenState extends State<VisitScreen> {
               ],
             ),
           ),
-
-
-
         ],
       ),
     );
@@ -389,51 +390,35 @@ class _VisitScreenState extends State<VisitScreen> {
     );
   }
 
-/*  Widget getSingleActivityTile({required String time,required String message,bool isPayment = false,bool isInvoice = false}){
-    Widget getActionButton = SizedBox.shrink();
-    if(isPayment){
-      getActionButton = Container(
-          padding: EdgeInsets.only(top: 5),
-          child: CommonButton(buttonName: "Pay Now", onTap: (){},verticalPadding: 3,fontWeight: FontWeight.normal,));
-    }else if(isInvoice){
-      getActionButton = Container(
-          padding: EdgeInsets.only(top: 5),
-          child: CommonButton(buttonName: "Download Invoice", onTap: (){},verticalPadding: 3,fontWeight: FontWeight.normal));
-    }else{
-      getActionButton = SizedBox.shrink();
-    }
-    return Row(
-      children: [
-        Container(
-            padding: EdgeInsets.symmetric(horizontal: 10),
-            child: CommonText(text:time,color: Colors.grey,fontSize: 13,)),
-        Expanded(
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
-            decoration: BoxDecoration(
-              color: Styles.cardColor,
-              //color: themeData.primaryColor.withOpacity(.1),
-              borderRadius: BorderRadius.circular(5),
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        CommonText(text: message,),
-                        getActionButton
-                      ],
-                    )
-                ),
-              ],
-            ),
-
+  Widget getNextDoseDetail(){
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 10,vertical: 8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border.all(color: themeData.primaryColor),
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CommonBoldText(text: 'Tablet',fontSize: 13,),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(child: CommonText(text: 'Paracetamol : 1 dose',fontSize: 14)),
+              SizedBox(width: 10,),
+              CommonText(text: 'After Meal',fontSize: 14),
+            ],
           ),
-        ),
-      ],
+          CommonText(text: 'Instructions : Milk Consume Karna Goli lene ke baad',fontSize: 14),
+        ],
+      ),
     );
-  }*/
+  }
+
+
+
+
 
 }
 
