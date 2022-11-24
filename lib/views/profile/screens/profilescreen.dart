@@ -1,13 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:hms_models/models/patient/patient_model.dart';
 import 'package:patient/views/common/componants/common_text.dart';
 import 'package:provider/provider.dart';
 
 import '../../../configs/styles.dart';
 import '../../../controllers/authentication_controller.dart';
 import '../../../controllers/navigation_controller.dart';
-import '../../../models/patient_model.dart';
 import '../../../packages/flux/utils/spacing.dart';
 import '../../../packages/flux/widgets/container/container.dart';
 import '../../../providers/patient_provider.dart';

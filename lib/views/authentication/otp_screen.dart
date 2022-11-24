@@ -2,17 +2,17 @@ import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hms_models/hms_models.dart';
+import 'package:hms_models/utils/my_safe_state.dart';
+import 'package:hms_models/utils/my_toast.dart';
 import 'package:patient/configs/app_strings.dart';
 import 'package:patient/controllers/authentication_controller.dart';
 import 'package:patient/providers/authentication_provider.dart';
-import 'package:patient/utils/my_safe_state.dart';
-import 'package:patient/utils/my_toast.dart';
 import 'package:patient/views/common/components/loading_widget.dart';
 import 'package:provider/provider.dart';
 
 import '../../controllers/connection_controller.dart';
 import '../../controllers/patient_controller.dart';
-import '../../utils/logger_service.dart';
 import '../common/components/modal_progress_hud.dart';
 import '../common/components/pin_put.dart';
 import '../homescreen/screens/homescreen.dart';
@@ -72,7 +72,7 @@ class _OtpScreenState extends State<OtpScreen> with MySafeState {
       timeout: Duration(seconds: otpDuration.toInt()),
       verificationCompleted: (AuthCredential credential) {
         print("Automatic Verification Completed");
-        MyToast.showSuccess("OTP Fetched Successfully", context);
+        MyToast.showSuccess(msg:"OTPcontext: Fetched Successfully", context: context);
 
         verificationId = null;
         isOTPSent = false;
@@ -109,14 +109,14 @@ class _OtpScreenState extends State<OtpScreen> with MySafeState {
 
         //_otpController?.text = "";
         mySetState();
-        MyToast.normalMsg(e.message ?? AppStrings.try_again, context);
+        MyToast.normalMsg(msg:e.message ?? AppStrings.try_again,context: context);
         // AnalyticsController().fireEvent(analyticEvent: AnalyticsEvent.phone_verification_failed);
         //_otpController?.text = "";
       },
       codeSent: (verificationId, [forceResendingToken]) {
         print("OTP Sent");
-        MyToast.showSuccess(AppStrings.otp_sent, context);
-        //MyToast.showSuccess("OTP sent to your mobile", context);
+        MyToast.showSuccess(msg:AppStrings.otp_sent,context: context);
+        //MyToast.showSuccess("msg:OTP sent to yourcontext: mobile", context);
         this.verificationId = verificationId;
         // istimer = true;
         //_otpController?.text = "";
@@ -157,7 +157,7 @@ class _OtpScreenState extends State<OtpScreen> with MySafeState {
     otpErrorMsg = "";
     isTimerOn = false;
     if(mounted) {
-      MyToast.showError(AppStrings.try_again, context);
+      MyToast.showError(msg:AppStrings.try_again,context: context);
       // AnalyticsController().fireEvent(analyticEvent: AnalyticsEvent.phone_verification_failed);
       mySetState();
     }
@@ -196,7 +196,7 @@ class _OtpScreenState extends State<OtpScreen> with MySafeState {
       print("Error in Verifying OTP in Auth_Service:${e.code}");
 
       if (e.code == "invalid-verification-code") {
-        MyToast.showError(AppStrings.wrong_otp, context);
+        MyToast.showError(msg:AppStrings.wrong_otp,context: context);
       }
 
       otpErrorMsg = e.message!;
@@ -212,7 +212,7 @@ class _OtpScreenState extends State<OtpScreen> with MySafeState {
 
   Future<void> onSuccess(User user) async {
     AuthenticationProvider authenticationProvider = Provider.of<AuthenticationProvider>(context, listen: false);
-    Log().i("user.phoneNumber:${user.phoneNumber}");
+    MyPrint.printOnConsole("user.phoneNumber:${user.phoneNumber}");
     if((user.phoneNumber ?? "").isNotEmpty) {
       authenticationProvider.setFirebaseUser(user, isNotify: false);
       authenticationProvider.setUserId(user.uid, isNotify: false);
@@ -497,13 +497,13 @@ class _OtpScreenState extends State<OtpScreen> with MySafeState {
             if (isOTPSent) {
               print("four");
               if (!checkEnabledVerifyButton()) {
-                Log().d("Invalid Otp");
+                MyPrint.printOnConsole("Invalid Otp");
                 isShowOtpErrorMsg = true;
                 otpErrorMsg = "OTP should be of 6 digits";
                 mySetState();
               }
               else {
-                Log().d("Valid Otp");
+                MyPrint.printOnConsole("Valid Otp");
                 isShowOtpErrorMsg = false;
                 otpErrorMsg = "";
                 mySetState();
@@ -515,13 +515,13 @@ class _OtpScreenState extends State<OtpScreen> with MySafeState {
                 }
                 else {
                   print("five");
-                  MyToast.showError(AppStrings.otp_expired_please_resend, context);
+                  MyToast.showError(msg:AppStrings.otp_expired_please_resend,context: context);
                 }
               }
             }
             else{
               print("seven");
-              MyToast.showError(AppStrings.otp_expired_please_resend, context);
+              MyToast.showError(msg:AppStrings.otp_expired_please_resend,context: context);
             }
           }
         }

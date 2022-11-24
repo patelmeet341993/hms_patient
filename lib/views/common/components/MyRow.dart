@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hms_models/utils/size_config.dart';
 
-import '../../../utils/SizeConfig.dart';
 import 'MyCol.dart';
 import 'Properties.dart';
 import 'ScreenMedia.dart';

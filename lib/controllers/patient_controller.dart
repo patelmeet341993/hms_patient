@@ -1,12 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:patient/configs/constants.dart';
+import 'package:hms_models/hms_models.dart';
 import 'package:patient/controllers/data_controller.dart';
-import 'package:patient/controllers/firestore_controller.dart';
 import 'package:patient/controllers/navigation_controller.dart';
-import 'package:patient/models/new_document_data_model.dart';
-import 'package:patient/models/patient_model.dart';
 import 'package:patient/providers/patient_provider.dart';
-import 'package:patient/utils/logger_service.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/authentication_provider.dart';
@@ -20,14 +16,14 @@ class PatientController {
   PatientProvider getProvider() => _patientProvider;
 
   Future<void> getPatientsDataForMainPage({bool isRefresh = true, bool isFromCache = false}) async {
-    Log().d("getPatientsDataForMainPage called with isRefresh:$isRefresh and isFromCache:$isFromCache");
+    MyPrint.printOnConsole("getPatientsDataForMainPage called with isRefresh:$isRefresh and isFromCache:$isFromCache");
 
     AuthenticationProvider authenticationProvider = Provider.of(NavigationController.mainScreenNavigator.currentContext!, listen: false);
     PatientProvider patientProvider = Provider.of(NavigationController.mainScreenNavigator.currentContext!, listen: false);
 
     if(!isRefresh && isFromCache) {
       if(patientProvider.patientsLength > 0 && patientProvider.getCurrentPatient() != null) {
-        Log().d("Data Already Exist");
+        MyPrint.printOnConsole("Data Already Exist");
         return;
       }
     }
@@ -52,7 +48,7 @@ class PatientController {
     NewDocumentDataModel newDocumentDataModel = await DataController().getNewDocIdAndTimeStamp();
 
     PatientModel patientModel = PatientModel(
-      id: newDocumentDataModel.docid,
+      id: newDocumentDataModel.docId,
       createdTime: newDocumentDataModel.timestamp,
       active: false,
       userMobiles: [mobile],
@@ -62,10 +58,11 @@ class PatientController {
       return true;
     })
     .catchError((e, s) {
-      Log().e("Error in Creating Patient Model:$e", s);
+      MyPrint.printOnConsole("Error in Creating Patient Model:$e");
+      MyPrint.printOnConsole(s);
       return false;
     });
-    Log().i("isPatientCreated:$isPatientCreated");
+    MyPrint.printOnConsole("isPatientCreated:$isPatientCreated");
 
     if(isPatientCreated) {
       return patientModel;
@@ -76,13 +73,13 @@ class PatientController {
   }
 
   Future<List<PatientModel>> getPatientsForMobileNumber({required String mobileNumber}) async {
-    Log().d("getPatientsForMobileNumber called with mobile number: $mobileNumber");
+    MyPrint.printOnConsole("getPatientsForMobileNumber called with mobile number: $mobileNumber");
     List<PatientModel> patients = [];
 
     PatientProvider patientProvider = Provider.of<PatientProvider>(NavigationController.mainScreenNavigator.currentContext!, listen: false);
 
     QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirestoreController.firestore.collection(FirebaseNodes.patientCollection).where("userMobiles", arrayContainsAny: [mobileNumber]).get();
-    Log().i("Patient Documents Length For Mobile Number '${mobileNumber}' :${querySnapshot.docs.length}");
+    MyPrint.printOnConsole("Patient Documents Length For Mobile Number '${mobileNumber}' :${querySnapshot.docs.length}");
 
     for (DocumentSnapshot<Map<String, dynamic>> documentSnapshot in querySnapshot.docs) {
       if((documentSnapshot.data() ?? {}).isNotEmpty) {

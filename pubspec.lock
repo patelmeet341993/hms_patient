@@ -324,6 +324,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.1"
+  hms_models:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: HEAD
+      resolved-ref: "2cebd816916581751e789383d3831871463ade6e"
+      url: "https://github.com/patelmeet341993/hms_models"
+    source: git
+    version: "0.0.1"
   http:
     dependency: transitive
     description:

@@ -16,9 +16,7 @@ import '../../../controllers/visit_controller.dart';
 import '../../../packages/flux/themes/text_style.dart';
 import '../../../packages/flux/utils/spacing.dart';
 import '../../../packages/flux/widgets/container/container.dart';
-import '../../../packages/flux/widgets/text/text.dart';
 import '../../../packages/flux/widgets/text_field/text_field.dart';
-import '../../../utils/logger_service.dart';
 import '../../about_us/screens/about_us_screen.dart';
 import '../../treatment_history/componants/treatment_activity.dart';
 

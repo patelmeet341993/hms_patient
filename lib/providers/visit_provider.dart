@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hms_models/models/visit_model/visit_model.dart';
 
-import '../models/visit_model/visit_model.dart';
 
 class VisitProvider extends ChangeNotifier {
   VisitModel? _visitModel;

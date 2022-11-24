@@ -3,15 +3,15 @@ import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/foundation.dart';
+import 'package:hms_models/hms_models.dart';
 
-import '../utils/logger_service.dart';
 
 class ConnectionProvider extends ChangeNotifier {
   bool isInternet = true;
   StreamSubscription<ConnectivityResult>? subscription;
 
   ConnectionProvider() {
-    Log().d("ConnectionProvider constructor called");
+    MyPrint.printOnConsole("ConnectionProvider constructor called");
     if(kIsWeb) {
       isInternet = true;
     }
@@ -20,19 +20,19 @@ class ConnectionProvider extends ChangeNotifier {
     }
     try {
       Connectivity().checkConnectivity().then((ConnectivityResult result) {
-        Log().d("Connectivity Result:$result");
+        MyPrint.printOnConsole("Connectivity Result:$result");
         isInternet = result == ConnectivityResult.none ? false : true;
 
-        Log().d("Connection Subscription Started");
+        MyPrint.printOnConsole("Connection Subscription Started");
         subscription = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) async {
-          Log().d("Connectivity Result:$result");
+          MyPrint.printOnConsole("Connectivity Result:$result");
           isInternet = result == ConnectivityResult.none ? false : true;
           notifyListeners();
         });
       });
     }
     catch (E) {
-      Log().e("Error in Connectivity Subscription:  $E");
+      MyPrint.printOnConsole("Error in Connectivity Subscription:  $E");
     }
   }
 

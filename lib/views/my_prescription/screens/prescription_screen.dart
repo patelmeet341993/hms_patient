@@ -2,11 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:intl/intl.dart';
-import 'package:patient/utils/my_utils.dart';
 
-import '../../../configs/styles.dart';
-import '../../../packages/flux/utils/spacing.dart';
-import '../../../packages/flux/widgets/container/container.dart';
 import '../../../packages/flux/widgets/text/text.dart';
 
 
