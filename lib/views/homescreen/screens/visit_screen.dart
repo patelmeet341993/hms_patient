@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:patient/controllers/navigation_controller.dart';
+import 'package:patient/providers/visit_provider.dart';
 import 'package:patient/views/common/componants/common_bold_text.dart';
 import 'package:patient/views/common/componants/common_button.dart';
 import 'package:patient/views/common/componants/common_text.dart';
@@ -11,17 +12,17 @@ import 'package:patient/views/treatment_history/screens/treatment_history_screen
 import 'package:qr_flutter/qr_flutter.dart';
 
 import '../../../configs/styles.dart';
+import '../../../controllers/visit_controller.dart';
 import '../../../packages/flux/themes/text_style.dart';
 import '../../../packages/flux/utils/spacing.dart';
 import '../../../packages/flux/widgets/container/container.dart';
-import '../../../packages/flux/widgets/text/text.dart';
 import '../../../packages/flux/widgets/text_field/text_field.dart';
-import '../../../utils/logger_service.dart';
 import '../../about_us/screens/about_us_screen.dart';
 import '../../treatment_history/componants/treatment_activity.dart';
 
 class VisitScreen extends StatefulWidget {
-  const VisitScreen({Key? key}) : super(key: key);
+  final VisitProvider? visitProvider;
+  const VisitScreen({Key? key, this.visitProvider}) : super(key: key);
 
   @override
   _VisitScreenState createState() => _VisitScreenState();
@@ -50,6 +51,37 @@ class _VisitScreenState extends State<VisitScreen> {
   List<bool> invoiceList = [false, false, false, true,];
   List<bool> payList = [false, false, true, false,];
 
+  late VisitProvider visitProvider;
+  late VisitController visitController;
+
+
+  Future<void> getData() async{
+    await visitController.startTreatmentActivityStream();
+  }
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    visitProvider = (widget.visitProvider ?? VisitProvider());
+    visitController = VisitController(visitProvider: visitProvider);
+    getData();
+    // VisitController(visitProvider: visitProvider).startTreatmentActivityStream();
+  }
+
+
+  // @override
+  // void didUpdateWidget(covariant VisitScreen oldWidget) {
+  //   if(oldWidget.nativeMenuModel.menuid != widget.nativeMenuModel.menuid) {
+  //     nativeMenuModel = widget.nativeMenuModel;
+  //     newHomeProvider = (widget.provider ?? NewHomeProvider());
+  //     newHomeController = NewHomeController(provider: newHomeProvider);
+  //     getData();
+  //   }
+  //   super.didUpdateWidget(oldWidget);
+  // }
+
   @override
   Widget build(BuildContext context) {
     themeData = Theme.of(context);
@@ -77,7 +109,6 @@ class _VisitScreenState extends State<VisitScreen> {
           ),
         ),
       ),
-
     );
   }
 
@@ -256,6 +287,10 @@ class _VisitScreenState extends State<VisitScreen> {
         SizedBox(height: 12,),
         getProfileInfo(),
         SizedBox(height: 20,),
+        CommonBoldText(text: "Upcoming Dose",textAlign: TextAlign.start,fontSize: 14,color: Colors.black.withOpacity(.9)),
+        SizedBox(height: 5,),
+        getNextDoseDetail(),
+        SizedBox(height: 20,),
         CommonBoldText(text: "Current Treatment Activity",textAlign: TextAlign.start,fontSize: 15,color: Colors.black.withOpacity(.9)),
         SizedBox(height: 18,),
       ],
@@ -315,10 +350,10 @@ class _VisitScreenState extends State<VisitScreen> {
                             ),
                           );
                         },
-                        embeddedImage: AssetImage('assets/extra/viren.jpg'),
-                        embeddedImageStyle: QrEmbeddedImageStyle(
-                          size: Size(28, 28)
-                        ),
+                        //embeddedImage: AssetImage('assets/extra/viren.jpg'),
+                        //embeddedImageStyle: QrEmbeddedImageStyle(
+                        //size: Size(28, 28)
+                        //),
                       ),
                     ),
                   //  Image.asset("assets/extra/code.png",height: 80,width: 80,fit: BoxFit.cover,)
@@ -330,7 +365,7 @@ class _VisitScreenState extends State<VisitScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    CommonText(text: "Viren Desai",color: Colors.white,fontSize: 17),
+                    CommonText(text: "${visitProvider.visitModel?.patientMetaModel?.name}",color: Colors.white,fontSize: 17),
                     SizedBox(height: 2,),
                     CommonText(text: "male   23 years old",color: Colors.white,),
                     SizedBox(height: 2,),
@@ -362,9 +397,6 @@ class _VisitScreenState extends State<VisitScreen> {
               ],
             ),
           ),
-
-
-
         ],
       ),
     );
@@ -389,51 +421,35 @@ class _VisitScreenState extends State<VisitScreen> {
     );
   }
 
-/*  Widget getSingleActivityTile({required String time,required String message,bool isPayment = false,bool isInvoice = false}){
-    Widget getActionButton = SizedBox.shrink();
-    if(isPayment){
-      getActionButton = Container(
-          padding: EdgeInsets.only(top: 5),
-          child: CommonButton(buttonName: "Pay Now", onTap: (){},verticalPadding: 3,fontWeight: FontWeight.normal,));
-    }else if(isInvoice){
-      getActionButton = Container(
-          padding: EdgeInsets.only(top: 5),
-          child: CommonButton(buttonName: "Download Invoice", onTap: (){},verticalPadding: 3,fontWeight: FontWeight.normal));
-    }else{
-      getActionButton = SizedBox.shrink();
-    }
-    return Row(
-      children: [
-        Container(
-            padding: EdgeInsets.symmetric(horizontal: 10),
-            child: CommonText(text:time,color: Colors.grey,fontSize: 13,)),
-        Expanded(
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
-            decoration: BoxDecoration(
-              color: Styles.cardColor,
-              //color: themeData.primaryColor.withOpacity(.1),
-              borderRadius: BorderRadius.circular(5),
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        CommonText(text: message,),
-                        getActionButton
-                      ],
-                    )
-                ),
-              ],
-            ),
-
+  Widget getNextDoseDetail(){
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 10,vertical: 8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border.all(color: themeData.primaryColor),
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CommonBoldText(text: 'Tablet',fontSize: 13,),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(child: CommonText(text: 'Paracetamol : 1 dose',fontSize: 14)),
+              SizedBox(width: 10,),
+              CommonText(text: 'After Meal',fontSize: 14),
+            ],
           ),
-        ),
-      ],
+          CommonText(text: 'Instructions : Milk Consume Karna Goli lene ke baad',fontSize: 14),
+        ],
+      ),
     );
-  }*/
+  }
+
+
+
+
 
 }
 

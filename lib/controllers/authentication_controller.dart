@@ -1,10 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:hms_models/hms_models.dart';
 import 'package:provider/provider.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 import '../providers/authentication_provider.dart';
-import '../utils/logger_service.dart';
 import '../views/authentication/login_screen.dart';
 import 'navigation_controller.dart';
 
@@ -42,15 +42,17 @@ class AuthenticationController {
     try {
       Future.wait([
         FirebaseAuth.instance.signOut().then((value) {
-          Log().i("Logged Out User From Firebase Auth");
+          MyPrint.printOnConsole("Logged Out User From Firebase Auth");
         })
         .catchError((e, s) {
-          Log().e("Error in Logging Out User From Firebase:$e", s);
+          MyPrint.printOnConsole("Error in Logging Out User From Firebase:$e");
+          MyPrint.printOnConsole(s);
         }),
       ]);
     }
     catch(e, s) {
-      Log().e("Error in Logging Out:$e", s);
+      MyPrint.printOnConsole("Error in Logging Out:$e");
+      MyPrint.printOnConsole(s);
     }
 
     isLoggedOut = true;

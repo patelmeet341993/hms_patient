@@ -2,12 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:hms_models/hms_models.dart';
 import 'package:patient/views/authentication/otp_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../../configs/app_theme.dart';
 import '../../providers/connection_provider.dart';
-import '../../utils/my_toast.dart';
 import '../common/components/modal_progress_hud.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -38,7 +38,7 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     }
     else {
-      MyToast.showError("No Internet", context);
+      MyToast.showError(msg: "No Internet",context: context);
     }
   }
 

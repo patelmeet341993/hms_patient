@@ -1,14 +1,11 @@
 import 'dart:io';
-import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:hms_models/hms_models.dart';
 import 'package:patient/controllers/authentication_controller.dart';
 import 'package:patient/controllers/patient_controller.dart';
-import 'package:patient/utils/logger_service.dart';
-import 'package:patient/packages/flux/flutx.dart';
-import 'package:patient/views/common/componants/common_text.dart';
 
 import '../controllers/navigation_controller.dart';
 import 'authentication/login_screen.dart';
@@ -31,7 +28,7 @@ class _SplashScreenState extends State<SplashScreen> {
      await Future.delayed(const Duration(seconds: 3));
 
     bool isUserLoggedIn = await AuthenticationController().isUserLoggedIn();
-    Log().i("isUserLoggedIn:$isUserLoggedIn");
+    MyPrint.printOnConsole("isUserLoggedIn:$isUserLoggedIn");
     NavigationController.isFirst = false;
     if(isUserLoggedIn) {
       await PatientController().getPatientsDataForMainPage();
@@ -48,8 +45,8 @@ class _SplashScreenState extends State<SplashScreen> {
     SystemChrome.setSystemUIOverlayStyle(
         SystemUiOverlayStyle(
           statusBarColor: Colors.white,
-          statusBarBrightness: Platform.isIOS?Brightness.light:Brightness.dark,
-          statusBarIconBrightness: Platform.isIOS?Brightness.light:Brightness.dark,
+          statusBarBrightness: !kIsWeb && Platform.isIOS?Brightness.light:Brightness.dark,
+          statusBarIconBrightness: !kIsWeb && Platform.isIOS?Brightness.light:Brightness.dark,
         ));
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
 

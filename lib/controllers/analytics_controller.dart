@@ -1,7 +1,8 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:hms_models/hms_models.dart';
 
-import '../utils/logger_service.dart';
+
 
 class AnalyticsController {
   static AnalyticsController? _instance;
@@ -23,10 +24,10 @@ class AnalyticsController {
   
   Future<void> fireEvent({required String analyticEvent, Map<String, dynamic>? parameters}) async {
     await analytics.logEvent(name:  analyticEvent, parameters: parameters != null && parameters.isNotEmpty ? parameters : null).then((value) {
-      Log().i('$analyticEvent fired with parameters:$parameters');
+      MyPrint.printOnConsole('$analyticEvent fired with parameters:$parameters');
     })
     .catchError((e) {
-      Log().e('Error in Firing $analyticEvent:$e');
+      MyPrint.printOnConsole('Error in Firing $analyticEvent:$e');
     });
   }
   

@@ -60,10 +60,10 @@ class QRCodeView extends StatelessWidget {
                     ),
                   );
                 },
-                embeddedImage: AssetImage('assets/extra/viren.jpg',),
-                embeddedImageStyle: QrEmbeddedImageStyle(
-                  size: Size(80, 80),
-                ),
+                // embeddedImage: AssetImage('assets/extra/viren.jpg',),
+                // embeddedImageStyle: QrEmbeddedImageStyle(
+                //   size: Size(40,40),
+                // ),
                 backgroundColor: Colors.white,
               ),
             ),

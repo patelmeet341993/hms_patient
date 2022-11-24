@@ -1,8 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:hms_models/hms_models.dart';
+import 'package:hms_models/models/common/new_document_data_model.dart';
 import 'package:uuid/uuid.dart';
-
-import '../models/new_document_data_model.dart';
-import 'firestore_controller.dart';
 
 class DataController {
   static DataController? _instance;
@@ -18,7 +17,7 @@ class DataController {
     String docId = "";
     Timestamp? timestamp;
 
-    await FirestoreController().firestore.collection("timestamp_collection").add({"temp_timestamp": FieldValue.serverTimestamp()}).then((DocumentReference<Map<String, dynamic>> reference) async {
+    await FirebaseNodes.timestampCollectionReference.add({"temp_timestamp": FieldValue.serverTimestamp()}).then((DocumentReference<Map<String, dynamic>> reference) async {
       docId = reference.id;
 
       if(isGetTimeStamp) {
@@ -36,6 +35,6 @@ class DataController {
       docId = Uuid().v1().replaceAll("-", "");
     }
 
-    return NewDocumentDataModel(docid: docId, timestamp: timestamp ?? Timestamp.now());
+    return NewDocumentDataModel(docId: docId, timestamp: timestamp ?? Timestamp.now());
   }
 }
