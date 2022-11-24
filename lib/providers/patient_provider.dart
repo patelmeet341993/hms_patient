@@ -1,9 +1,7 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import 'package:hms_models/models/patient/patient_model.dart';
-import 'package:hms_models/models/visit_model/visit_model.dart';
+import 'package:hms_models/hms_models.dart';
 
 class PatientProvider extends ChangeNotifier {
   PatientModel? _currentPatient;
