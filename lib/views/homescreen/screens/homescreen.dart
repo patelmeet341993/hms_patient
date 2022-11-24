@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:patient/configs/my_print.dart';
+import 'package:patient/controllers/visit_controller.dart';
 import 'package:patient/providers/patient_provider.dart';
+import 'package:patient/providers/visit_provider.dart';
 import 'package:patient/utils/logger_service.dart';
 import 'package:patient/views/homescreen/screens/visit_screen.dart';
 import 'package:patient/views/profile/screens/profilescreen.dart';
@@ -30,6 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
+    // MyPrint.printOnConsole("startTreatmentActivityStream :}");
     PatientProvider patientProvider = Provider.of(NavigationController.mainScreenNavigator.currentContext!, listen: false);
     if(patientProvider.patientsLength > 0 && patientProvider.getCurrentPatient() != null) {
 
@@ -38,7 +42,9 @@ class _HomeScreenState extends State<HomeScreen> {
       futureGetPatientsData = PatientController().getPatientsDataForMainPage(isRefresh: false, isFromCache: true);
     }
     // futureGetPatientsData = PatientController().getPatientsDataForMainPage(isRefresh: false, isFromCache: true);
+
     super.initState();
+
   }
 
   @override
@@ -83,7 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
       iconColor: Colors.grey,
       itemList: [
         FxBottomNavigationBarItem(
-          page: VisitScreen(),
+          page: VisitScreen(visitProvider: Provider.of<VisitProvider>(context)),
           activeIconData: Icons.house,
           iconData: Icons.house_outlined,
         ),

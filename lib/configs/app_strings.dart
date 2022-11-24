@@ -11,8 +11,8 @@ class AppStrings {
 
   //region firebase collections
   static const String admin_users = "admin_users";
-  static const String patient = "patient";
-  static const String visits = "visits";
+  static const String patientCollection = "patient";
+  static const String visitCollection = "visits";
 
 
 

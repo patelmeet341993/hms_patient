@@ -468,7 +468,7 @@ class _OtpScreenState extends State<OtpScreen> with MySafeState {
 
     return InkWell(
       onTap: () {
-        registerUser(widget.mobile!);
+        registerUser(widget.mobile ?? "");
       },
       child: Container(
         margin: const EdgeInsets.only(top: 15),
@@ -684,7 +684,7 @@ class _OtpScreenState extends State<OtpScreen> with MySafeState {
                   visible: isOTPTimeout,
                   child: GestureDetector(
                     onTap: () {
-                      registerUser(widget.mobile!);
+                      registerUser(widget.mobile ?? "");
                     },
                     child: Container(
                       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 32),

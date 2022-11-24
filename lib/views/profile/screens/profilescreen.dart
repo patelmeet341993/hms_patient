@@ -56,7 +56,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   FxSpacing.height(15),
                   //CommonText(text: "${currentPatient?.id ?? ""}",fontSize: 22,fontWeight: FontWeight.w600,textAlign: TextAlign.center),
                   currentPatient!.name.isNotEmpty ? FxSpacing.height(4) : SizedBox.shrink(),
-                  currentPatient.name.isNotEmpty ? CommonText(text: "${currentPatient?.name ?? ""}",fontSize: 22,fontWeight: FontWeight.w600,textAlign: TextAlign.center):SizedBox.shrink(),
+                  currentPatient.name.isNotEmpty ? CommonText(text: currentPatient.name ?? "",fontSize: 22,fontWeight: FontWeight.w600,textAlign: TextAlign.center):SizedBox.shrink(),
                   FxSpacing.height(4),
                   getTreatmentActiveWidget(isActive: true),
                   FxSpacing.height(20),
@@ -77,7 +77,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   _buildSingleRow(title: 'My QR Code', icon: Icons.qr_code_2,
                     onTap: (){
                       showDialog(context: context, builder: (context){
-                        return QRCodeView(userId: currentPatient?.id ?? "",);
+                        return QRCodeView(userId: currentPatient.id,);
                       });
                     },
                   ),

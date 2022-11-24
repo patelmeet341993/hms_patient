@@ -3,11 +3,14 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:patient/models/patient_model.dart';
+import 'package:patient/models/visit_model/visit_model.dart';
 
 class PatientProvider extends ChangeNotifier {
   PatientModel? _currentPatient;
   List<PatientModel> _patientModels = [];
   StreamSubscription<QuerySnapshot<Map<String, dynamic>>>? _querySnapshot;
+  VisitModel? _visitModel;
+
 
   PatientModel? getCurrentPatient() {
     if(_currentPatient != null) {
@@ -55,18 +58,37 @@ class PatientProvider extends ChangeNotifier {
     }
   }
 
-  void setStreamSubscription(StreamSubscription<QuerySnapshot<Map<String, dynamic>>> querySnapshot,{bool isNotify = true}){
-    _querySnapshot = querySnapshot;
+  StreamSubscription<QuerySnapshot<Map<String, dynamic>>>? get querySnapshot {
+    if(_querySnapshot != null) {
+      return _querySnapshot;
+    }
+    return null;
+  }
+
+  void setStreamSubscription(StreamSubscription<QuerySnapshot<Map<String, dynamic>>>? querySnapshot,{bool isNotify = true}){
+    if(querySnapshot != null){
+      _querySnapshot = querySnapshot;
+    }
     if(isNotify) {
       notifyListeners();
     }
   }
 
-  StreamSubscription<QuerySnapshot<Map<String, dynamic>>>? get querySnapshot {
-    if(_querySnapshot != null) {
-      return _querySnapshot;
+  void setVisitModel(VisitModel? visitModel , {bool isNotify = true}){
+    if(visitModel != null){
+      _visitModel = visitModel;
     }
-  };
+    if(isNotify){
+      notifyListeners();
+    }
+  }
 
+  VisitModel? get visitModel {
+    if(_visitModel != null){
+      return _visitModel;
+    } else {
+      return null;
+    }
+  }
 
 }

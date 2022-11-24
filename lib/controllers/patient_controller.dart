@@ -12,6 +12,13 @@ import 'package:provider/provider.dart';
 import '../providers/authentication_provider.dart';
 
 class PatientController {
+  late PatientProvider _patientProvider;
+
+  PatientController({PatientProvider? provider}) {
+    _patientProvider = (provider ?? PatientProvider());
+  }
+  PatientProvider getProvider() => _patientProvider;
+
   Future<void> getPatientsDataForMainPage({bool isRefresh = true, bool isFromCache = false}) async {
     Log().d("getPatientsDataForMainPage called with isRefresh:$isRefresh and isFromCache:$isFromCache");
 
@@ -93,4 +100,5 @@ class PatientController {
 
     return patients;
   }
+
 }
