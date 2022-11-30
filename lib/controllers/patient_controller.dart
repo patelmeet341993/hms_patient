@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hms_models/hms_models.dart';
 import 'package:patient/controllers/data_controller.dart';
 import 'package:patient/controllers/navigation_controller.dart';

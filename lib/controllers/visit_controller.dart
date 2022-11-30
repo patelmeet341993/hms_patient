@@ -1,11 +1,6 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hms_models/hms_models.dart';
-import 'package:hms_models/models/patient/patient_model.dart';
-import 'package:hms_models/models/visit_model/visit_model.dart';
-import 'package:hms_models/utils/my_print.dart';
-import 'package:hms_models/utils/parsing_helper.dart';
 import 'package:patient/providers/patient_provider.dart';
 import 'package:patient/providers/visit_provider.dart';
 import 'package:provider/provider.dart';
@@ -37,7 +32,6 @@ class VisitController{
    }
    MyPrint.printOnConsole("in visit controller22222");
 
-   List<VisitModel> myStreamActiveVisits = [];
    // List<VisitModel> myStreamActiveVisits = [];
 
 
