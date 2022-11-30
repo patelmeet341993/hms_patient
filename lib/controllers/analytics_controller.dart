@@ -1,8 +1,7 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:hms_models/hms_models.dart';
-
-
+import '../utils/logger_service.dart';
 
 class AnalyticsController {
   static AnalyticsController? _instance;

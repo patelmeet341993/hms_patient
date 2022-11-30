@@ -38,6 +38,7 @@ class VisitController{
    MyPrint.printOnConsole("in visit controller22222");
 
    List<VisitModel> myStreamActiveVisits = [];
+   // List<VisitModel> myStreamActiveVisits = [];
 
 
    VisitModel visitModel;
