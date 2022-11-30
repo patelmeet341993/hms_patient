@@ -1,5 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:hms_models/hms_models.dart';
@@ -399,7 +397,7 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState{
                     SizedBox(height: 2,),
                     CommonText(text: "${patientMetaModel.gender}   ${calculateAge(patientMetaModel.dateOfBirth?.toDate() ?? DateTime.now())} years old",color: Colors.white,),
                     SizedBox(height: 2,),
-                    CommonText(text: DatePresentation.ddMMMMyyyy(patientMetaModel.dateOfBirth?.toDate()?? DateTime.now()),color: Colors.white,),
+                    CommonText(text: DatePresentation.ddMMMMyyyyTimeStamp(patientMetaModel.dateOfBirth?? Timestamp.now()),color: Colors.white,),
                   ],
                 ),
               ),
