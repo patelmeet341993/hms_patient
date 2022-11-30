@@ -395,7 +395,7 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState{
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    CommonText(text: patientMetaModel.name,color: Colors.white,fontSize: 17),
+                    CommonText(text: "${visitProvider.visitModel?.patientMetaModel?.name}",color: Colors.white,fontSize: 17),
                     SizedBox(height: 2,),
                     CommonText(text: "${patientMetaModel.gender}   ${calculateAge(patientMetaModel.dateOfBirth?.toDate() ?? DateTime.now())} years old",color: Colors.white,),
                     SizedBox(height: 2,),
