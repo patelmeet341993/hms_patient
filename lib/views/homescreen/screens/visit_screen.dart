@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:hms_models/hms_models.dart';
+import 'package:intl/intl.dart';
 import 'package:patient/controllers/navigation_controller.dart';
 import 'package:patient/providers/visit_provider.dart';
 import 'package:patient/views/common/componants/common_bold_text.dart';
@@ -9,6 +12,7 @@ import 'package:patient/views/common/componants/common_text.dart';
 import 'package:patient/views/common/componants/qr_view_dialog.dart';
 import 'package:patient/views/common/screens/notification_screen.dart';
 import 'package:patient/views/treatment_history/screens/treatment_history_screen.dart';
+import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 import '../../../configs/styles.dart';
@@ -28,7 +32,7 @@ class VisitScreen extends StatefulWidget {
   _VisitScreenState createState() => _VisitScreenState();
 }
 
-class _VisitScreenState extends State<VisitScreen> {
+class _VisitScreenState extends State<VisitScreen> with MySafeState{
   late ThemeData themeData;
   bool isFirstTimeUser = false;
   TextEditingController searchController =  TextEditingController();
@@ -53,6 +57,7 @@ class _VisitScreenState extends State<VisitScreen> {
 
   late VisitProvider visitProvider;
   late VisitController visitController;
+  VisitModel visitModel = VisitModel();
 
 
   Future<void> getData() async{
@@ -62,11 +67,12 @@ class _VisitScreenState extends State<VisitScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     visitProvider = (widget.visitProvider ?? VisitProvider());
     visitController = VisitController(visitProvider: visitProvider);
-    getData();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async{
+      await getData();
+    });
     // VisitController(visitProvider: visitProvider).startTreatmentActivityStream();
   }
 
@@ -82,6 +88,24 @@ class _VisitScreenState extends State<VisitScreen> {
   //   super.didUpdateWidget(oldWidget);
   // }
 
+
+  int calculateAge(DateTime birthDate) {
+    DateTime currentDate = DateTime.now();
+    int age = currentDate.year - birthDate.year;
+    int month1 = currentDate.month;
+    int month2 = birthDate.month;
+    if (month2 > month1) {
+      age--;
+    } else if (month1 == month2) {
+      int day1 = currentDate.day;
+      int day2 = birthDate.day;
+      if (day2 > day1) {
+        age--;
+      }
+    }
+    return age;
+  }
+
   @override
   Widget build(BuildContext context) {
     themeData = Theme.of(context);
@@ -94,17 +118,22 @@ class _VisitScreenState extends State<VisitScreen> {
            },
           child: Scaffold(
             resizeToAvoidBottomInset: false,
-            body: Column(
-              children: [
-                SizedBox(height: 10,),
-                getTopBar(isOpen: true,name: "Saraswati Clinic"),
-                Expanded(
-                  child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 20,),
-                      child: isFirstTimeUser?getForUserFirstTime():getMainPage()
-                  ),
-                ),
-              ],
+            body: Consumer<VisitProvider>(
+              builder: (context, VisitProvider visitProvider, _) {
+                visitModel = visitProvider.visitModel ?? VisitModel();
+                return Column(
+                  children: [
+                    SizedBox(height: 10,),
+                    getTopBar(isOpen: true,name: "Saraswati Clinic"),
+                    Expanded(
+                      child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 20,),
+                          child: isFirstTimeUser?getForUserFirstTime():getMainPage()
+                      ),
+                    ),
+                  ],
+                );
+              }
             ),
           ),
         ),
@@ -298,6 +327,7 @@ class _VisitScreenState extends State<VisitScreen> {
   }
 
   Widget getProfileInfo() {
+    PatientMetaModel patientMetaModel = visitModel.patientMetaModel ?? PatientMetaModel();
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
       decoration: BoxDecoration(
@@ -365,11 +395,11 @@ class _VisitScreenState extends State<VisitScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    CommonText(text: "${visitProvider.visitModel?.patientMetaModel?.name}",color: Colors.white,fontSize: 17),
+                    CommonText(text: patientMetaModel.name,color: Colors.white,fontSize: 17),
                     SizedBox(height: 2,),
-                    CommonText(text: "male   23 years old",color: Colors.white,),
+                    CommonText(text: "${patientMetaModel.gender}   ${calculateAge(patientMetaModel.dateOfBirth?.toDate() ?? DateTime.now())} years old",color: Colors.white,),
                     SizedBox(height: 2,),
-                    CommonText(text: "19-04-1999",color: Colors.white,),
+                    CommonText(text: DatePresentation.ddMMMMyyyy(patientMetaModel.dateOfBirth?.toDate()?? DateTime.now()),color: Colors.white,),
                   ],
                 ),
               ),
@@ -403,8 +433,9 @@ class _VisitScreenState extends State<VisitScreen> {
   }
 
   Widget getMyTreatment() {
+    List<TreatmentActivityModel> treatMentList = visitModel.treatmentActivity;
     return ListView.builder(
-      itemCount: 4 + 1,
+      itemCount: treatMentList.length + 1,
       shrinkWrap: true,
       itemBuilder: (context,index){
         if(index == 0){
@@ -412,8 +443,8 @@ class _VisitScreenState extends State<VisitScreen> {
         }
         index--;
         return TreatmentActivityScreen(
-          time: timingList[index],
-          message:  messageList[index],
+          time: hhMM(treatMentList[index].createdTime ?? Timestamp.now()),
+          message:  treatMentList[index].treatmentActivityStatus ,
           isButtonVisible: index == 2 || index == 3 ? true:false,
           buttonName: index == 2 ? "Download Invoice" : index == 3 ? "Pay Now" : "",
         );
@@ -447,8 +478,10 @@ class _VisitScreenState extends State<VisitScreen> {
     );
   }
 
-
-
+  static String hhMM(Timestamp timeStamp) {
+    DateTime dateTime = timeStamp.toDate();
+    return DateFormat('HH:mm a').format(dateTime);
+  }
 
 
 }

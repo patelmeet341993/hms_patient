@@ -84,7 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
       iconColor: Colors.grey,
       itemList: [
         FxBottomNavigationBarItem(
-          page: VisitScreen(visitProvider: Provider.of<VisitProvider>(context)),
+          page: VisitScreen(visitProvider: Provider.of<VisitProvider>(context,listen: false)),
           activeIconData: Icons.house,
           iconData: Icons.house_outlined,
         ),
