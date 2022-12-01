@@ -9,7 +9,6 @@ class PatientProvider extends ChangeNotifier {
   StreamSubscription<QuerySnapshot<Map<String, dynamic>>>? _querySnapshot;
   VisitModel? _visitModel;
 
-
   PatientModel? getCurrentPatient() {
     if(_currentPatient != null) {
       return PatientModel.fromMap(_currentPatient!.toMap());

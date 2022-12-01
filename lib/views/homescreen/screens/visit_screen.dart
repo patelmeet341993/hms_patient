@@ -30,7 +30,7 @@ class VisitScreen extends StatefulWidget {
   _VisitScreenState createState() => _VisitScreenState();
 }
 
-class _VisitScreenState extends State<VisitScreen> with MySafeState{
+class _VisitScreenState extends State<VisitScreen> with MySafeState {
   late ThemeData themeData;
   bool isFirstTimeUser = false;
   TextEditingController searchController =  TextEditingController();
@@ -57,35 +57,9 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState{
   late VisitController visitController;
   VisitModel visitModel = VisitModel();
 
-
   Future<void> getData() async{
     await visitController.startTreatmentActivityStream();
   }
-
-
-  @override
-  void initState() {
-    super.initState();
-    visitProvider = (widget.visitProvider ?? VisitProvider());
-    visitController = VisitController(visitProvider: visitProvider);
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async{
-      await getData();
-    });
-    // VisitController(visitProvider: visitProvider).startTreatmentActivityStream();
-  }
-
-
-  // @override
-  // void didUpdateWidget(covariant VisitScreen oldWidget) {
-  //   if(oldWidget.nativeMenuModel.menuid != widget.nativeMenuModel.menuid) {
-  //     nativeMenuModel = widget.nativeMenuModel;
-  //     newHomeProvider = (widget.provider ?? NewHomeProvider());
-  //     newHomeController = NewHomeController(provider: newHomeProvider);
-  //     getData();
-  //   }
-  //   super.didUpdateWidget(oldWidget);
-  // }
-
 
   int calculateAge(DateTime birthDate) {
     DateTime currentDate = DateTime.now();
@@ -94,7 +68,8 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState{
     int month2 = birthDate.month;
     if (month2 > month1) {
       age--;
-    } else if (month1 == month2) {
+    }
+    else if (month1 == month2) {
       int day1 = currentDate.day;
       int day2 = birthDate.day;
       if (day2 > day1) {
@@ -102,6 +77,35 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState{
       }
     }
     return age;
+  }
+
+  static String hhMM(Timestamp timeStamp) {
+    DateTime dateTime = timeStamp.toDate();
+    return DateFormat('HH:mm a').format(dateTime);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    visitProvider = (widget.visitProvider ?? VisitProvider());
+    visitController = VisitController(visitProvider: visitProvider);
+    getData();
+  }
+
+  /*@override
+  void didUpdateWidget(covariant VisitScreen oldWidget) {
+    if(oldWidget.nativeMenuModel.menuid != widget.nativeMenuModel.menuid) {
+      nativeMenuModel = widget.nativeMenuModel;
+      newHomeProvider = (widget.provider ?? NewHomeProvider());
+      newHomeController = NewHomeController(provider: newHomeProvider);
+      getData();
+    }
+    super.didUpdateWidget(oldWidget);
+  }*/
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -112,7 +116,7 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState{
       child: SafeArea(
         child: GestureDetector(
            onTap: (){
-             FocusScope.of(context).requestFocus(new FocusNode());
+             FocusScope.of(context).requestFocus(FocusNode());
            },
           child: Scaffold(
             resizeToAvoidBottomInset: false,
@@ -121,7 +125,7 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState{
                 visitModel = visitProvider.visitModel ?? VisitModel();
                 return Column(
                   children: [
-                    SizedBox(height: 10,),
+                    const SizedBox(height: 10,),
                     getTopBar(isOpen: true,name: "Saraswati Clinic"),
                     Expanded(
                       child: Container(
@@ -141,7 +145,7 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState{
 
   Widget getTopBar({bool isOpen = true,required String name}) {
     return  Container(
-      padding: EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
@@ -153,16 +157,16 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState{
                 child: Row(
                     children: [
                         Flexible(child: CommonBoldText(text: name,textAlign: TextAlign.start,fontSize: 20,textOverFlow: TextOverflow.ellipsis,maxLines: 3,)),
-                      SizedBox(width: 5,),
+                      const SizedBox(width: 5,),
                       Container(
-                          padding: EdgeInsets.symmetric(horizontal: 4).copyWith(top: 1),
+                          padding: const EdgeInsets.symmetric(horizontal: 4).copyWith(top: 1),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(4),
                             border: Border.all(color: isOpen?Colors.green:Colors.grey),
                           ),
                           child: CommonBoldText(text: isOpen?'Open':"Closed", color: isOpen?Colors.green:Colors.grey,fontSize: 12,)
                         ),
-                      SizedBox(width: 5,),
+                      const SizedBox(width: 5,),
                   ],
                 ),
               )
@@ -178,7 +182,7 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState{
                   onTap:(){
                      Navigator.pushNamed(NavigationController.mainScreenNavigator.currentContext!,NotificationScreen.routeName);
                   },
-                  child: Icon(
+                  child: const Icon(
                     Icons.notifications,
                     size: 22,
                     color: Colors.grey,
@@ -189,8 +193,8 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState{
                   top: 2,
                   child: FxContainer.rounded(
                     paddingAll: 4,
-                    child: Container(),
                     color: themeData.primaryColor,
+                    child: Container(),
                   ),
                 )
               ],
@@ -209,7 +213,7 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState{
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            padding: EdgeInsets.all(2),
+            padding: const EdgeInsets.all(2),
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey.shade400,width: 6)
             ),
@@ -218,25 +222,27 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState{
               version: QrVersions.auto,
               padding: EdgeInsets.zero,
               gapless: false,
-               embeddedImageEmitsError: true,
+              embeddedImageEmitsError: true,
               errorStateBuilder: (context,obj){
                 return Container(
-                  padding: EdgeInsets.symmetric(horizontal: 25, vertical:10),
+                  padding: const EdgeInsets.symmetric(horizontal: 25, vertical:10),
                   color: Colors.white,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(FeatherIcons.alertOctagon),
-                      SizedBox(height:8),
+                      const Icon(FeatherIcons.alertOctagon),
+                      const SizedBox(height:8),
                       CommonText(text: "Some Error in Generating QR \n Please Try again",textAlign: TextAlign.center),
-                      SizedBox(height:8),
-                      CommonButton(buttonName: "Try Again",
+                      const SizedBox(height:8),
+                      CommonButton(
+                        buttonName: "Try Again",
                         onTap: (){
-                        setState(() {});
+                          setState(() {});
                         },
                         verticalPadding: 3,
                         fontWeight: FontWeight.normal,
-                        borderRadius: 2,)
+                        borderRadius: 2,
+                      )
                     ],
                   ),
                 );
@@ -248,7 +254,7 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState{
               backgroundColor: Colors.white,
             ),
           ),
-          SizedBox(height: 5,),
+          const SizedBox(height: 5,),
           CommonText(text: "( Scan Your QR Code from Receptionist )"),
         ],
       ),
@@ -259,9 +265,9 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState{
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: 10,),
+        const SizedBox(height: 10,),
         getTextField(),
-        SizedBox(height: 10,),
+        const SizedBox(height: 10,),
         Expanded(child: getMyTreatment()),
       ],
     );
@@ -277,7 +283,7 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState{
           color: Colors.grey, xMuted: true,fontSize: 15),
       floatingLabelBehavior: FloatingLabelBehavior.never,
       filled: true,
-      contentPadding: EdgeInsets.symmetric(vertical: 12),
+      contentPadding: const EdgeInsets.symmetric(vertical: 12),
       fillColor: Styles.cardColor,
       enabledBorderColor: themeData.primaryColor,
       disabledBorder: OutlineInputBorder(
@@ -309,17 +315,17 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState{
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: 10,),
+        const SizedBox(height: 10,),
         CommonBoldText(text: "Profile Overview",textAlign: TextAlign.start,fontSize: 15,color: Colors.black.withOpacity(.9) ),
-        SizedBox(height: 12,),
+        const SizedBox(height: 12,),
         getProfileInfo(),
-        SizedBox(height: 20,),
+        const SizedBox(height: 20,),
         CommonBoldText(text: "Upcoming Dose",textAlign: TextAlign.start,fontSize: 14,color: Colors.black.withOpacity(.9)),
-        SizedBox(height: 5,),
+        const SizedBox(height: 5,),
         getNextDoseDetail(),
-        SizedBox(height: 20,),
+        const SizedBox(height: 20,),
         CommonBoldText(text: "Current Treatment Activity",textAlign: TextAlign.start,fontSize: 15,color: Colors.black.withOpacity(.9)),
-        SizedBox(height: 18,),
+        const SizedBox(height: 18,),
       ],
     );
   }
@@ -327,7 +333,7 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState{
   Widget getProfileInfo() {
     PatientMetaModel patientMetaModel = visitModel.patientMetaModel ?? PatientMetaModel();
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
       decoration: BoxDecoration(
         color: themeData.primaryColor,
         borderRadius: BorderRadius.circular(6),
@@ -358,15 +364,15 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState{
                         embeddedImageEmitsError: true,
                         errorStateBuilder: (context,obj){
                           return Container(
-                            padding: EdgeInsets.symmetric(horizontal: 25, vertical:10),
+                            padding: const EdgeInsets.symmetric(horizontal: 25, vertical:10),
                             color: Colors.white,
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(FeatherIcons.alertOctagon),
-                                SizedBox(height:8),
+                                const Icon(FeatherIcons.alertOctagon),
+                                const SizedBox(height:8),
                                 CommonText(text: "Some Error in Generating Image Please Try again",textAlign: TextAlign.center),
-                                SizedBox(height:8),
+                                const SizedBox(height:8),
                                 CommonButton(buttonName: "Try Again",
                                   onTap: (){
                                      setState(() {});
@@ -387,30 +393,30 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState{
                   //  Image.asset("assets/extra/code.png",height: 80,width: 80,fit: BoxFit.cover,)
                 ),
               ),
-              SizedBox(width: 15),
+              const SizedBox(width: 15),
               Expanded(
                 flex: 2,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     CommonText(text: "${visitProvider.visitModel?.patientMetaModel?.name}",color: Colors.white,fontSize: 17),
-                    SizedBox(height: 2,),
+                    const SizedBox(height: 2,),
                     CommonText(text: "${patientMetaModel.gender}   ${calculateAge(patientMetaModel.dateOfBirth?.toDate() ?? DateTime.now())} years old",color: Colors.white,),
-                    SizedBox(height: 2,),
+                    const SizedBox(height: 2,),
                     CommonText(text: DatePresentation.ddMMMMyyyyTimeStamp(patientMetaModel.dateOfBirth?? Timestamp.now()),color: Colors.white,),
                   ],
                 ),
               ),
             ],
           ),
-          SizedBox(height:10),
+          const SizedBox(height:10),
           FxContainer(
             onTap: (){
               Navigator.pushNamed(NavigationController.mainScreenNavigator.currentContext!,TreatmentHistoryScreen.routeName);
             },
-            padding: EdgeInsets.symmetric(vertical: 12),
+            padding: const EdgeInsets.symmetric(vertical: 12),
             borderRadiusAll: 4,
-            color: Color(0xffe6e1e5).withAlpha(45),
+            color: const Color(0xffe6e1e5).withAlpha(45),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -452,7 +458,7 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState{
 
   Widget getNextDoseDetail(){
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10,vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 8),
       decoration: BoxDecoration(
         color: Colors.white,
         border: Border.all(color: themeData.primaryColor),
@@ -466,7 +472,7 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState{
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(child: CommonText(text: 'Paracetamol : 1 dose',fontSize: 14)),
-              SizedBox(width: 10,),
+              const SizedBox(width: 10,),
               CommonText(text: 'After Meal',fontSize: 14),
             ],
           ),
@@ -475,13 +481,6 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState{
       ),
     );
   }
-
-  static String hhMM(Timestamp timeStamp) {
-    DateTime dateTime = timeStamp.toDate();
-    return DateFormat('HH:mm a').format(dateTime);
-  }
-
-
 }
 
 
