@@ -3,6 +3,7 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:hms_models/hms_models.dart';
 import 'package:intl/intl.dart';
 import 'package:patient/controllers/navigation_controller.dart';
+import 'package:patient/providers/patient_provider.dart';
 import 'package:patient/providers/visit_provider.dart';
 import 'package:patient/views/common/componants/common_bold_text.dart';
 import 'package:patient/views/common/componants/common_button.dart';
@@ -32,7 +33,6 @@ class VisitScreen extends StatefulWidget {
 
 class _VisitScreenState extends State<VisitScreen> with MySafeState {
   late ThemeData themeData;
-  bool isFirstTimeUser = false;
   TextEditingController searchController =  TextEditingController();
   String userId = "123456";
 
@@ -120,17 +120,21 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState {
            },
           child: Scaffold(
             resizeToAvoidBottomInset: false,
-            body: Consumer<VisitProvider>(
-              builder: (context, VisitProvider visitProvider, _) {
+            body: Consumer2<PatientProvider, VisitProvider>(
+              builder: (context, PatientProvider patientProvider, VisitProvider visitProvider, _) {
                 visitModel = visitProvider.visitModel ?? VisitModel();
+                PatientModel? patientModel = patientProvider.getCurrentPatient();
+
                 return Column(
                   children: [
                     const SizedBox(height: 10,),
                     getTopBar(isOpen: true,name: "Saraswati Clinic"),
                     Expanded(
                       child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 20,),
-                          child: isFirstTimeUser?getForUserFirstTime():getMainPage()
+                          padding: const EdgeInsets.symmetric(horizontal: 20,),
+                          child: !(patientModel?.isProfileComplete ?? false)
+                              ? getForUserFirstTime(userId: patientModel?.id ?? "")
+                              : getMainPage(),
                       ),
                     ),
                   ],
@@ -206,7 +210,7 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState {
     );
   }
 
-  Widget getForUserFirstTime() {
+  Widget getForUserFirstTime({required String userId}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
@@ -247,10 +251,10 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState {
                   ),
                 );
               },
-              embeddedImage: AssetImage('assets/extra/viren.jpg'),
+              /*embeddedImage: const AssetImage('assets/extra/viren.jpg'),
               embeddedImageStyle: QrEmbeddedImageStyle(
-                size: Size(80, 80),
-              ),
+                size: const Size(80, 80),
+              ),*/
               backgroundColor: Colors.white,
             ),
           ),
