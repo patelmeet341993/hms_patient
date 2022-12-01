@@ -9,51 +9,48 @@ import 'navigation_controller.dart';
 
 class VisitController{
 
- late VisitProvider _visitProvider;
+  late VisitProvider _visitProvider;
 
- VisitController({VisitProvider? visitProvider}){
-  _visitProvider = (visitProvider ?? VisitProvider());
- }
+  VisitController({VisitProvider? visitProvider}){
+    _visitProvider = (visitProvider ?? VisitProvider());
+  }
 
- VisitProvider getProvider() => _visitProvider;
+  VisitProvider getProvider() => _visitProvider;
 
- Future<void> startTreatmentActivityStream() async {
-  MyPrint.printOnConsole("in visit controller");
-  try {
-   PatientProvider patientProvider = Provider.of<PatientProvider>(NavigationController.mainScreenNavigator.currentContext!, listen: false);
-   VisitProvider visitProvider = getProvider();
-   String patientId = "";
-   PatientModel? patientModel = patientProvider.getCurrentPatient();
-   if (patientModel != null) {
-    patientId = patientModel.id;
-   }
-   if (patientId.isEmpty) {
-    return;
-   }
-   MyPrint.printOnConsole("in visit controller22222");
+  Future<void> startTreatmentActivityStream() async {
+    MyPrint.printOnConsole("in visit controller");
+    try {
+      PatientProvider patientProvider = Provider.of<PatientProvider>(NavigationController.mainScreenNavigator.currentContext!, listen: false);
+      VisitProvider visitProvider = getProvider();
+      String patientId = "";
+      PatientModel? patientModel = patientProvider.getCurrentPatient();
+      if (patientModel != null) {
+        patientId = patientModel.id;
+      }
+      if (patientId.isEmpty) {
+        return;
+      }
+      MyPrint.printOnConsole("in visit controller22222");
+      VisitModel visitModel;
+      MyPrint.printOnConsole("in visit controller3333");
 
-   // List<VisitModel> myStreamActiveVisits = [];
+      final StreamSubscription<QuerySnapshot<Map<String, dynamic>>> querySnapshot = FirebaseNodes.visitsCollectionReference
+          .where('patientId', isEqualTo: patientId)
+          .where('isTreatmentActiveStream', isEqualTo: true)
+          .snapshots().listen((QuerySnapshot<Map<String, dynamic>> querySnapshot) {
+            MyPrint.printOnConsole("in visit controller44444");
 
+            List<QueryDocumentSnapshot<Map<String, dynamic>>> documents = querySnapshot.docs;
+            documents.forEach((element) {
+              visitModel = VisitModel.fromMap(ParsingHelper.parseMapMethod(element.data()));
+              visitProvider.setVisitModel(visitModel);
 
-   VisitModel visitModel;
-   MyPrint.printOnConsole("in visit controller3333");
-
-   final StreamSubscription<QuerySnapshot<Map<String, dynamic>>> querySnapshot = FirebaseNodes.visitsCollectionReference
-       .where('patientId', isEqualTo: patientId)
-       .where('isTreatmentActiveStream', isEqualTo: true)
-       .snapshots().listen((QuerySnapshot<Map<String, dynamic>> querySnapshot) {
-    MyPrint.printOnConsole("in visit controller44444");
-
-    List<QueryDocumentSnapshot<Map<String, dynamic>>> documents = querySnapshot.docs;
-    documents.forEach((element) {
-     visitModel = VisitModel.fromMap(ParsingHelper.parseMapMethod(element.data()));
-     visitProvider.setVisitModel(visitModel);
-
-     MyPrint.printOnConsole("visit model: ${visitModel.pharmaBilling?.totalAmount}");
-    });
-   },onError: (error) {
-        MyPrint.printOnConsole("error in stream subscription$error");
-   });
+              MyPrint.printOnConsole("visit model: ${visitModel.pharmaBilling?.totalAmount}");
+            });
+          },
+          onError: (error) {
+            MyPrint.printOnConsole("error in stream subscription$error");
+          });
 
    patientProvider.setStreamSubscription(querySnapshot);
   }

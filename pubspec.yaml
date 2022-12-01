@@ -37,6 +37,8 @@ dependencies:
   ########
   # Core #
   ########
+  hms_models:
+    git: https://github.com/patelmeet341993/hms_models
 
   ###########
   # Logging #
@@ -70,9 +72,6 @@ dependencies:
   uuid: ^3.0.6
   qr_flutter: ^4.0.0
   equatable: ^2.0.5
-
-  hms_models:
-    git: https://github.com/patelmeet341993/hms_models
 
 dev_dependencies:
   flutter_test:
