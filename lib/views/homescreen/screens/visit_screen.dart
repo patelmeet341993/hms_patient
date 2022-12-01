@@ -713,10 +713,10 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState {
   }
 
 
-  static String hhMM(Timestamp timeStamp) {
-    DateTime dateTime = timeStamp.toDate();
-    return DateFormat('HH:mm a').format(dateTime);
-  }
+  // static String hhMM(Timestamp timeStamp) {
+  //   DateTime dateTime = timeStamp.toDate();
+  //   return DateFormat('HH:mm a').format(dateTime);
+  // }
 
 }
 
