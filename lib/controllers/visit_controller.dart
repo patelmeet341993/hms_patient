@@ -61,9 +61,6 @@ class VisitController{
    MyPrint.printOnConsole(e);
    MyPrint.printOnConsole(s);
   }
-
-
-
   // querySnapshot.forEach((element) {
   //  element.docChanges.forEach((element) {
   //   myStreamActiveVisits.add(VisitModel.fromMap(ParsingHelper.parseMapMethod<dynamic,dynamic,String,dynamic>(element.doc.data())));
@@ -75,6 +72,15 @@ class VisitController{
   //  });
   // });
 
+ }
+ Future<void> closeSteamSubscription() async {
+  try {
+   PatientProvider patientProvider = Provider.of<PatientProvider>(NavigationController.mainScreenNavigator.currentContext!, listen: false);
+   patientProvider.closeStreamSubscription(patientProvider.querySnapshot);
+  } catch (e,s){
+   MyPrint.printOnConsole("Error in closing the stream subscription: ${e}");
+   MyPrint.printOnConsole(s);
+  }
  }
 
 }
