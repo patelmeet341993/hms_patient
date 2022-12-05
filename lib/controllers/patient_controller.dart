@@ -50,6 +50,7 @@ class PatientController {
       id: newDocumentDataModel.docId,
       createdTime: newDocumentDataModel.timestamp,
       active: false,
+      primaryMobile: mobile,
       userMobiles: [mobile],
     );
 
