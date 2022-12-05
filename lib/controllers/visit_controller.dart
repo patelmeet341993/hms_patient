@@ -52,7 +52,7 @@ class VisitController{
             MyPrint.printOnConsole("error in stream subscription$error");
           });
 
-      patientProvider.setStreamSubscription(querySnapshot);
+      patientProvider.setStreamSubscription(querySnapshot, isNotify: false);
     }
     catch (e,s) {
       MyPrint.printOnConsole(e);
