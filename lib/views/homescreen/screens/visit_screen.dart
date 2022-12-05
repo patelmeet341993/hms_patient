@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:hms_models/hms_models.dart';
-import 'package:intl/intl.dart';
 import 'package:patient/controllers/navigation_controller.dart';
 import 'package:patient/providers/patient_provider.dart';
 import 'package:patient/providers/visit_provider.dart';
@@ -23,7 +22,6 @@ import '../../../packages/flux/widgets/container/container.dart';
 import '../../../packages/flux/widgets/text_field/text_field.dart';
 import '../../about_us/screens/about_us_screen.dart';
 import '../../treatment_history/componants/showCaseTimeline.dart';
-import '../../treatment_history/componants/treatment_activity.dart';
 
 class VisitScreen extends StatefulWidget {
   final VisitProvider? visitProvider;
@@ -81,10 +79,10 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState {
     return age;
   }
 
-  static String hhMM(Timestamp timeStamp) {
+  /*static String hhMM(Timestamp timeStamp) {
     DateTime dateTime = timeStamp.toDate();
     return DateFormat('HH:mm a').format(dateTime);
-  }
+  }*/
 
   @override
   void initState() {
@@ -449,7 +447,7 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState {
   }
 
   Widget getMyTreatment() {
-    List<TreatmentActivityModel> treatMentList = visitModel.treatmentActivity;
+    // List<TreatmentActivityModel> treatMentList = visitModel.treatmentActivity;
     return ListView.builder(
       itemCount: visitModel.treatmentActivity.length + 1,
       itemBuilder: (BuildContext context, int index) {
@@ -492,7 +490,7 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState {
         );
       },
     );
-    return ListView.builder(
+    /*return ListView.builder(
       itemCount: treatMentList.length + 1,
       shrinkWrap: true,
       itemBuilder: (context,index){
@@ -531,30 +529,30 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState {
                   : "",
         );
       }
-    );
+    );*/
   }
 
-  IndicatorStyle _indicatorStyleCheckpoint(Step step) {
+  /*IndicatorStyle _indicatorStyleCheckpoint(Step step) {
     return IndicatorStyle(
       width: 46,
       height: 100,
       indicator: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: Colors.grey,
-          borderRadius: const BorderRadius.all(
+          borderRadius: BorderRadius.all(
             Radius.circular(20),
           ),
         ),
-        child: Center(
+        child: const Center(
           child: Icon(
             Icons.home,
-            color: const Color(0xFF1D1E20),
+            color: Color(0xFF1D1E20),
             size: 30,
           ),
         ),
       ),
     );
-  }
+  }*/
 
   Widget prescriptionExpansionTile(){
     return Column(
@@ -565,19 +563,19 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState {
             backgroundColor: Styles.cardColor,
 
             collapsedBackgroundColor: Styles.cardColor,
-            tilePadding: EdgeInsets.symmetric(horizontal: 10,vertical:0 ),
+            tilePadding: const EdgeInsets.symmetric(horizontal: 10,vertical:0 ),
 
-            title: Text("Prescribed"),
-            subtitle: Text("Doctor Name: ${visitModel.visitBillings.values.first.doctorName ?? ""}"),
+            title: const Text("Prescribed"),
+            subtitle: Text("Doctor Name: ${visitModel.visitBillings.values.first.doctorName}"),
 
             children: [
               getPrescriptionTable()
             ],
           ),
         ),
-        SizedBox(height: 10,),
+        const SizedBox(height: 10,),
         Container(
-          padding: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
           decoration: BoxDecoration(
             color: Styles.cardColor,
             //color: themeData.primaryColor.withOpacity(.1),
@@ -592,18 +590,18 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState {
                   RichText(
                       text: TextSpan(
                         text: visitModel.visitBillings.values.first.totalFees.toString(),
-                        style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14, decoration: TextDecoration.lineThrough,color: Colors.black),
+                        style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 14, decoration: TextDecoration.lineThrough,color: Colors.black),
                         children: [
                           TextSpan(
                             text: " ${visitModel.visitBillings.values.first.discount}",
-                            style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15,decoration: TextDecoration.none),
+                            style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 15,decoration: TextDecoration.none),
                           )
                         ]
                       ))
                 ],
               )),
               CommonButton(verticalPadding:2, buttonName: "Cash", onTap: (){}),
-              SizedBox(width: 10,),
+              const SizedBox(width: 10,),
               CommonButton(verticalPadding: 2,buttonName: "Online", onTap: (){}),
             ],
           ),
