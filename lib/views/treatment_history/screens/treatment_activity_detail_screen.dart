@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:hms_models/models/visit_model/visit_model.dart';
 import 'package:patient/views/common/componants/common_topbar.dart';
 
-import '../../../configs/styles.dart';
-import '../../../packages/flux/widgets/container/container.dart';
-import '../../common/componants/common_bold_text.dart';
 import '../componants/treatment_activity.dart';
 
 
@@ -52,6 +49,7 @@ class _TreatmentActivityDetailScreenState extends State<TreatmentActivityDetailS
                     shrinkWrap: true,
                   itemBuilder: (context,index){
                   return TreatmentActivityScreen(
+                    visitModel: VisitModel(),
                     time: timingList[index],
                     message:  messageList[index],
                     isButtonVisible: index == 2 || index == 3 ? true:false,

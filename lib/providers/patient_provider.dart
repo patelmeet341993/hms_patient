@@ -9,7 +9,6 @@ class PatientProvider extends ChangeNotifier {
   StreamSubscription<QuerySnapshot<Map<String, dynamic>>>? _querySnapshot;
   VisitModel? _visitModel;
 
-
   PatientModel? getCurrentPatient() {
     if(_currentPatient != null) {
       return PatientModel.fromMap(_currentPatient!.toMap());
@@ -66,6 +65,16 @@ class PatientProvider extends ChangeNotifier {
   void setStreamSubscription(StreamSubscription<QuerySnapshot<Map<String, dynamic>>>? querySnapshot,{bool isNotify = true}){
     if(querySnapshot != null){
       _querySnapshot = querySnapshot;
+    }
+    if(isNotify) {
+      notifyListeners();
+    }
+  }
+
+  void closeStreamSubscription(StreamSubscription<QuerySnapshot<Map<String, dynamic>>>? querySnapshot,{bool isNotify = true}){
+    if(querySnapshot != null){
+        querySnapshot.cancel();
+      _querySnapshot?.cancel();
     }
     if(isNotify) {
       notifyListeners();

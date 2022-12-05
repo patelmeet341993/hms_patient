@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:hms_models/hms_models.dart';
-import 'package:intl/intl.dart';
 import 'package:patient/controllers/navigation_controller.dart';
+import 'package:patient/providers/patient_provider.dart';
 import 'package:patient/providers/visit_provider.dart';
 import 'package:patient/views/common/componants/common_bold_text.dart';
 import 'package:patient/views/common/componants/common_button.dart';
@@ -12,6 +12,7 @@ import 'package:patient/views/common/screens/notification_screen.dart';
 import 'package:patient/views/treatment_history/screens/treatment_history_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:timeline_tile/timeline_tile.dart';
 
 import '../../../configs/styles.dart';
 import '../../../controllers/visit_controller.dart';
@@ -20,7 +21,7 @@ import '../../../packages/flux/utils/spacing.dart';
 import '../../../packages/flux/widgets/container/container.dart';
 import '../../../packages/flux/widgets/text_field/text_field.dart';
 import '../../about_us/screens/about_us_screen.dart';
-import '../../treatment_history/componants/treatment_activity.dart';
+import '../../treatment_history/componants/showCaseTimeline.dart';
 
 class VisitScreen extends StatefulWidget {
   final VisitProvider? visitProvider;
@@ -30,9 +31,8 @@ class VisitScreen extends StatefulWidget {
   _VisitScreenState createState() => _VisitScreenState();
 }
 
-class _VisitScreenState extends State<VisitScreen> with MySafeState{
+class _VisitScreenState extends State<VisitScreen> with MySafeState {
   late ThemeData themeData;
-  bool isFirstTimeUser = false;
   TextEditingController searchController =  TextEditingController();
   String userId = "123456";
 
@@ -57,35 +57,9 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState{
   late VisitController visitController;
   VisitModel visitModel = VisitModel();
 
-
   Future<void> getData() async{
     await visitController.startTreatmentActivityStream();
   }
-
-
-  @override
-  void initState() {
-    super.initState();
-    visitProvider = (widget.visitProvider ?? VisitProvider());
-    visitController = VisitController(visitProvider: visitProvider);
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async{
-      await getData();
-    });
-    // VisitController(visitProvider: visitProvider).startTreatmentActivityStream();
-  }
-
-
-  // @override
-  // void didUpdateWidget(covariant VisitScreen oldWidget) {
-  //   if(oldWidget.nativeMenuModel.menuid != widget.nativeMenuModel.menuid) {
-  //     nativeMenuModel = widget.nativeMenuModel;
-  //     newHomeProvider = (widget.provider ?? NewHomeProvider());
-  //     newHomeController = NewHomeController(provider: newHomeProvider);
-  //     getData();
-  //   }
-  //   super.didUpdateWidget(oldWidget);
-  // }
-
 
   int calculateAge(DateTime birthDate) {
     DateTime currentDate = DateTime.now();
@@ -94,7 +68,8 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState{
     int month2 = birthDate.month;
     if (month2 > month1) {
       age--;
-    } else if (month1 == month2) {
+    }
+    else if (month1 == month2) {
       int day1 = currentDate.day;
       int day2 = birthDate.day;
       if (day2 > day1) {
@@ -102,6 +77,35 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState{
       }
     }
     return age;
+  }
+
+  /*static String hhMM(Timestamp timeStamp) {
+    DateTime dateTime = timeStamp.toDate();
+    return DateFormat('HH:mm a').format(dateTime);
+  }*/
+
+  @override
+  void initState() {
+    super.initState();
+    visitProvider = (widget.visitProvider ?? VisitProvider());
+    visitController = VisitController(visitProvider: visitProvider);
+    getData();
+  }
+
+  /*@override
+  void didUpdateWidget(covariant VisitScreen oldWidget) {
+    if(oldWidget.nativeMenuModel.menuid != widget.nativeMenuModel.menuid) {
+      nativeMenuModel = widget.nativeMenuModel;
+      newHomeProvider = (widget.provider ?? NewHomeProvider());
+      newHomeController = NewHomeController(provider: newHomeProvider);
+      getData();
+    }
+    super.didUpdateWidget(oldWidget);
+  }*/
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -112,21 +116,26 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState{
       child: SafeArea(
         child: GestureDetector(
            onTap: (){
-             FocusScope.of(context).requestFocus(new FocusNode());
+             FocusScope.of(context).requestFocus(FocusNode());
            },
           child: Scaffold(
             resizeToAvoidBottomInset: false,
-            body: Consumer<VisitProvider>(
-              builder: (context, VisitProvider visitProvider, _) {
+            body: Consumer2<PatientProvider, VisitProvider>(
+              builder: (context, PatientProvider patientProvider, VisitProvider visitProvider, _) {
                 visitModel = visitProvider.visitModel ?? VisitModel();
+                PatientModel? patientModel = patientProvider.getCurrentPatient();
+                userId = patientModel?.id ?? "";
+
                 return Column(
                   children: [
-                    SizedBox(height: 10,),
+                    const SizedBox(height: 10,),
                     getTopBar(isOpen: true,name: "Saraswati Clinic"),
                     Expanded(
                       child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 20,),
-                          child: isFirstTimeUser?getForUserFirstTime():getMainPage()
+                          padding: const EdgeInsets.symmetric(horizontal: 20,),
+                          child: !(patientModel?.isProfileComplete ?? false)
+                              ? getForUserFirstTime()
+                              : getMainPage(),
                       ),
                     ),
                   ],
@@ -141,7 +150,7 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState{
 
   Widget getTopBar({bool isOpen = true,required String name}) {
     return  Container(
-      padding: EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
@@ -153,16 +162,16 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState{
                 child: Row(
                     children: [
                         Flexible(child: CommonBoldText(text: name,textAlign: TextAlign.start,fontSize: 20,textOverFlow: TextOverflow.ellipsis,maxLines: 3,)),
-                      SizedBox(width: 5,),
+                      const SizedBox(width: 5,),
                       Container(
-                          padding: EdgeInsets.symmetric(horizontal: 4).copyWith(top: 1),
+                          padding: const EdgeInsets.symmetric(horizontal: 4).copyWith(top: 1),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(4),
                             border: Border.all(color: isOpen?Colors.green:Colors.grey),
                           ),
                           child: CommonBoldText(text: isOpen?'Open':"Closed", color: isOpen?Colors.green:Colors.grey,fontSize: 12,)
                         ),
-                      SizedBox(width: 5,),
+                      const SizedBox(width: 5,),
                   ],
                 ),
               )
@@ -178,7 +187,7 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState{
                   onTap:(){
                      Navigator.pushNamed(NavigationController.mainScreenNavigator.currentContext!,NotificationScreen.routeName);
                   },
-                  child: Icon(
+                  child: const Icon(
                     Icons.notifications,
                     size: 22,
                     color: Colors.grey,
@@ -189,14 +198,13 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState{
                   top: 2,
                   child: FxContainer.rounded(
                     paddingAll: 4,
-                    child: Container(),
                     color: themeData.primaryColor,
+                    child: Container(),
                   ),
                 )
               ],
             ),
           ),
-
         ],
       ),
     );
@@ -209,46 +217,51 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState{
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            padding: EdgeInsets.all(2),
+            padding: const EdgeInsets.all(2),
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey.shade400,width: 6)
             ),
             child: QrImage(
-              data: userId,
+              data: QRCodeDataModel(
+                id: userId,
+                type: QRCodeTypes.patient,
+              ).toEncodedString(),
               version: QrVersions.auto,
               padding: EdgeInsets.zero,
               gapless: false,
-               embeddedImageEmitsError: true,
+              embeddedImageEmitsError: true,
               errorStateBuilder: (context,obj){
                 return Container(
-                  padding: EdgeInsets.symmetric(horizontal: 25, vertical:10),
+                  padding: const EdgeInsets.symmetric(horizontal: 25, vertical:10),
                   color: Colors.white,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(FeatherIcons.alertOctagon),
-                      SizedBox(height:8),
+                      const Icon(FeatherIcons.alertOctagon),
+                      const SizedBox(height:8),
                       CommonText(text: "Some Error in Generating QR \n Please Try again",textAlign: TextAlign.center),
-                      SizedBox(height:8),
-                      CommonButton(buttonName: "Try Again",
+                      const SizedBox(height:8),
+                      CommonButton(
+                        buttonName: "Try Again",
                         onTap: (){
-                        setState(() {});
+                          setState(() {});
                         },
                         verticalPadding: 3,
                         fontWeight: FontWeight.normal,
-                        borderRadius: 2,)
+                        borderRadius: 2,
+                      )
                     ],
                   ),
                 );
               },
-              embeddedImage: AssetImage('assets/extra/viren.jpg'),
+              /*embeddedImage: const AssetImage('assets/extra/viren.jpg'),
               embeddedImageStyle: QrEmbeddedImageStyle(
-                size: Size(80, 80),
-              ),
+                size: const Size(80, 80),
+              ),*/
               backgroundColor: Colors.white,
             ),
           ),
-          SizedBox(height: 5,),
+          const SizedBox(height: 5,),
           CommonText(text: "( Scan Your QR Code from Receptionist )"),
         ],
       ),
@@ -259,9 +272,9 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState{
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: 10,),
+        const SizedBox(height: 10,),
         getTextField(),
-        SizedBox(height: 10,),
+        const SizedBox(height: 10,),
         Expanded(child: getMyTreatment()),
       ],
     );
@@ -277,7 +290,7 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState{
           color: Colors.grey, xMuted: true,fontSize: 15),
       floatingLabelBehavior: FloatingLabelBehavior.never,
       filled: true,
-      contentPadding: EdgeInsets.symmetric(vertical: 12),
+      contentPadding: const EdgeInsets.symmetric(vertical: 12),
       fillColor: Styles.cardColor,
       enabledBorderColor: themeData.primaryColor,
       disabledBorder: OutlineInputBorder(
@@ -309,17 +322,17 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState{
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: 10,),
+        const SizedBox(height: 10,),
         CommonBoldText(text: "Profile Overview",textAlign: TextAlign.start,fontSize: 15,color: Colors.black.withOpacity(.9) ),
-        SizedBox(height: 12,),
+        const SizedBox(height: 12,),
         getProfileInfo(),
-        SizedBox(height: 20,),
+        const SizedBox(height: 20,),
         CommonBoldText(text: "Upcoming Dose",textAlign: TextAlign.start,fontSize: 14,color: Colors.black.withOpacity(.9)),
-        SizedBox(height: 5,),
+        const SizedBox(height: 5,),
         getNextDoseDetail(),
-        SizedBox(height: 20,),
+        const SizedBox(height: 20,),
         CommonBoldText(text: "Current Treatment Activity",textAlign: TextAlign.start,fontSize: 15,color: Colors.black.withOpacity(.9)),
-        SizedBox(height: 18,),
+        const SizedBox(height: 18,),
       ],
     );
   }
@@ -327,7 +340,7 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState{
   Widget getProfileInfo() {
     PatientMetaModel patientMetaModel = visitModel.patientMetaModel ?? PatientMetaModel();
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
       decoration: BoxDecoration(
         color: themeData.primaryColor,
         borderRadius: BorderRadius.circular(6),
@@ -349,7 +362,10 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState{
                           border: Border.all(color: Colors.white,width: 2)
                       ),
                       child: QrImage(
-                        data: userId,
+                        data: QRCodeDataModel(
+                          id: userId,
+                          type: QRCodeTypes.patient,
+                        ).toEncodedString(),
                         version: QrVersions.auto,
                         padding: EdgeInsets.zero,
                         gapless: false,
@@ -358,15 +374,15 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState{
                         embeddedImageEmitsError: true,
                         errorStateBuilder: (context,obj){
                           return Container(
-                            padding: EdgeInsets.symmetric(horizontal: 25, vertical:10),
+                            padding: const EdgeInsets.symmetric(horizontal: 25, vertical:10),
                             color: Colors.white,
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(FeatherIcons.alertOctagon),
-                                SizedBox(height:8),
+                                const Icon(FeatherIcons.alertOctagon),
+                                const SizedBox(height:8),
                                 CommonText(text: "Some Error in Generating Image Please Try again",textAlign: TextAlign.center),
-                                SizedBox(height:8),
+                                const SizedBox(height:8),
                                 CommonButton(buttonName: "Try Again",
                                   onTap: (){
                                      setState(() {});
@@ -387,30 +403,30 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState{
                   //  Image.asset("assets/extra/code.png",height: 80,width: 80,fit: BoxFit.cover,)
                 ),
               ),
-              SizedBox(width: 15),
+              const SizedBox(width: 15),
               Expanded(
                 flex: 2,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     CommonText(text: "${visitProvider.visitModel?.patientMetaModel?.name}",color: Colors.white,fontSize: 17),
-                    SizedBox(height: 2,),
+                    const SizedBox(height: 2,),
                     CommonText(text: "${patientMetaModel.gender}   ${calculateAge(patientMetaModel.dateOfBirth?.toDate() ?? DateTime.now())} years old",color: Colors.white,),
-                    SizedBox(height: 2,),
+                    const SizedBox(height: 2,),
                     CommonText(text: DatePresentation.ddMMMMyyyyTimeStamp(patientMetaModel.dateOfBirth?? Timestamp.now()),color: Colors.white,),
                   ],
                 ),
               ),
             ],
           ),
-          SizedBox(height:10),
+          const SizedBox(height:10),
           FxContainer(
             onTap: (){
               Navigator.pushNamed(NavigationController.mainScreenNavigator.currentContext!,TreatmentHistoryScreen.routeName);
             },
-            padding: EdgeInsets.symmetric(vertical: 12),
+            padding: const EdgeInsets.symmetric(vertical: 12),
             borderRadiusAll: 4,
-            color: Color(0xffe6e1e5).withAlpha(45),
+            color: const Color(0xffe6e1e5).withAlpha(45),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -431,8 +447,50 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState{
   }
 
   Widget getMyTreatment() {
-    List<TreatmentActivityModel> treatMentList = visitModel.treatmentActivity;
+    // List<TreatmentActivityModel> treatMentList = visitModel.treatmentActivity;
     return ListView.builder(
+      itemCount: visitModel.treatmentActivity.length + 1,
+      itemBuilder: (BuildContext context, int index) {
+        if(index == 0){
+          return getProfileInfoBody();
+        }
+        index--;
+        final example = visitModel.treatmentActivity[index];
+
+        return TimelineTile(
+          alignment: TimelineAlign.manual,
+          lineXY: 0.1,
+          isFirst: index == 0,
+          isLast: index == visitModel.treatmentActivity.length - 1,
+          // afterLineStyle: LineStyle(thickness: 1),
+          indicatorStyle: IndicatorStyle(
+            width: 40,
+            height: 40,
+            indicator: IndicatorExample(number: '${index + 1}'),
+
+            drawGap: true,
+            // indicatorXY: 0.1
+
+          ),
+          beforeLineStyle: LineStyle(
+            color: Colors.grey.withOpacity(0.2),
+          ),
+          endChild: GestureDetector(
+            child: RowExample(treatmentActivityModel: example,),
+            onTap: () {
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute<ShowcaseTimeline>(
+              //     builder: (_) =>
+              //         ShowcaseTimeline(example: example),
+              //   ),
+              // );
+            },
+          ),
+        );
+      },
+    );
+    /*return ListView.builder(
       itemCount: treatMentList.length + 1,
       shrinkWrap: true,
       itemBuilder: (context,index){
@@ -440,19 +498,157 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState{
           return getProfileInfoBody();
         }
         index--;
+        // if(treatMentList[index].treatmentActivityStatus == TreatmentActivityStatus.prescribed){
+        //   return prescribtionExpansionTile();
+        // }
+        return TimelineTile(
+          alignment: TimelineAlign.start,
+          isFirst: index == 0,
+          isLast: index == treatMentList.length - 1,
+          // lineXY: 0.9,
+          endChild: Container(
+            child: Text("hello"),
+          ),
+        );
         return TreatmentActivityScreen(
+          visitModel: visitModel,
+          prescribeWidget: prescriptionExpansionTile(),
           time: hhMM(treatMentList[index].createdTime ?? Timestamp.now()),
           message:  treatMentList[index].treatmentActivityStatus ,
+          buttonOnTap: () async {
+            if( treatMentList[index].treatmentActivityStatus == TreatmentActivityStatus.completed){
+              await visitController.closeSteamSubscription();
+              MyPrint.printOnConsole("in downlaod invoice");
+            }
+          },
           isButtonVisible: index == 2 || index == 3 ? true:false,
-          buttonName: index == 2 ? "Download Invoice" : index == 3 ? "Pay Now" : "",
+          buttonName: treatMentList[index].treatmentActivityStatus == TreatmentActivityStatus.billPay
+              ? "Pay Now"
+              : treatMentList[index].treatmentActivityStatus == TreatmentActivityStatus.completed
+                  ? "Download Invoice"
+                  : "",
         );
       }
+    );*/
+  }
+
+  /*IndicatorStyle _indicatorStyleCheckpoint(Step step) {
+    return IndicatorStyle(
+      width: 46,
+      height: 100,
+      indicator: Container(
+        decoration: const BoxDecoration(
+          color: Colors.grey,
+          borderRadius: BorderRadius.all(
+            Radius.circular(20),
+          ),
+        ),
+        child: const Center(
+          child: Icon(
+            Icons.home,
+            color: Color(0xFF1D1E20),
+            size: 30,
+          ),
+        ),
+      ),
+    );
+  }*/
+
+  Widget prescriptionExpansionTile(){
+    return Column(
+      children: [
+        Theme(
+          data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+          child: ExpansionTile(
+            backgroundColor: Styles.cardColor,
+
+            collapsedBackgroundColor: Styles.cardColor,
+            tilePadding: const EdgeInsets.symmetric(horizontal: 10,vertical:0 ),
+
+            title: const Text("Prescribed"),
+            subtitle: Text("Doctor Name: ${visitModel.visitBillings.values.first.doctorName}"),
+
+            children: [
+              getPrescriptionTable()
+            ],
+          ),
+        ),
+        const SizedBox(height: 10,),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+          decoration: BoxDecoration(
+            color: Styles.cardColor,
+            //color: themeData.primaryColor.withOpacity(.1),
+            borderRadius: BorderRadius.circular(5),
+          ),
+          child: Row(
+            children: [
+              Expanded(child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Doctor consultancy fee", style: Theme.of(context).textTheme.bodySmall,),
+                  RichText(
+                      text: TextSpan(
+                        text: visitModel.visitBillings.values.first.totalFees.toString(),
+                        style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 14, decoration: TextDecoration.lineThrough,color: Colors.black),
+                        children: [
+                          TextSpan(
+                            text: " ${visitModel.visitBillings.values.first.discount}",
+                            style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 15,decoration: TextDecoration.none),
+                          )
+                        ]
+                      ))
+                ],
+              )),
+              CommonButton(verticalPadding:2, buttonName: "Cash", onTap: (){}),
+              const SizedBox(width: 10,),
+              CommonButton(verticalPadding: 2,buttonName: "Online", onTap: (){}),
+            ],
+          ),
+
+        ),
+      ],
+    );
+  }
+
+  Widget getPrescriptionTable(){
+
+    // MyPrint.printOnConsole("Dasshboard screen ${visitProvider.getPharmaBillingModel!.items}");
+
+    return DataTable(
+        headingRowHeight: 30,
+        headingRowColor: MaterialStateProperty.resolveWith(
+              (states) => themeData.primaryColor.withOpacity(0.3),),
+        columns: [
+          DataColumn(label:getColumnItem("Medicine")),
+          DataColumn(label:getColumnItem("Dose")),
+          // DataColumn(label:getColumnItem("Time")),
+          DataColumn(label:getColumnItem("Dose count")),
+          // DataColumn(label:getColumnItem("Instruction")),
+          // DataColumn(label:getColumnItem("Mrp")),
+          // DataColumn(label:getColumnItem("Total amount")),
+          // DataColumn(label:Center(child:Text("Quantity",style: themeData.textTheme.bodyText1,))),
+          // DataColumn(label:Center(child:Text("Instruction",style: themeData.textTheme.bodyText1,))),
+          // DataColumn(label:Center(child:Text("Amount",style: themeData.textTheme.bodyText1,))),
+          // DataColumn(label:Center(child:Text("Total amount",style: themeData.textTheme.bodyText1,))),
+        ],
+        rows: List.generate(visitModel.diagnosis.length, (index) {
+          PrescriptionModel prescriptionModel = visitModel.diagnosis[index].prescription[index];
+          // amountTextEditingControllers.add(TextEditingController());
+          return getDataRow(prescriptionModel: prescriptionModel,index: index);
+        })
+
+
+      // (visitProvider.getPharmaBillingModel ?? PharmaBillingModel()).items.map((e) {
+      //   amountTextEditingControllers.add(TextEditingController());
+      //   return getDataRow(name: e.medicineName,description: "3 nos", quantity: 3, time: "Afternoon,Evening", instruction: "take only when have fever",totalAmount: 26.4,controller: mobileControlller,amountController: amountTextEditingControllers);
+      // }).toList()
     );
   }
 
   Widget getNextDoseDetail(){
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10,vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 8),
       decoration: BoxDecoration(
         color: Colors.white,
         border: Border.all(color: themeData.primaryColor),
@@ -466,7 +662,7 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState{
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(child: CommonText(text: 'Paracetamol : 1 dose',fontSize: 14)),
-              SizedBox(width: 10,),
+              const SizedBox(width: 10,),
               CommonText(text: 'After Meal',fontSize: 14),
             ],
           ),
@@ -476,11 +672,56 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState{
     );
   }
 
-  static String hhMM(Timestamp timeStamp) {
-    DateTime dateTime = timeStamp.toDate();
-    return DateFormat('HH:mm a').format(dateTime);
+
+  DataRow getDataRow({ required PrescriptionModel prescriptionModel,int index = 0}){
+    // controller.text = quantity.toString();
+    return DataRow(
+        cells: [
+          getDataCell(prescriptionModel.medicineName,),
+          getDataCell(prescriptionModel.doses[index].dose,),
+          // getDataCell(pharmaBillingItemModel.dosePerUnit),
+          getDataCell(prescriptionModel.doses[index].doseCount.toString()),
+          // getDataCell(getEditableContent()),
+          // getDataCell(prescriptionModel.dosePerUnit,),
+          // getDataCell(prescriptionModel.price.toString()),
+          // getEditableContent(amountController,(String? val){
+          //   pharmaBillingItemModel.finalAmount = calculateTotalAmount(quantityController.text.isEmpty ? "0":quantityController.text,amountController.text.isEmpty?"0":amountController.text);
+          //   pharmaBillingItemModel.price = ParsingHelper.parseDoubleMethod(amountController.text.trim());
+          //   pharmaBillingItemModel.discount = individualDiscount(pharmaBillingItemModel.finalAmount);
+          //   setState(() {});
+          //   getTotalAmount();
+          // }),
+          // getDataCell(prescriptionModel.finalAmount.toString()),
+        ]
+    );
   }
 
+  Widget getColumnItem(String text){
+    return Expanded(child:Center(child: Text(text,style: themeData.textTheme.bodySmall,)));
+  }
+
+  DataCell getDataCell(String text){
+    return  DataCell(Center(
+      child: Text(text,
+        style: themeData.textTheme.bodySmall,
+        overflow: TextOverflow.visible,
+        softWrap: true,),
+    ),);
+  }
+
+  DataCell getEditableContent(String text){
+    return DataCell(
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(text),
+    ));
+  }
+
+
+  // static String hhMM(Timestamp timeStamp) {
+  //   DateTime dateTime = timeStamp.toDate();
+  //   return DateFormat('HH:mm a').format(dateTime);
+  // }
 
 }
 
