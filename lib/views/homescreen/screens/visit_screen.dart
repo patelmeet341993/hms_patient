@@ -124,6 +124,7 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState {
               builder: (context, PatientProvider patientProvider, VisitProvider visitProvider, _) {
                 visitModel = visitProvider.visitModel ?? VisitModel();
                 PatientModel? patientModel = patientProvider.getCurrentPatient();
+                userId = patientModel?.id ?? "";
 
                 return Column(
                   children: [
@@ -133,7 +134,7 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState {
                       child: Container(
                           padding: const EdgeInsets.symmetric(horizontal: 20,),
                           child: !(patientModel?.isProfileComplete ?? false)
-                              ? getForUserFirstTime(userId: patientModel?.id ?? "")
+                              ? getForUserFirstTime()
                               : getMainPage(),
                       ),
                     ),
@@ -210,7 +211,7 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState {
     );
   }
 
-  Widget getForUserFirstTime({required String userId}) {
+  Widget getForUserFirstTime() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
@@ -222,7 +223,10 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState {
               border: Border.all(color: Colors.grey.shade400,width: 6)
             ),
             child: QrImage(
-              data: userId,
+              data: QRCodeDataModel(
+                id: userId,
+                type: QRCodeTypes.patient,
+              ).toEncodedString(),
               version: QrVersions.auto,
               padding: EdgeInsets.zero,
               gapless: false,
@@ -359,7 +363,10 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState {
                           border: Border.all(color: Colors.white,width: 2)
                       ),
                       child: QrImage(
-                        data: userId,
+                        data: QRCodeDataModel(
+                          id: userId,
+                          type: QRCodeTypes.patient,
+                        ).toEncodedString(),
                         version: QrVersions.auto,
                         padding: EdgeInsets.zero,
                         gapless: false,
