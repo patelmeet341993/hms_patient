@@ -96,5 +96,4 @@ class PatientController {
 
     return patients;
   }
-
 }

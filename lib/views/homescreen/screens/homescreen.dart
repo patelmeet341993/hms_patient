@@ -39,7 +39,6 @@ class _HomeScreenState extends State<HomeScreen> {
     // futureGetPatientsData = PatientController().getPatientsDataForMainPage(isRefresh: false, isFromCache: true);
 
     super.initState();
-
   }
 
   @override
