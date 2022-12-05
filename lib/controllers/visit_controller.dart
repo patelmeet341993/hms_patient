@@ -70,6 +70,7 @@ class VisitController{
   // });
 
   }
+
   Future<void> closeSteamSubscription() async {
     try {
       PatientProvider patientProvider = Provider.of<PatientProvider>(NavigationController.mainScreenNavigator.currentContext!, listen: false);
