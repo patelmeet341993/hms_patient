@@ -71,6 +71,16 @@ class PatientProvider extends ChangeNotifier {
     }
   }
 
+  void closeStreamSubscription(StreamSubscription<QuerySnapshot<Map<String, dynamic>>>? querySnapshot,{bool isNotify = true}){
+    if(querySnapshot != null){
+        querySnapshot.cancel();
+      _querySnapshot?.cancel();
+    }
+    if(isNotify) {
+      notifyListeners();
+    }
+  }
+
   void setVisitModel(VisitModel? visitModel , {bool isNotify = true}){
     if(visitModel != null){
       _visitModel = visitModel;

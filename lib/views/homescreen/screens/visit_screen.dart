@@ -13,6 +13,7 @@ import 'package:patient/views/common/screens/notification_screen.dart';
 import 'package:patient/views/treatment_history/screens/treatment_history_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:timeline_tile/timeline_tile.dart';
 
 import '../../../configs/styles.dart';
 import '../../../controllers/visit_controller.dart';
@@ -21,6 +22,7 @@ import '../../../packages/flux/utils/spacing.dart';
 import '../../../packages/flux/widgets/container/container.dart';
 import '../../../packages/flux/widgets/text_field/text_field.dart';
 import '../../about_us/screens/about_us_screen.dart';
+import '../../treatment_history/componants/showCaseTimeline.dart';
 import '../../treatment_history/componants/treatment_activity.dart';
 
 class VisitScreen extends StatefulWidget {
@@ -205,7 +207,6 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState {
               ],
             ),
           ),
-
         ],
       ),
     );
@@ -450,6 +451,48 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState {
   Widget getMyTreatment() {
     List<TreatmentActivityModel> treatMentList = visitModel.treatmentActivity;
     return ListView.builder(
+      itemCount: visitModel.treatmentActivity.length + 1,
+      itemBuilder: (BuildContext context, int index) {
+        if(index == 0){
+          return getProfileInfoBody();
+        }
+        index--;
+        final example = visitModel.treatmentActivity[index];
+
+        return TimelineTile(
+          alignment: TimelineAlign.manual,
+          lineXY: 0.1,
+          isFirst: index == 0,
+          isLast: index == visitModel.treatmentActivity.length - 1,
+          // afterLineStyle: LineStyle(thickness: 1),
+          indicatorStyle: IndicatorStyle(
+            width: 40,
+            height: 40,
+            indicator: IndicatorExample(number: '${index + 1}'),
+
+            drawGap: true,
+            // indicatorXY: 0.1
+
+          ),
+          beforeLineStyle: LineStyle(
+            color: Colors.grey.withOpacity(0.2),
+          ),
+          endChild: GestureDetector(
+            child: RowExample(treatmentActivityModel: example,),
+            onTap: () {
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute<ShowcaseTimeline>(
+              //     builder: (_) =>
+              //         ShowcaseTimeline(example: example),
+              //   ),
+              // );
+            },
+          ),
+        );
+      },
+    );
+    return ListView.builder(
       itemCount: treatMentList.length + 1,
       shrinkWrap: true,
       itemBuilder: (context,index){
@@ -457,13 +500,151 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState {
           return getProfileInfoBody();
         }
         index--;
+        // if(treatMentList[index].treatmentActivityStatus == TreatmentActivityStatus.prescribed){
+        //   return prescribtionExpansionTile();
+        // }
+        return TimelineTile(
+          alignment: TimelineAlign.start,
+          isFirst: index == 0,
+          isLast: index == treatMentList.length - 1,
+          // lineXY: 0.9,
+          endChild: Container(
+            child: Text("hello"),
+          ),
+        );
         return TreatmentActivityScreen(
+          visitModel: visitModel,
+          prescribeWidget: prescriptionExpansionTile(),
           time: hhMM(treatMentList[index].createdTime ?? Timestamp.now()),
           message:  treatMentList[index].treatmentActivityStatus ,
+          buttonOnTap: () async {
+            if( treatMentList[index].treatmentActivityStatus == TreatmentActivityStatus.completed){
+              await visitController.closeSteamSubscription();
+              MyPrint.printOnConsole("in downlaod invoice");
+            }
+          },
           isButtonVisible: index == 2 || index == 3 ? true:false,
-          buttonName: index == 2 ? "Download Invoice" : index == 3 ? "Pay Now" : "",
+          buttonName: treatMentList[index].treatmentActivityStatus == TreatmentActivityStatus.billPay
+              ? "Pay Now"
+              : treatMentList[index].treatmentActivityStatus == TreatmentActivityStatus.completed
+                  ? "Download Invoice"
+                  : "",
         );
       }
+    );
+  }
+
+  IndicatorStyle _indicatorStyleCheckpoint(Step step) {
+    return IndicatorStyle(
+      width: 46,
+      height: 100,
+      indicator: Container(
+        decoration: BoxDecoration(
+          color: Colors.grey,
+          borderRadius: const BorderRadius.all(
+            Radius.circular(20),
+          ),
+        ),
+        child: Center(
+          child: Icon(
+            Icons.home,
+            color: const Color(0xFF1D1E20),
+            size: 30,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget prescriptionExpansionTile(){
+    return Column(
+      children: [
+        Theme(
+          data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+          child: ExpansionTile(
+            backgroundColor: Styles.cardColor,
+
+            collapsedBackgroundColor: Styles.cardColor,
+            tilePadding: EdgeInsets.symmetric(horizontal: 10,vertical:0 ),
+
+            title: Text("Prescribed"),
+            subtitle: Text("Doctor Name: ${visitModel.visitBillings.values.first.doctorName ?? ""}"),
+
+            children: [
+              getPrescriptionTable()
+            ],
+          ),
+        ),
+        SizedBox(height: 10,),
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+          decoration: BoxDecoration(
+            color: Styles.cardColor,
+            //color: themeData.primaryColor.withOpacity(.1),
+            borderRadius: BorderRadius.circular(5),
+          ),
+          child: Row(
+            children: [
+              Expanded(child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Doctor consultancy fee", style: Theme.of(context).textTheme.bodySmall,),
+                  RichText(
+                      text: TextSpan(
+                        text: visitModel.visitBillings.values.first.totalFees.toString(),
+                        style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14, decoration: TextDecoration.lineThrough,color: Colors.black),
+                        children: [
+                          TextSpan(
+                            text: " ${visitModel.visitBillings.values.first.discount}",
+                            style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15,decoration: TextDecoration.none),
+                          )
+                        ]
+                      ))
+                ],
+              )),
+              CommonButton(verticalPadding:2, buttonName: "Cash", onTap: (){}),
+              SizedBox(width: 10,),
+              CommonButton(verticalPadding: 2,buttonName: "Online", onTap: (){}),
+            ],
+          ),
+
+        ),
+      ],
+    );
+  }
+
+  Widget getPrescriptionTable(){
+
+    // MyPrint.printOnConsole("Dasshboard screen ${visitProvider.getPharmaBillingModel!.items}");
+
+    return DataTable(
+        headingRowHeight: 30,
+        headingRowColor: MaterialStateProperty.resolveWith(
+              (states) => themeData.primaryColor.withOpacity(0.3),),
+        columns: [
+          DataColumn(label:getColumnItem("Medicine")),
+          DataColumn(label:getColumnItem("Dose")),
+          // DataColumn(label:getColumnItem("Time")),
+          DataColumn(label:getColumnItem("Dose count")),
+          // DataColumn(label:getColumnItem("Instruction")),
+          // DataColumn(label:getColumnItem("Mrp")),
+          // DataColumn(label:getColumnItem("Total amount")),
+          // DataColumn(label:Center(child:Text("Quantity",style: themeData.textTheme.bodyText1,))),
+          // DataColumn(label:Center(child:Text("Instruction",style: themeData.textTheme.bodyText1,))),
+          // DataColumn(label:Center(child:Text("Amount",style: themeData.textTheme.bodyText1,))),
+          // DataColumn(label:Center(child:Text("Total amount",style: themeData.textTheme.bodyText1,))),
+        ],
+        rows: List.generate(visitModel.diagnosis.length, (index) {
+          PrescriptionModel prescriptionModel = visitModel.diagnosis[index].prescription[index];
+          // amountTextEditingControllers.add(TextEditingController());
+          return getDataRow(prescriptionModel: prescriptionModel,index: index);
+        })
+
+
+      // (visitProvider.getPharmaBillingModel ?? PharmaBillingModel()).items.map((e) {
+      //   amountTextEditingControllers.add(TextEditingController());
+      //   return getDataRow(name: e.medicineName,description: "3 nos", quantity: 3, time: "Afternoon,Evening", instruction: "take only when have fever",totalAmount: 26.4,controller: mobileControlller,amountController: amountTextEditingControllers);
+      // }).toList()
     );
   }
 
@@ -492,6 +673,58 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState {
       ),
     );
   }
+
+
+  DataRow getDataRow({ required PrescriptionModel prescriptionModel,int index = 0}){
+    // controller.text = quantity.toString();
+    return DataRow(
+        cells: [
+          getDataCell(prescriptionModel.medicineName,),
+          getDataCell(prescriptionModel.doses[index].dose,),
+          // getDataCell(pharmaBillingItemModel.dosePerUnit),
+          getDataCell(prescriptionModel.doses[index].doseCount.toString()),
+          // getDataCell(getEditableContent()),
+          // getDataCell(prescriptionModel.dosePerUnit,),
+          // getDataCell(prescriptionModel.price.toString()),
+          // getEditableContent(amountController,(String? val){
+          //   pharmaBillingItemModel.finalAmount = calculateTotalAmount(quantityController.text.isEmpty ? "0":quantityController.text,amountController.text.isEmpty?"0":amountController.text);
+          //   pharmaBillingItemModel.price = ParsingHelper.parseDoubleMethod(amountController.text.trim());
+          //   pharmaBillingItemModel.discount = individualDiscount(pharmaBillingItemModel.finalAmount);
+          //   setState(() {});
+          //   getTotalAmount();
+          // }),
+          // getDataCell(prescriptionModel.finalAmount.toString()),
+        ]
+    );
+  }
+
+  Widget getColumnItem(String text){
+    return Expanded(child:Center(child: Text(text,style: themeData.textTheme.bodySmall,)));
+  }
+
+  DataCell getDataCell(String text){
+    return  DataCell(Center(
+      child: Text(text,
+        style: themeData.textTheme.bodySmall,
+        overflow: TextOverflow.visible,
+        softWrap: true,),
+    ),);
+  }
+
+  DataCell getEditableContent(String text){
+    return DataCell(
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(text),
+    ));
+  }
+
+
+  // static String hhMM(Timestamp timeStamp) {
+  //   DateTime dateTime = timeStamp.toDate();
+  //   return DateFormat('HH:mm a').format(dateTime);
+  // }
+
 }
 
 
