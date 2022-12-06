@@ -60,8 +60,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   FxSpacing.height(15),
                   //CommonText(text: "${currentPatient?.id ?? ""}",fontSize: 22,fontWeight: FontWeight.w600,textAlign: TextAlign.center),
-                  currentPatient!.name.isNotEmpty ? FxSpacing.height(4) : const SizedBox.shrink(),
-                  currentPatient.name.isNotEmpty ? CommonText(text: currentPatient.name,fontSize: 22,fontWeight: FontWeight.w600,textAlign: TextAlign.center):const SizedBox.shrink(),
+                  (currentPatient?.name).checkNotEmpty ? FxSpacing.height(4) : const SizedBox.shrink(),
+                  (currentPatient?.name).checkNotEmpty ? CommonText(text: currentPatient!.name,fontSize: 22,fontWeight: FontWeight.w600,textAlign: TextAlign.center):const SizedBox.shrink(),
                   FxSpacing.height(4),
                   getTreatmentActiveWidget(isActive: true),
                   FxSpacing.height(20),
@@ -81,9 +81,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   FxSpacing.height(8),
                   _buildSingleRow(title: 'My QR Code', icon: Icons.qr_code_2,
                     onTap: (){
-                      showDialog(context: context, builder: (context){
-                        return QRCodeView(userId: currentPatient.id,);
-                      });
+                      if(currentPatient != null) {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return QRCodeView(
+                              data: QRCodeDataModel(
+                                id: currentPatient.id,
+                                type: QRCodeTypes.patient,
+                              ).toEncodedString(),
+                            );
+                          },
+                        );
+                      }
                     },
                   ),
                   FxSpacing.height(8),
