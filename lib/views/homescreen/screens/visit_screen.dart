@@ -352,7 +352,12 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState {
               InkWell(
                 onTap: (){
                   showDialog(context: context, builder: (context){
-                    return QRCodeView(userId: userId,);
+                    return QRCodeView(
+                      data: QRCodeDataModel(
+                        id: userId,
+                        type: QRCodeTypes.patient,
+                      ).toEncodedString(),
+                    );
                   });
                 },
                 child: ClipRRect(
