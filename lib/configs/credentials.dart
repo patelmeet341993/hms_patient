@@ -1,4 +1,4 @@
-import 'package:firebase_core/firebase_core.dart';
+import 'package:hms_models/hms_models.dart';
 
 import '../controllers/app_controller.dart';
 import 'firebase_options_dev.dart' as firebase_dev;
