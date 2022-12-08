@@ -11,6 +11,7 @@ import '../../../providers/patient_provider.dart';
 import '../../about_us/screens/about_us_screen.dart';
 import '../../common/componants/common_dialog.dart';
 import '../../common/componants/qr_view_dialog.dart';
+import '../../common/components/loading_widget.dart';
 import '../../common/screens/notification_screen.dart';
 import '../../treatment_history/screens/treatment_history_screen.dart';
 
