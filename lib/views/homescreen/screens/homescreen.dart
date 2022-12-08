@@ -7,8 +7,8 @@ import 'package:patient/views/profile/screens/profilescreen.dart';
 import 'package:provider/provider.dart';
 
 import '../../../configs/styles.dart';
+import '../../../controllers/my_patient_controller.dart';
 import '../../../controllers/navigation_controller.dart';
-import '../../../controllers/patient_controller.dart';
 import '../../../packages/flux/widgets/bottom_navigation_bar/bottom_navigation_bar.dart';
 import '../../common/components/loading_widget.dart';
 import '../../my_prescription/screens/prescription_screen.dart';
@@ -34,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     }
     else {
-      futureGetPatientsData = PatientController().getPatientsDataForMainPage(isRefresh: false, isFromCache: true);
+      futureGetPatientsData = MyPatientController().getPatientsDataForMainPage(isRefresh: false, isFromCache: true);
     }
     // futureGetPatientsData = PatientController().getPatientsDataForMainPage(isRefresh: false, isFromCache: true);
 

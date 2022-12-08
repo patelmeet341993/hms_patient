@@ -6,10 +6,10 @@ import 'package:provider/provider.dart';
 
 import '../providers/authentication_provider.dart';
 
-class PatientController {
+class MyPatientController {
   late PatientProvider _patientProvider;
 
-  PatientController({PatientProvider? provider}) {
+  MyPatientController({PatientProvider? provider}) {
     _patientProvider = (provider ?? PatientProvider());
   }
   PatientProvider getProvider() => _patientProvider;

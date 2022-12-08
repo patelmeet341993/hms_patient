@@ -7,11 +7,10 @@ import 'package:provider/provider.dart';
 
 import 'navigation_controller.dart';
 
-class VisitController{
-
+class MyVisitController{
   late VisitProvider _visitProvider;
 
-  VisitController({VisitProvider? visitProvider}){
+  MyVisitController({VisitProvider? visitProvider}){
     _visitProvider = (visitProvider ?? VisitProvider());
   }
 
@@ -69,6 +68,60 @@ class VisitController{
   //  });
   // });
 
+  }
+
+  Future<VisitModel> getVisitModel(String id,{bool isListen = false}) async {
+    VisitModel visitModel = VisitModel();
+    MyPrint.printOnConsole("getVisitModel: $id");
+    MyPrint.printOnConsole("1");
+
+    try{
+      VisitProvider visitProvider = getProvider();
+      PatientProvider patientProvider = Provider.of<PatientProvider>(NavigationController.mainScreenNavigator.currentContext!, listen: false);
+
+      if(isListen){
+        MyPrint.printOnConsole("2");
+
+        final StreamSubscription<QuerySnapshot<Map<String, dynamic>>> querySnapshot = FirebaseNodes.visitsCollectionReference
+            .where('id', isEqualTo: id)
+            .where('isTreatmentActiveStream', isEqualTo: true)
+            .snapshots().listen((QuerySnapshot<Map<String, dynamic>> querySnapshot) {
+          MyPrint.printOnConsole("in visit controller44444");
+
+          List<QueryDocumentSnapshot<Map<String, dynamic>>> documents = querySnapshot.docs;
+          documents.forEach((element) {
+                 visitModel = VisitModel.fromMap(ParsingHelper.parseMapMethod(element.data()));
+                 visitProvider.setVisitModel(visitModel);
+                 MyPrint.printOnConsole("3");
+
+                  MyPrint.printOnConsole("visit model: ${visitModel.pharmaBilling?.totalAmount}");
+                });
+              },
+            onError: (error) {
+              MyPrint.printOnConsole("error in stream subscription$error");
+            });
+        // patientProvider.setStreamSubscription(querySnapshot, isNotify: false);
+        return visitModel;
+      }
+      else {
+        DocumentSnapshot<Map<String,dynamic>> documentSnapshot = await FirebaseNodes.visitsCollectionReference.doc(id).get();
+        if(documentSnapshot.exists){
+          Map<String,dynamic> data = documentSnapshot.data() ?? {};
+          MyPrint.printOnConsole(data);
+          visitModel = VisitModel.fromMap(ParsingHelper.parseMapMethod(documentSnapshot.data()));
+          visitProvider.setVisitModel(visitModel);
+        }
+        MyPrint.printOnConsole(visitModel.id);
+      }
+
+    }
+    catch(e,s){
+      MyPrint.printOnConsole("Error in getting visit model: $e");
+      MyPrint.printOnConsole(s);
+    }
+
+
+    return visitModel;
   }
 
   Future<void> closeSteamSubscription() async {

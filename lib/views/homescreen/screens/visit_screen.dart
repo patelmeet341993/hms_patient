@@ -54,7 +54,7 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState {
   List<bool> payList = [false, false, true, false,];
 
   late VisitProvider visitProvider;
-  late VisitController visitController;
+  late MyVisitController visitController;
   VisitModel visitModel = VisitModel();
 
   Future<void> getData() async{
@@ -88,8 +88,8 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState {
   void initState() {
     super.initState();
     visitProvider = (widget.visitProvider ?? VisitProvider());
-    visitController = VisitController(visitProvider: visitProvider);
-    getData();
+    visitController = MyVisitController(visitProvider: visitProvider);
+    // getData();
   }
 
   /*@override
