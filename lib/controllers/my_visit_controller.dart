@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:hms_models/hms_models.dart';
 import 'package:patient/providers/patient_provider.dart';
 import 'package:patient/providers/visit_provider.dart';
-import 'package:provider/provider.dart';
 
 import 'navigation_controller.dart';
 

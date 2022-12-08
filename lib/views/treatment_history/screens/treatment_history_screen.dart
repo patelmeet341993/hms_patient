@@ -1,14 +1,13 @@
+import 'package:add_2_calendar/add_2_calendar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:hms_models/hms_models.dart';
+import 'package:patient/controllers/my_visit_controller.dart';
+import 'package:patient/providers/patient_provider.dart';
 import 'package:patient/views/common/componants/common_topbar.dart';
-import 'package:patient/views/treatment_history/screens/treatment_activity_detail_screen.dart';
 
 import '../../../configs/styles.dart';
-import '../../../controllers/navigation_controller.dart';
 import '../../../packages/flux/utils/spacing.dart';
-import '../../../packages/flux/widgets/container/container.dart';
 import '../../../packages/flux/widgets/text/text.dart';
-import '../../common/componants/common_bold_text.dart';
 
 class TreatmentHistoryScreen extends StatefulWidget {
   static const String routeName = "/TreatmentHistoryScreen";
