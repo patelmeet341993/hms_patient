@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
-import 'common_bold_text.dart';
 import 'common_button.dart';
 import 'common_text.dart';
 
 class QRCodeView extends StatelessWidget {
-  String userId;
-  QRCodeView({required this.userId});
+  final String data;
+  const QRCodeView({Key? key, required this.data}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +33,7 @@ class QRCodeView extends StatelessWidget {
                   border: Border.all(color: Colors.grey.shade400,width: 6)
               ),
               child: QrImage(
-                data: userId,
+                data: data,
                 version: QrVersions.auto,
                 padding: EdgeInsets.zero,
                 gapless: false,

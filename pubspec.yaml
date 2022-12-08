@@ -58,6 +58,7 @@ dependencies:
   flutter_feather_icons: ^2.0.0+1
   timeline_tile: ^2.0.0
   add_2_calendar: ^2.2.3
+  cached_network_image: ^3.2.1
 
   ####################
   # State management #
