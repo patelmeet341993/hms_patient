@@ -27,6 +27,75 @@ class _TreatmentHistoryScreenState extends State<TreatmentHistoryScreen> {
     false,
     true,
   ];
+  Future? getVisitData;
+
+  List<PropertyModel> propertiesModel = [
+    PropertyModel(name: "abc", priority: 1),
+    PropertyModel(name: "pqr", priority: 3),
+    PropertyModel(name: "mno", priority: 2),
+    PropertyModel(name: "xyz", priority: 2),
+  ];
+
+  VisitModel visitModel = VisitModel();
+
+  late PatientProvider provider;
+  Future<void> getData(String ids) async {
+    visitModel = await MyVisitController().getVisitModel(ids,isListen: false);
+  }
+
+
+
+  Event buildEvent({Recurrence? recurrence}) {
+    return Event(
+      title: 'Test eventeee',
+      description: 'example',
+      location: 'Flutter app',
+      startDate: DateTime.now(),
+      endDate: DateTime.now().add(const Duration(minutes: 30)),
+      allDay: false,
+      iosParams: const IOSParams(
+        reminder: const Duration(minutes: 40),
+        url: "http://example.com",
+      ),
+      androidParams: const AndroidParams(
+        emailInvites: ["test@example.com"],
+
+      ),
+      recurrence: recurrence,
+    );
+  }
+
+  void showModalBottomsheet(){
+    showModalBottomSheet(
+      context: context,
+
+      builder: (BuildContext context){
+      return Material(
+        color: Colors.white,
+        child: ListView.builder(
+            shrinkWrap: true,
+
+            itemCount: propertiesModel.length,
+            itemBuilder: (BuildContext context, int index){
+
+              return Container(
+                padding: EdgeInsets.all(5),
+                child: TextFormField(
+                  decoration: InputDecoration(hintText: propertiesModel[index].name),
+                ) ,
+              );
+            },
+          ),
+      );
+      },
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    provider = Provider.of<PatientProvider>(context, listen:  false);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,37 +103,44 @@ class _TreatmentHistoryScreenState extends State<TreatmentHistoryScreen> {
     return Container(
       color: themeData.backgroundColor,
       child: Scaffold(
+        floatingActionButton: FloatingActionButton(
+          onPressed: (){
+            showModalBottomsheet();
+            // Add2Calendar.addEvent2Cal(
+            //   buildEvent(),
+            // );
+          },
+        ),
         body: SafeArea(
           child: Column(
             children: [
               CommonTopBar(title: "Treatment History"),
-              SizedBox(height : 1),
-              Expanded(
-                child: isEvent?Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    ListView.builder(
-                        itemCount: 4,
-                        padding: EdgeInsets.symmetric(horizontal: 20,vertical: 10),
-                        shrinkWrap: true,
-                        itemBuilder: (context,index){
-                          return InkWell(
-                              onTap: (){
-                                Navigator.pushNamed(NavigationController.mainScreenNavigator.currentContext!,TreatmentActivityDetailScreen.routeName);
-                              },
-                              child: getSingleEvent(newVisit: isNewVisit[index]));
-                        }
-                    )
-                  ],
-                ):Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CommonBoldText(text: "No Treatment History",fontSize: 20,color: Colors.black.withOpacity(.6)),
-                    ]
-                ),
-              ),
-
-
+              const SizedBox(height : 1),
+              Expanded(child:getHistory()),
+              // Expanded(
+              //   child: isEvent?Column(
+              //     mainAxisAlignment: MainAxisAlignment.start,
+              //     children: [
+              //       ListView.builder(
+              //           itemCount: 4,
+              //           padding: EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+              //           shrinkWrap: true,
+              //           itemBuilder: (context,index){
+              //             return InkWell(
+              //                 onTap: (){
+              //                   Navigator.pushNamed(NavigationController.mainScreenNavigator.currentContext!,TreatmentActivityDetailScreen.routeName);
+              //                 },
+              //                 child: getSingleEvent(newVisit: isNewVisit[index]));
+              //           }
+              //       )
+              //     ],
+              //   ):Column(
+              //       mainAxisAlignment: MainAxisAlignment.center,
+              //       children: [
+              //         CommonBoldText(text: "No Treatment History",fontSize: 20,color: Colors.black.withOpacity(.6)),
+              //       ]
+              //   ),
+              // ),
             ],
           ),
         ),
@@ -72,11 +148,21 @@ class _TreatmentHistoryScreenState extends State<TreatmentHistoryScreen> {
     );
   }
 
+  Widget getHistory(){
+    return ListView(
+      shrinkWrap: true,
+      children: (provider.getCurrentPatient() ?? PatientModel()).activeVisits.entries.map((e) {
+        return Container(
+          child: Text(e.key),
+        );
+      }).toList()
+    );
+  }
 
   Widget getSingleEvent({bool newVisit = true}) {
     return Container(
-      margin: EdgeInsets.only(bottom: 10),
-      padding:  EdgeInsets.symmetric(horizontal: 15,vertical: 15),
+      margin: const EdgeInsets.only(bottom: 10),
+      padding:  const EdgeInsets.symmetric(horizontal: 15,vertical: 15),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         color: Styles.cardColor,
@@ -84,7 +170,7 @@ class _TreatmentHistoryScreenState extends State<TreatmentHistoryScreen> {
       child: Row(
         children: [
           Container(
-            padding:  EdgeInsets.symmetric(horizontal: 15,vertical: 10),
+            padding:  const EdgeInsets.symmetric(horizontal: 15,vertical: 10),
             decoration: BoxDecoration(
               border: Border.all(color: themeData.primaryColor),
               borderRadius: BorderRadius.circular(4),
@@ -150,4 +236,17 @@ class _TreatmentHistoryScreenState extends State<TreatmentHistoryScreen> {
   }
 
 
+
+
+
 }
+
+class PropertyModel{
+
+  final String name;
+  final int priority;
+  TextEditingController? textEditingController = TextEditingController();
+
+    PropertyModel({this.name = "", this.priority = 0, this.textEditingController});
+}
+
