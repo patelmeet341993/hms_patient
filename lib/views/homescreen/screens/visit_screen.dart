@@ -494,25 +494,42 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState {
 
 
   Widget getVisitTreatmentActivity() {
+    // VisitProvider visitProvider = Provider.of<VisitProvider>(context,listen: false);
     Map<String,Timestamp> activeVisits = newPatientProvider.getCurrentPatient()?.activeVisits ?? {};
     List<String> visitIds = activeVisits.keys.toList()..sort((a, b) => activeVisits[a]!.compareTo(activeVisits[b]!));
+    // List<VisitModel> visitModels = visitProvider.visitModelAccordingToId.
+    MyPrint.printOnConsole(visitIds);
 
-    MyPrint.printOnConsole("vvisitIds:$visitIds");
+    return Consumer<VisitProvider>(
+      builder: (context, VisitProvider vp, _) {
+        MyPrint.printOnConsole("visitProvider.visitModelAccordingToIds: ${vp.visitModelAccordingToId.keys}");
+        MyPrint.printOnConsole("visitProvider.visitModelAccordingToId[visitIds[index]]: ${vp.visitModelAccordingToId}");
+        // List<String> visitIds = activeVisits.keys.toList()..sort((a, b) => activeVisits[a]!.compareTo(activeVisits[b]!));
+        // List<VisitModel> visitModels = vp.visitModelAccordingToId.values.toList();
+        return  Column(
+          mainAxisSize: MainAxisSize.min,
+          // shrinkWrap: true,
+          children: vp.visitModelAccordingToId.values.map((e) {
+            MyPrint.printOnConsole("visitProvider.visitModelAccordingToId[visitIds[index]]: ${e.id}");
+            return VisitTreatmentActivity(visitId: e.id, visitModel: e,);
+          }).toList()
 
-    return ListView.builder(
-      itemCount: visitIds.length,
-      physics: NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      itemBuilder: (BuildContext context, int index) {
-        // if(index == 0){
-        //   return getProfileInfoBody();
-        // }
-
-        // index--;
-        // final example = visitModel.treatmentActivity[index];
-
-        return VisitTreatmentActivity(visitId: visitIds[index]);
-      },
+        );
+        // VisitTreatmentActivity(visitModel: value)   ListView.builder(
+        //   itemCount: vp.visitModelAccordingToId.length,
+        //   physics: NeverScrollableScrollPhysics(),
+        //   shrinkWrap: true,
+        //   itemBuilder: (BuildContext context, int index) {
+        //     // if(index == 0){
+        //     //   return getProfileInfoBody();
+        //     // }
+        //
+        //     // index--;
+        //     // final example = visitModel.treatmentActivity[index];
+        //     return VisitTreatmentActivity(visitModel: vp.visitModelAccordingToId[visitIds[index]]);
+        //   },
+        // );
+      }
     );
   }
 
