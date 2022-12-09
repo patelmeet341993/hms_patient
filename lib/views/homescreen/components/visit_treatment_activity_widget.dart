@@ -12,7 +12,8 @@ import '../../common/componants/common_button.dart';
 class VisitTreatmentActivity extends StatefulWidget {
   static const String routeName = "/VisitTreatmentActivity";
   final String visitId;
-  const VisitTreatmentActivity({Key? key, required this.visitId}) : super(key: key);
+  final VisitModel? visitModel;
+  const VisitTreatmentActivity({Key? key, this.visitId = "", this.visitModel}) : super(key: key);
 
   @override
   State<VisitTreatmentActivity> createState() => _VisitTreatmentActivityState();
@@ -33,32 +34,29 @@ class _VisitTreatmentActivityState extends State<VisitTreatmentActivity> {
     {"data1":"data","subtitle":"as dma ca cbna cba  cas ca scas cas cjhsa jc a s c sab c as ch asghhjs bcjasbckas k"}
   ];
 
-
-  Future<void> getData() async {
-    visitModel = await visitController.getVisitModel(widget.visitId,isListen: true).then((value){
-      MyPrint.printOnConsole("visitModel: ${visitModel.id}");
-      return value;
-    });
-  }
-
   @override
   void initState() {
     super.initState();
-    MyPrint.printOnConsole("in in it state");
-    visitProvider = (Provider.of<VisitProvider>(context,listen: false) ?? VisitProvider());
-    visitController = MyVisitController(visitProvider: visitProvider);
-    future = getData();
+    MyPrint.printOnConsole("in in it state ${widget.visitModel?.id}");
+    visitModel = widget.visitModel ?? VisitModel();
+  }
+
+  @override
+  void didUpdateWidget(covariant VisitTreatmentActivity oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if(widget.visitModel != null) {
+      visitModel = widget.visitModel!;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     themeData = Theme.of(context);
-    return Consumer<VisitProvider>(
-      // future:future,
-     builder: (context,VisitProvider vp,_ ){
-       visitModel = vp.visitModel ?? VisitModel();
+    // visitModel = widget.visitModel ?? VisitModel();
 
-       return Column(
+    MyPrint.printOnConsole("VisitTreatmentActivity widget.visitId:'${widget.visitId}'");
+
+    return Column(
             children: [
               Row(
                 children: [
@@ -76,7 +74,7 @@ class _VisitTreatmentActivityState extends State<VisitTreatmentActivity> {
               ),
              ListView.builder(
                shrinkWrap: true,
-               physics: NeverScrollableScrollPhysics(),
+               physics: const NeverScrollableScrollPhysics(),
                itemCount: visitModel.treatmentActivity.length,
                itemBuilder: (BuildContext context, int index) {
 
@@ -93,8 +91,7 @@ class _VisitTreatmentActivityState extends State<VisitTreatmentActivity> {
 
             ],
           );
-        }
-    );
+
   }
 
   Widget getTimeLineView(int index){
