@@ -511,7 +511,7 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState {
         // index--;
         // final example = visitModel.treatmentActivity[index];
 
-        return VisitTreatmentActivity(visitId: visitIds[index], visitProvider: Provider.of<VisitProvider>(context,listen: false),);
+        return VisitTreatmentActivity(visitId: visitIds[index]);
       },
     );
   }
