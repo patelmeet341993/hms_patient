@@ -8,7 +8,7 @@ import 'package:patient/views/common/componants/common_button.dart';
 import 'package:patient/views/common/componants/common_text.dart';
 import 'package:patient/views/common/componants/qr_view_dialog.dart';
 import 'package:patient/views/common/screens/notification_screen.dart';
-import 'package:patient/views/homescreen/screens/visit_treatment_activity_screen.dart';
+import 'package:patient/views/homescreen/components/visit_treatment_activity_widget.dart';
 import 'package:patient/views/treatment_history/screens/treatment_history_screen.dart';
 
 import '../../../configs/styles.dart';
