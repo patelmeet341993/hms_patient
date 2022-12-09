@@ -2,7 +2,6 @@ import 'package:hms_models/hms_models.dart';
 import 'package:patient/controllers/data_controller.dart';
 import 'package:patient/controllers/navigation_controller.dart';
 import 'package:patient/providers/patient_provider.dart';
-import 'package:provider/provider.dart';
 
 import '../providers/authentication_provider.dart';
 
@@ -29,16 +28,21 @@ class MyPatientController {
 
     if(authenticationProvider.mobileNumber.isNotEmpty) {
       List<PatientModel> patients = await getPatientsForMobileNumber(mobileNumber: authenticationProvider.mobileNumber);
-      if(patients.isEmpty) {
-        PatientModel? patientModel = await createPatient(mobile: authenticationProvider.mobileNumber);
+      PatientModel? patientModel;
 
-        if(patientModel != null) {
-          patientProvider.addPatientModel(patientModel);
-          patientProvider.setCurrentPatient(patientModel);
-        }
-        else {
-          patientProvider.setCurrentPatient(null);
-        }
+      if(patients.isEmpty) {
+        patientModel = await createPatient(mobile: authenticationProvider.mobileNumber);
+      }
+      else {
+        patientModel = patients.first;
+      }
+
+      if(patientModel != null) {
+        patientProvider.addPatientModel(patientModel);
+        patientProvider.setCurrentPatient(patientModel);
+      }
+      else {
+        patientProvider.setCurrentPatient(null);
       }
     }
   }
