@@ -6,7 +6,7 @@ import 'package:patient/providers/visit_provider.dart';
 
 import 'navigation_controller.dart';
 
-class MyVisitController{
+class MyVisitController {
   late VisitProvider _visitProvider;
 
   MyVisitController({VisitProvider? visitProvider}){
@@ -70,6 +70,8 @@ class MyVisitController{
   }
 
   Future<VisitModel> getVisitModel(String id,{bool isListen = false}) async {
+    MyPrint.printOnConsole("MyVisitController().getVisitModel() called for Visit:$id");
+
     // VisitModel visitModel = VisitModel();
     MyPrint.printOnConsole("getVisitModel: $id");
     MyPrint.printOnConsole("1");
@@ -82,25 +84,31 @@ class MyVisitController{
         VisitModel visitModel = VisitModel();
         MyPrint.printOnConsole("2");
 
-          FirebaseNodes.visitsCollectionReference
+        StreamSubscription<QuerySnapshot<Map<String, dynamic>>> querySnapshot = FirebaseNodes.visitsCollectionReference
               .where('id', isEqualTo: id)
               .where('isTreatmentActiveStream', isEqualTo: true)
               .snapshots().listen((QuerySnapshot<Map<String, dynamic>> querySnapshot) {
 
-            List<QueryDocumentSnapshot<Map<String, dynamic>>> documents = querySnapshot.docs;
-            documents.forEach((element) {
-                 visitModel = VisitModel.fromMap(ParsingHelper.parseMapMethod(element.data()));
-                 MyPrint.printOnConsole("3");
+                List<QueryDocumentSnapshot<Map<String, dynamic>>> documents = querySnapshot.docs;
+                Map<String, VisitModel> visitMap = {};
+                documents.forEach((element) {
+                     visitModel = VisitModel.fromMap(ParsingHelper.parseMapMethod(element.data()));
+                     visitMap = {id:VisitModel.fromMap(ParsingHelper.parseMapMethod(element.data()))};
+                     MyPrint.printOnConsole(visitMap);
 
-                 MyPrint.printOnConsole("visit modelcurrentDoctorName: ${visitModel.currentDoctorName}");
-
+                     // visitMap.addAll({id:VisitModel.fromMap(ParsingHelper.parseMapMethod(element.data()))});
+                     MyPrint.printOnConsole("3");
                 });
-              visitProvider.setVisitModel(visitModel);
-
+                visitProvider.setVisitModelAccordingToId(Map.castFrom(visitMap));
             },
             onError: (error) {
               MyPrint.printOnConsole("error in stream subscription$error");
             });
+
+        Map<String, StreamSubscription<QuerySnapshot<Map<String,dynamic>>>> visitStream = {id:querySnapshot};
+        visitProvider.setVisitStreamSubscription(visitStream);
+
+        // print(visitModel:)
         // patientProvider.setStreamSubscription(querySnapshot, isNotify: false);
         return visitModel;
       }
