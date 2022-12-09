@@ -1,7 +1,9 @@
 import 'package:hms_models/hms_models.dart';
 import 'package:patient/controllers/data_controller.dart';
+import 'package:patient/controllers/my_visit_controller.dart';
 import 'package:patient/controllers/navigation_controller.dart';
 import 'package:patient/providers/patient_provider.dart';
+import 'package:patient/providers/visit_provider.dart';
 
 import '../providers/authentication_provider.dart';
 
@@ -40,6 +42,13 @@ class MyPatientController {
       if(patientModel != null) {
         patientProvider.addPatientModel(patientModel);
         patientProvider.setCurrentPatient(patientModel);
+
+        patientModel.activeVisits.forEach((key, value)  {
+           MyVisitController(visitProvider: Provider.of<VisitProvider>(NavigationController.mainScreenNavigator.currentContext!,listen: false)).getVisitModel(key,isListen: true);
+        });
+
+      MyPrint.printOnConsole("visittttt");
+
       }
       else {
         patientProvider.setCurrentPatient(null);
