@@ -491,19 +491,27 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState {
     );
   }
 
+
+
   Widget getVisitTreatmentActivity() {
+    Map<String,Timestamp> activeVisits = newPatientProvider.getCurrentPatient()?.activeVisits ?? {};
+    List<String> visitIds = activeVisits.keys.toList()..sort((a, b) => activeVisits[a]!.compareTo(activeVisits[b]!));
+
+    MyPrint.printOnConsole("vvisitIds:$visitIds");
+
     return ListView.builder(
-      itemCount: 1,
+      itemCount: visitIds.length,
       physics: NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemBuilder: (BuildContext context, int index) {
         // if(index == 0){
         //   return getProfileInfoBody();
         // }
+
         // index--;
         // final example = visitModel.treatmentActivity[index];
 
-        return VisitTreatmentActivity(visitId: "65235a50657811ed879e93dbff774310");
+        return VisitTreatmentActivity(visitId: visitIds[index], visitProvider: Provider.of<VisitProvider>(context,listen: false),);
       },
     );
   }
@@ -538,16 +546,15 @@ class IndicatorExample extends StatelessWidget {
 }
 
 class TimeLineRow extends StatelessWidget {
-  TimeLineRow({Key? key, required this.treatmentActivityModel, this.visitModel}) : super(key: key);
+  final TreatmentActivityModel treatmentActivityModel;
+  final VisitModel? visitModel;
 
-  TreatmentActivityModel treatmentActivityModel;
-  VisitModel? visitModel;
-
-  late ThemeData themeData;
+  const TimeLineRow({Key? key, required this.treatmentActivityModel, this.visitModel}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    themeData = Theme.of(context);
+    ThemeData themeData = Theme.of(context);
+
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 10),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -563,7 +570,12 @@ class TimeLineRow extends StatelessWidget {
           ),
           Visibility(
             visible: treatmentActivityModel.treatmentActivityStatus == TreatmentActivityStatus.assigned,
-            child: Text("Doctor Name: ${visitModel?.visitBillings.values.first.doctorName ?? ""}", style: const TextStyle(fontSize: 14),)),
+            child: Text(
+              // "Doctor Name: ${visitModel?.visitBillings.values.first.doctorName ?? ""}",
+              "Doctor Name: ${visitModel?.currentDoctorName ?? ""}",
+              style: const TextStyle(fontSize: 14),
+            ),
+          ),
           Text(DatePresentation.hhMM(treatmentActivityModel.updatedTime ?? treatmentActivityModel.createdTime!),style: themeData.textTheme.bodySmall!.copyWith(height: 1,letterSpacing: 0.5,fontSize: 12))
 
         ],
