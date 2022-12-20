@@ -4,10 +4,14 @@ import 'package:hms_models/hms_models.dart';
 import 'package:patient/controllers/my_visit_controller.dart';
 import 'package:patient/providers/patient_provider.dart';
 import 'package:patient/views/common/componants/common_topbar.dart';
+import 'package:patient/views/treatment_history/components/admitDetailsScreen.dart';
+import 'package:patient/views/treatment_history/screens/treatment_activity_detail_screen.dart';
 
 import '../../../configs/styles.dart';
+import '../../../controllers/navigation_controller.dart';
 import '../../../packages/flux/utils/spacing.dart';
 import '../../../packages/flux/widgets/text/text.dart';
+import '../../common/componants/common_bold_text.dart';
 
 class TreatmentHistoryScreen extends StatefulWidget {
   static const String routeName = "/TreatmentHistoryScreen";
@@ -29,11 +33,11 @@ class _TreatmentHistoryScreenState extends State<TreatmentHistoryScreen> {
   ];
   Future? getVisitData;
 
-  List<PropertyModel> propertiesModel = [
-    PropertyModel(name: "abc", priority: 1),
-    PropertyModel(name: "pqr", priority: 3),
-    PropertyModel(name: "mno", priority: 2),
-    PropertyModel(name: "xyz", priority: 2),
+  List<PropertyModels> propertiesModel = [
+    PropertyModels(name: "abc", priority: 1),
+    PropertyModels(name: "pqr", priority: 3),
+    PropertyModels(name: "mno", priority: 2),
+    PropertyModels(name: "xyz", priority: 2),
   ];
 
   VisitModel visitModel = VisitModel();
@@ -65,32 +69,6 @@ class _TreatmentHistoryScreenState extends State<TreatmentHistoryScreen> {
     );
   }
 
-  void showModalBottomsheet(){
-    showModalBottomSheet(
-      context: context,
-
-      builder: (BuildContext context){
-      return Material(
-        color: Colors.white,
-        child: ListView.builder(
-            shrinkWrap: true,
-
-            itemCount: propertiesModel.length,
-            itemBuilder: (BuildContext context, int index){
-
-              return Container(
-                padding: EdgeInsets.all(5),
-                child: TextFormField(
-                  decoration: InputDecoration(hintText: propertiesModel[index].name),
-                ) ,
-              );
-            },
-          ),
-      );
-      },
-    );
-  }
-
   @override
   void initState() {
     super.initState();
@@ -103,44 +81,48 @@ class _TreatmentHistoryScreenState extends State<TreatmentHistoryScreen> {
     return Container(
       color: themeData.backgroundColor,
       child: Scaffold(
-        floatingActionButton: FloatingActionButton(
-          onPressed: (){
-            showModalBottomsheet();
-            // Add2Calendar.addEvent2Cal(
-            //   buildEvent(),
-            // );
-          },
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: FloatingActionButton(
+            onPressed: (){
+              Navigator.push(context, MaterialPageRoute(builder: (context) => AdmittedDetailScreen(visitModel: visitModel,)));
+              // showModalBottomsheet();
+              // Add2Calendar.addEvent2Cal(
+              //   buildEvent(),
+              // );
+            },
+          ),
         ),
         body: SafeArea(
           child: Column(
             children: [
               CommonTopBar(title: "Treatment History"),
-              const SizedBox(height : 1),
-              Expanded(child:getHistory()),
-              // Expanded(
-              //   child: isEvent?Column(
-              //     mainAxisAlignment: MainAxisAlignment.start,
-              //     children: [
-              //       ListView.builder(
-              //           itemCount: 4,
-              //           padding: EdgeInsets.symmetric(horizontal: 20,vertical: 10),
-              //           shrinkWrap: true,
-              //           itemBuilder: (context,index){
-              //             return InkWell(
-              //                 onTap: (){
-              //                   Navigator.pushNamed(NavigationController.mainScreenNavigator.currentContext!,TreatmentActivityDetailScreen.routeName);
-              //                 },
-              //                 child: getSingleEvent(newVisit: isNewVisit[index]));
-              //           }
-              //       )
-              //     ],
-              //   ):Column(
-              //       mainAxisAlignment: MainAxisAlignment.center,
-              //       children: [
-              //         CommonBoldText(text: "No Treatment History",fontSize: 20,color: Colors.black.withOpacity(.6)),
-              //       ]
-              //   ),
-              // ),
+              // const SizedBox(height : 1),
+              // Expanded(child:getHistory()),
+              Expanded(
+                child: isEvent?Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    ListView.builder(
+                        itemCount: 4,
+                        padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+                        shrinkWrap: true,
+                        itemBuilder: (context,index){
+                          return InkWell(
+                              onTap: (){
+                                Navigator.pushNamed(NavigationController.mainScreenNavigator.currentContext!,TreatmentActivityDetailScreen.routeName);
+                              },
+                              child: getSingleEvent(newVisit: isNewVisit[index]));
+                        }
+                    )
+                  ],
+                ):Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CommonBoldText(text: "No Treatment History",fontSize: 20,color: Colors.black.withOpacity(.6)),
+                    ]
+                ),
+              ),
             ],
           ),
         ),
@@ -241,12 +223,11 @@ class _TreatmentHistoryScreenState extends State<TreatmentHistoryScreen> {
 
 }
 
-class PropertyModel{
+class PropertyModels{
 
   final String name;
   final int priority;
   TextEditingController? textEditingController = TextEditingController();
 
-    PropertyModel({this.name = "", this.priority = 0, this.textEditingController});
+    PropertyModels({this.name = "", this.priority = 0, this.textEditingController});
 }
-
