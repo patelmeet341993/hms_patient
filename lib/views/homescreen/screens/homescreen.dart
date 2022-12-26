@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hms_models/utils/my_print.dart';
+import 'package:patient/configs/notification_service.dart';
 import 'package:patient/providers/patient_provider.dart';
 import 'package:patient/providers/visit_provider.dart';
 import 'package:patient/views/homescreen/screens/visit_screen.dart';
@@ -25,6 +26,10 @@ class _HomeScreenState extends State<HomeScreen> {
   late ThemeData themeData;
 
   Future<void>? futureGetPatientsData;
+  
+  NotificationService notificationService =  NotificationService();
+  
+  
 
   @override
   void initState() {
@@ -36,6 +41,15 @@ class _HomeScreenState extends State<HomeScreen> {
     else {
       futureGetPatientsData = MyPatientController().getPatientsDataForMainPage(isRefresh: false, isFromCache: true);
     }
+
+    notificationService.scheduleNotifications(
+      title: "It's time to get the dose",
+      id: 12,
+      body: "Paracetamol 20 mg",
+      time: DateTime.now().add(const Duration(minutes: 1))
+    ).then((value) {
+      MyPrint.printOnConsole("theennn:}");
+    });
     // futureGetPatientsData = PatientController().getPatientsDataForMainPage(isRefresh: false, isFromCache: true);
 
     super.initState();
@@ -105,4 +119,6 @@ class _HomeScreenState extends State<HomeScreen> {
       ],
     );
   }
+
+
 }
