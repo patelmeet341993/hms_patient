@@ -1,15 +1,16 @@
 import 'package:hms_models/hms_models.dart';
 import 'package:patient/controllers/data_controller.dart';
+import 'package:patient/controllers/my_visit_controller.dart';
 import 'package:patient/controllers/navigation_controller.dart';
 import 'package:patient/providers/patient_provider.dart';
-import 'package:provider/provider.dart';
+import 'package:patient/providers/visit_provider.dart';
 
 import '../providers/authentication_provider.dart';
 
-class PatientController {
+class MyPatientController {
   late PatientProvider _patientProvider;
 
-  PatientController({PatientProvider? provider}) {
+  MyPatientController({PatientProvider? provider}) {
     _patientProvider = (provider ?? PatientProvider());
   }
   PatientProvider getProvider() => _patientProvider;
@@ -29,16 +30,28 @@ class PatientController {
 
     if(authenticationProvider.mobileNumber.isNotEmpty) {
       List<PatientModel> patients = await getPatientsForMobileNumber(mobileNumber: authenticationProvider.mobileNumber);
-      if(patients.isEmpty) {
-        PatientModel? patientModel = await createPatient(mobile: authenticationProvider.mobileNumber);
+      PatientModel? patientModel;
 
-        if(patientModel != null) {
-          patientProvider.addPatientModel(patientModel);
-          patientProvider.setCurrentPatient(patientModel);
-        }
-        else {
-          patientProvider.setCurrentPatient(null);
-        }
+      if(patients.isEmpty) {
+        patientModel = await createPatient(mobile: authenticationProvider.mobileNumber);
+      }
+      else {
+        patientModel = patients.first;
+      }
+
+      if(patientModel != null) {
+        patientProvider.addPatientModel(patientModel);
+        patientProvider.setCurrentPatient(patientModel);
+
+        patientModel.activeVisits.forEach((key, value)  {
+           MyVisitController(visitProvider: Provider.of<VisitProvider>(NavigationController.mainScreenNavigator.currentContext!,listen: false)).getVisitModel(key,isListen: true);
+        });
+
+      MyPrint.printOnConsole("visittttt");
+
+      }
+      else {
+        patientProvider.setCurrentPatient(null);
       }
     }
   }

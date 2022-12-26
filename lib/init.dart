@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:hms_models/hms_models.dart';
 
 import 'configs/credentials.dart';
+import 'configs/notification_service.dart';
 import 'controllers/app_controller.dart';
 
 /// Runs the app in [runZonedGuarded] to handle all types of errors, including [FlutterError]s.
@@ -55,9 +56,13 @@ Future<void> initApp({bool isDev = false}) async {
       HttpOverrides.global = MyHttpOverrides();
       HttpClient httpClient = HttpClient();
       httpClient.badCertificateCallback = ((X509Certificate cert, String host, int port) => true);
-
+      if(Platform.isIOS){
+        await NotificationService().requestIOSPermissions();
+      }
       futures.addAll([
         Firebase.initializeApp(),
+        NotificationService().init(),
+
         SystemChrome.setPreferredOrientations(<DeviceOrientation>[
           DeviceOrientation.portraitUp,
         ]),

@@ -3,15 +3,13 @@ import 'dart:async';
 import 'package:hms_models/hms_models.dart';
 import 'package:patient/providers/patient_provider.dart';
 import 'package:patient/providers/visit_provider.dart';
-import 'package:provider/provider.dart';
 
 import 'navigation_controller.dart';
 
-class VisitController{
-
+class MyVisitController {
   late VisitProvider _visitProvider;
 
-  VisitController({VisitProvider? visitProvider}){
+  MyVisitController({VisitProvider? visitProvider}){
     _visitProvider = (visitProvider ?? VisitProvider());
   }
 
@@ -69,6 +67,71 @@ class VisitController{
   //  });
   // });
 
+  }
+
+  Future<VisitModel> getVisitModel(String id,{bool isListen = false}) async {
+    MyPrint.printOnConsole("MyVisitController().getVisitModel() called for Visit:$id");
+
+    // VisitModel visitModel = VisitModel();
+    MyPrint.printOnConsole("getVisitModel: $id");
+    MyPrint.printOnConsole("1");
+
+    try{
+      VisitProvider visitProvider = getProvider();
+      // PatientProvider patientProvider = Provider.of<PatientProvider>(NavigationController.mainScreenNavigator.currentContext!, listen: false);
+
+      if(isListen){
+        VisitModel visitModel = VisitModel();
+        MyPrint.printOnConsole("2");
+
+        StreamSubscription<QuerySnapshot<Map<String, dynamic>>> querySnapshot = FirebaseNodes.visitsCollectionReference
+              .where('id', isEqualTo: id)
+              .where('isTreatmentActiveStream', isEqualTo: true)
+              .snapshots().listen((QuerySnapshot<Map<String, dynamic>> querySnapshot) {
+
+                List<QueryDocumentSnapshot<Map<String, dynamic>>> documents = querySnapshot.docs;
+                Map<String, VisitModel> visitMap = {};
+                documents.forEach((element) {
+                     visitModel = VisitModel.fromMap(ParsingHelper.parseMapMethod(element.data()));
+                     visitMap = {id:VisitModel.fromMap(ParsingHelper.parseMapMethod(element.data()))};
+                     MyPrint.printOnConsole(visitMap);
+
+                     // visitMap.addAll({id:VisitModel.fromMap(ParsingHelper.parseMapMethod(element.data()))});
+                     MyPrint.printOnConsole("3");
+                });
+                visitProvider.setVisitModelAccordingToId(Map.castFrom(visitMap));
+            },
+            onError: (error) {
+              MyPrint.printOnConsole("error in stream subscription$error");
+            });
+
+        Map<String, StreamSubscription<QuerySnapshot<Map<String,dynamic>>>> visitStream = {id:querySnapshot};
+        visitProvider.setVisitStreamSubscription(visitStream);
+
+        // print(visitModel:)
+        // patientProvider.setStreamSubscription(querySnapshot, isNotify: false);
+        return visitModel;
+      }
+      else {
+        VisitModel visitModel = VisitModel();
+
+        DocumentSnapshot<Map<String,dynamic>> documentSnapshot = await FirebaseNodes.visitsCollectionReference.doc(id).get();
+        if(documentSnapshot.exists){
+          Map<String,dynamic> data = documentSnapshot.data() ?? {};
+          MyPrint.printOnConsole(data);
+          visitModel = VisitModel.fromMap(ParsingHelper.parseMapMethod(documentSnapshot.data()));
+          visitProvider.setVisitModel(visitModel);
+        }
+        MyPrint.printOnConsole(visitModel.id);
+        return visitModel;
+      }
+
+    }
+    catch(e,s){
+      MyPrint.printOnConsole("Error in getting visit model: $e");
+      MyPrint.printOnConsole(s);
+      return VisitModel();
+    }
   }
 
   Future<void> closeSteamSubscription() async {

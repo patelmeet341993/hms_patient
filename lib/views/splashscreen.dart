@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hms_models/hms_models.dart';
 import 'package:patient/controllers/authentication_controller.dart';
-import 'package:patient/controllers/patient_controller.dart';
+import 'package:patient/controllers/my_patient_controller.dart';
 
 import '../controllers/navigation_controller.dart';
 import 'authentication/login_screen.dart';
@@ -31,7 +31,7 @@ class _SplashScreenState extends State<SplashScreen> {
     MyPrint.printOnConsole("isUserLoggedIn:$isUserLoggedIn");
     NavigationController.isFirst = false;
     if(isUserLoggedIn) {
-      await PatientController().getPatientsDataForMainPage();
+      await MyPatientController().getPatientsDataForMainPage();
       Navigator.pushNamedAndRemoveUntil(context, HomeScreen.routeName, (route) => false);
     }
     else {

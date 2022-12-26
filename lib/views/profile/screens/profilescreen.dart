@@ -1,10 +1,6 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:hms_models/hms_models.dart';
 import 'package:patient/views/common/componants/common_text.dart';
-import 'package:patient/views/common/components/loading_widget.dart';
-import 'package:provider/provider.dart';
 
 import '../../../configs/styles.dart';
 import '../../../controllers/authentication_controller.dart';
@@ -15,6 +11,7 @@ import '../../../providers/patient_provider.dart';
 import '../../about_us/screens/about_us_screen.dart';
 import '../../common/componants/common_dialog.dart';
 import '../../common/componants/qr_view_dialog.dart';
+import '../../common/components/loading_widget.dart';
 import '../../common/screens/notification_screen.dart';
 import '../../treatment_history/screens/treatment_history_screen.dart';
 

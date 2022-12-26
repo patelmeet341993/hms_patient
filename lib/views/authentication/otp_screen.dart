@@ -12,7 +12,7 @@ import 'package:patient/views/common/components/loading_widget.dart';
 import 'package:provider/provider.dart';
 
 import '../../controllers/connection_controller.dart';
-import '../../controllers/patient_controller.dart';
+import '../../controllers/my_patient_controller.dart';
 import '../common/components/modal_progress_hud.dart';
 import '../common/components/pin_put.dart';
 import '../homescreen/screens/homescreen.dart';
@@ -217,7 +217,7 @@ class _OtpScreenState extends State<OtpScreen> with MySafeState {
       authenticationProvider.setFirebaseUser(user, isNotify: false);
       authenticationProvider.setUserId(user.uid, isNotify: false);
       authenticationProvider.setMobileNumber(user.phoneNumber ?? "", isNotify: false);
-      await PatientController().getPatientsDataForMainPage();
+      await MyPatientController().getPatientsDataForMainPage();
       Navigator.pushNamedAndRemoveUntil(context, HomeScreen.routeName, (route) => false);
     }
     else {
@@ -468,7 +468,7 @@ class _OtpScreenState extends State<OtpScreen> with MySafeState {
 
     return InkWell(
       onTap: () {
-        registerUser(widget.mobile ?? "");
+        registerUser(widget.mobile);
       },
       child: Container(
         margin: const EdgeInsets.only(top: 15),
@@ -684,7 +684,7 @@ class _OtpScreenState extends State<OtpScreen> with MySafeState {
                   visible: isOTPTimeout,
                   child: GestureDetector(
                     onTap: () {
-                      registerUser(widget.mobile ?? "");
+                      registerUser(widget.mobile);
                     },
                     child: Container(
                       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 32),
