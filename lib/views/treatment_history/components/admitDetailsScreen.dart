@@ -123,15 +123,15 @@ class _AdmittedDetailScreenState extends State<AdmittedDetailScreen> {
           ),
         ),
         const SizedBox(width: 10,),
-
         addButton(
           onTap: (){
-            ObservationModel observation = ObservationModel(
+                ObservationModel observation = ObservationModel(
                 icon: selectedObservation?.icon ?? "",
                 name: selectedObservation?.name ?? "",
                 value: observationController.text.trim(),
                 priority: selectedObservation?.priority ?? 0,
-                note: "note note note"
+                note: "note note note",
+                values: selectedObservation?.values
             );
             observationDataModel.observation = observationListNew;
             observationListNew.add(observation);
@@ -252,12 +252,84 @@ class _AdmittedDetailScreenState extends State<AdmittedDetailScreen> {
  Widget observationData(){
    return Column(
      children: observationListNew.map((e) {
-       return Row(
-         children: [
-           Text(e.name,style: const TextStyle(color: Colors.black),),
-           const Text(" : "),
-           Text(e.value,style: const TextStyle(color: Colors.black),),
-         ],
+       return Container(
+         margin: const EdgeInsets.all(8),
+         padding: const EdgeInsets.all(8),
+         decoration: BoxDecoration(
+           shape: BoxShape.rectangle,
+           border: Border.all(color: Colors.black45,width: 0.5)
+         ),
+         child: Column(
+           children: [
+             Row(
+               children: [
+                 Text(e.name,style: const TextStyle(color: Colors.black),),
+                 const Text(" : "),
+                 Flexible(
+                   child: TextFormField(
+                     controller: TextEditingController(text: e.value),
+                     onChanged: (String val){
+                       e.value = val;
+                       // setState(() {});
+                     },
+                     decoration: InputDecoration(
+                       contentPadding: const EdgeInsets.symmetric(horizontal: 10),
+                       hintText: e.value,
+                     ),
+                   ),
+                 ),
+
+                 // Text(e.value,style: const TextStyle(color: Colors.black),),
+                 const SizedBox(width: 10,),
+                 InkWell(
+                   onTap: (){
+                     setState(() {});
+                   },
+                   child: const Icon(Icons.add,size: 20,),
+                 ),
+                 const SizedBox(width: 10,),
+                 InkWell(
+                   onTap: (){
+                     FocusScope.of(context).requestFocus(FocusNode());
+                   },
+                   child: const Icon(Icons.check,size: 20,),
+                 ),
+                 const SizedBox(width: 10,),
+                 InkWell(
+                   onTap: (){
+                     observationListNew.remove(e);
+                     setState(() {});
+                   },
+                   child: const Icon(Icons.delete,size: 20,),
+                 ),
+               ],
+             ),
+             const SizedBox(height: 10,),
+             Visibility(
+                 visible: e.values.isEmpty ? false:true,
+                 child: ListView(
+                   physics: const NeverScrollableScrollPhysics(),
+                   shrinkWrap: true,
+                   children: e.values.keys.map((e){
+                     return Container(
+                       margin: EdgeInsets.only(bottom: 8),
+                       child: Row(
+                         children: [
+                           Text("$e : "),
+                           const SizedBox(width: 10,),
+                           Expanded(child: TextFormField(
+                             decoration: InputDecoration(
+                               contentPadding: EdgeInsets.zero
+                             ),
+                           ))
+                         ],
+                       ),
+                     );
+                   }).toList(),
+                 )
+             )
+           ],
+         ),
        );
      }).toList(),
    );

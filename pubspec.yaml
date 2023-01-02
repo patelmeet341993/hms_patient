@@ -38,7 +38,12 @@ dependencies:
   # Core #
   ########
   hms_models:
-    git: https://github.com/patelmeet341993/hms_models
+    git:
+      url: https://github.com/patelmeet341993/hms_models
+      ref: happy_branch
+
+
+#    git: https://github.com/patelmeet341993/hms_models
 
   ###########
   # Logging #

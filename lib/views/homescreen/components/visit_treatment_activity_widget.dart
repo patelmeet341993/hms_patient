@@ -287,17 +287,19 @@ class _VisitTreatmentActivityState extends State<VisitTreatmentActivity> {
                 Row(
                   children: [
                     Container(
-                        child: Text("Total amount: ${visitModel.pharmaBilling?.totalAmount ?? 0}", style: themeData.textTheme.subtitle2?.copyWith(fontWeight: FontWeight.w600,letterSpacing: 0.2,height: 1),)),
+                        child: Text("Total amount: ${visitModel.pharmaBilling?.totalAmount ?? 0}", style: themeData.textTheme.subtitle2?.copyWith(fontSize:14,fontWeight: FontWeight.w600,letterSpacing: 0.2,height: 1),)),
                     Visibility(
                       visible:  visitModel.pharmaBilling?.paymentStatus == PaymentStatus.paid,
-                      child: Container(
-                        margin: const EdgeInsets.only(left: 10),
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        decoration: BoxDecoration(
-                            color: Colors.green.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(10)
-                        ),
-                        child: Text(PaymentStatus.paid,style: themeData.textTheme.subtitle2?.copyWith(fontWeight: FontWeight.w600,fontSize: 12,letterSpacing: 0.3, color: Colors.green),
+                      child: Flexible(
+                        child: Container(
+                          margin: const EdgeInsets.only(left: 10),
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          decoration: BoxDecoration(
+                              color: Colors.green.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(10)
+                          ),
+                          child: Text(PaymentStatus.paid,style: themeData.textTheme.subtitle2?.copyWith(fontWeight: FontWeight.w600,fontSize: 12,letterSpacing: 0.3, color: Colors.green),
+                          ),
                         ),
                       ),
                     )
