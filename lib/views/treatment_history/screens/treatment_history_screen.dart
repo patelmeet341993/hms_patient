@@ -78,55 +78,39 @@ class _TreatmentHistoryScreenState extends State<TreatmentHistoryScreen> {
   @override
   Widget build(BuildContext context) {
     themeData = Theme.of(context);
-    return Container(
-      color: themeData.backgroundColor,
-      child: Scaffold(
-        floatingActionButton: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: FloatingActionButton(
-            onPressed: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context) => AdmittedDetailScreen(visitModel: visitModel,)));
-              // showModalBottomsheet();
-              // Add2Calendar.addEvent2Cal(
-              //   buildEvent(),
-              // );
-            },
-          ),
-        ),
-        body: SafeArea(
-          child: Column(
-            children: [
-              CommonTopBar(title: "Treatment History"),
-              // const SizedBox(height : 1),
-              // Expanded(child:getHistory()),
-              Expanded(
-                child: isEvent?Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    ListView.builder(
-                        itemCount: 4,
-                        padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
-                        shrinkWrap: true,
-                        itemBuilder: (context,index){
-                          return InkWell(
-                              onTap: (){
-                                Navigator.pushNamed(NavigationController.mainScreenNavigator.currentContext!,TreatmentActivityDetailScreen.routeName);
-                              },
-                              child: getSingleEvent(newVisit: isNewVisit[index]));
-                        }
-                    )
-                  ],
-                ):Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CommonBoldText(text: "No Treatment History",fontSize: 20,color: Colors.black.withOpacity(.6)),
-                    ]
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+    return SafeArea(
+         child: Column(
+           children: [
+             CommonTopBar(title: "Treatment History"),
+             // const SizedBox(height : 1),
+             // Expanded(child:getHistory()),
+             Expanded(
+               child: isEvent?Column(
+                 mainAxisAlignment: MainAxisAlignment.start,
+                 children: [
+                   ListView.builder(
+                       itemCount: 4,
+                       padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+                       shrinkWrap: true,
+                       itemBuilder: (context,index){
+                         return InkWell(
+                             onTap: (){
+                               Navigator.pushNamed(NavigationController.mainScreenNavigator.currentContext!,TreatmentActivityDetailScreen.routeName);
+                             },
+                             child: getSingleEvent(newVisit: isNewVisit[index]));
+                       }
+                   )
+                 ],
+               ):Column(
+                   mainAxisAlignment: MainAxisAlignment.center,
+                   children: [
+                     CommonBoldText(text: "No Treatment History",fontSize: 20,color: Colors.black.withOpacity(.6)),
+                   ]
+               ),
+             ),
+           ],
+         ),
+
     );
   }
 

@@ -6,6 +6,7 @@ import 'package:patient/views/common/screens/notification_screen.dart';
 import 'package:patient/views/treatment_history/screens/treatment_history_screen.dart';
 
 import '../views/about_us/screens/about_us_screen.dart';
+import '../views/admit_details/screens/admit_details_screen.dart';
 import '../views/authentication/login_screen.dart';
 import '../views/authentication/otp_screen.dart';
 import '../views/homescreen/screens/homescreen.dart';
@@ -90,6 +91,10 @@ class NavigationController {
       }
       case TreatmentHistoryScreen.routeName: {
         page = const TreatmentHistoryScreen();
+        break;
+      }
+      case AdmitDetailsScreen.routeName: {
+        page =  AdmitDetailsScreen();
         break;
       }
       case TreatmentActivityDetailScreen.routeName: {

@@ -3,6 +3,7 @@ import 'package:hms_models/hms_models.dart';
 import 'package:patient/controllers/navigation_controller.dart';
 import 'package:patient/providers/patient_provider.dart';
 import 'package:patient/providers/visit_provider.dart';
+import 'package:patient/views/admit_details/screens/admit_details_screen.dart';
 import 'package:patient/views/common/componants/common_bold_text.dart';
 import 'package:patient/views/common/componants/common_button.dart';
 import 'package:patient/views/common/componants/common_text.dart';
@@ -18,6 +19,7 @@ import '../../../packages/flux/utils/spacing.dart';
 import '../../../packages/flux/widgets/container/container.dart';
 import '../../../packages/flux/widgets/text_field/text_field.dart';
 import '../../about_us/screens/about_us_screen.dart';
+import '../../treatment_history/components/admitDetailsScreen.dart';
 
 class VisitScreen extends StatefulWidget {
   final VisitProvider? visitProvider;
@@ -317,6 +319,8 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState {
         const SizedBox(height: 5,),
         getNextDoseDetail(),
         const SizedBox(height: 20,),
+        getAdmitContainer(),
+
         // VisitTreatmentActivity(visitId: "65235a50657811ed879e93dbff774310"),
         // Row(
         //   children: [
@@ -419,7 +423,7 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState {
                     const SizedBox(height: 2,),
                     CommonText(text: "${patientMetaModel.gender}   ${calculateAge(patientMetaModel.dateOfBirth?.toDate() ?? DateTime.now())} years old",color: Colors.white,),
                     const SizedBox(height: 2,),
-                    CommonText(text: DatePresentation.ddMMMMyyyyTimeStamp(patientMetaModel.dateOfBirth?? Timestamp.now()),color: Colors.white,),
+                    CommonText(text: DatePresentation.ddMMMMyyyyTimeStamp(patientMetaModel.dateOfBirth ?? Timestamp.now()),color: Colors.white,),
                   ],
                 ),
               ),
@@ -491,8 +495,6 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState {
     );
   }
 
-
-
   Widget getVisitTreatmentActivity() {
     // VisitProvider visitProvider = Provider.of<VisitProvider>(context,listen: false);
     Map<String,Timestamp> activeVisits = newPatientProvider.getCurrentPatient()?.activeVisits ?? {};
@@ -530,6 +532,39 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState {
         //   },
         // );
       }
+    );
+  }
+
+  Widget getAdmitContainer(){
+    return  InkWell(
+      onTap: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context) => AdmitDetailsScreen(visitModel: visitModel,)));
+
+        //  Navigator.pushNamed(NavigationController.mainScreenNavigator.currentContext!,AdmitDetailsScreen.routeName);
+      },
+      child: Container(
+
+        padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(color: themeData.primaryColor),
+          borderRadius: BorderRadius.circular(6),
+        ),
+
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.bedroom_child_outlined,
+              color: Colors.black,
+              size: 20,
+            ),
+            FxSpacing.width(8),
+            CommonText(text:'Admit Details',color:Colors.black,
+              fontSize: 14,fontWeight: FontWeight.bold),
+          ],
+        ),
+      ),
     );
   }
 

@@ -92,7 +92,6 @@ class _LoginScreenState extends State<LoginScreen> {
                           getLoginText2(),
                           getMobileTextField(),
                           getContinueButton(),
-                          //getTermsAndConditionsLink(),
                         ],
                       ),
                     ),
