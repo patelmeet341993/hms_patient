@@ -51,6 +51,12 @@ class MyVisitController {
           });
 
       patientProvider.setStreamSubscription(querySnapshot, isNotify: false);
+
+      //Todo call the stream close method for closing the stream subscription
+      //trycatch
+      // Timer(Duration(hours: DateTime.now().add(const Duration(hours: 12)).hour),(){
+      //   closeSteamSubscription();
+      // });
     }
     catch (e,s){
       MyPrint.printOnConsole(e);
@@ -134,6 +140,7 @@ class MyVisitController {
     }
   }
 
+  //Todo this method will be called when the subscription is to be closed.
   Future<void> closeSteamSubscription() async {
     try {
       PatientProvider patientProvider = Provider.of<PatientProvider>(NavigationController.mainScreenNavigator.currentContext!, listen: false);
