@@ -84,14 +84,11 @@ class _VisitTreatmentActivityState extends State<VisitTreatmentActivity> {
                     titleString = "Current";
                   }
                    final example = visitModel.treatmentActivity[index];
-
                    return getTimeLineView(index);
                },
              )
-
             ],
           );
-
   }
 
   Widget getTimeLineView(int index){
@@ -165,6 +162,7 @@ class _VisitTreatmentActivityState extends State<VisitTreatmentActivity> {
               collapsedBackgroundColor: Colors.transparent,
 
               tilePadding: const EdgeInsets.symmetric(horizontal: 10,vertical:0),
+              // controlAffinity: ListTileControlAffinity.leading,
 
               title: Text(treatmentActivityModel.treatmentActivityStatus),
               subtitle: Column(

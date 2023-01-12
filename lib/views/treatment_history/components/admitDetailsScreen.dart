@@ -17,7 +17,8 @@ class _AdmittedDetailScreenState extends State<AdmittedDetailScreen> {
   ObservationModel observationModel = ObservationModel();
   List<ObservationModel> observationList = [],medicationsList = [],observationListNew = [], medicationList = [],  selectedObservationsList = [], selectedMedicationList = [];
   AdmitModel admitModel = AdmitModel();
-
+  // Map<int, ObservationModel> observationListNew2 = {};
+  List<ObservationModel> tempList = [];
   ObservationsDataModel observationDataModel = ObservationsDataModel();
   List<ObservationsDataModel> observationsDataList = [];
 
@@ -81,7 +82,7 @@ class _AdmittedDetailScreenState extends State<AdmittedDetailScreen> {
     );
   }
 
- Widget getMainBody() {
+  Widget getMainBody() {
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -103,46 +104,57 @@ class _AdmittedDetailScreenState extends State<AdmittedDetailScreen> {
         ),
       ),
     );
- }
+  }
 
- Widget observationView(){
+  Widget observationView(){
     return Row(
       children: [
         Expanded(child: dropDownView()),
-        const SizedBox(width: 10,),
-        Expanded(
-          child: TextFormField(
-
-            controller:observationController,
-            decoration: const InputDecoration(
-              hintText: "Value",
-              contentPadding: EdgeInsets.symmetric(horizontal: 10),
-
-              border: OutlineInputBorder()
-            ),
-          ),
-        ),
-        const SizedBox(width: 10,),
-        addButton(
-          onTap: (){
-                ObservationModel observation = ObservationModel(
-                icon: selectedObservation?.icon ?? "",
-                name: selectedObservation?.name ?? "",
-                value: observationController.text.trim(),
-                priority: selectedObservation?.priority ?? 0,
-                note: "note note note",
-                values: selectedObservation?.values
-            );
-            observationDataModel.observation = observationListNew;
-            observationListNew.add(observation);
-            setState(() {});
-          }
-        )
       ],
     );
- }
+  }
 
- Widget medicationView(){
+  Widget dropDownView(){
+    return Theme(
+      data: themeData,
+      child: Container(
+        decoration: BoxDecoration(border: Border.all(width: 0.5)),
+        padding: const EdgeInsets.only(left: 10),
+        child: DropdownButton<ObservationModel>(
+            dropdownColor: Colors.white,
+            underline: Container(),
+            isExpanded: true,
+            hint: const Text("Select observation"),
+            value: selectedObservation,
+            items: observationList.map((e) {
+              return DropdownMenuItem<ObservationModel>(
+                value: e,
+                child: Text(e.name),
+              );
+            }).toList(),
+            onChanged: (ObservationModel? value){
+              selectedObservation = value;
+              Map<String,dynamic> valuesMap = selectedObservation?.values ?? {};
+              valuesMap.forEach((key, value) {
+                valuesMap[key] = TextEditingController();
+              });
+              ObservationModel observation = ObservationModel(
+                  icon: selectedObservation?.icon ?? "",
+                  name: selectedObservation?.name ?? "",
+                  value: observationController.text.trim(),
+                  priority: selectedObservation?.priority ?? 0,
+                  note: "note note note",
+                  values: valuesMap
+              );
+              observationDataModel.observation = observationListNew;
+              observationListNew.add(observation);
+              setState(() {});
+            }),
+      ),
+    );
+  }
+
+  Widget medicationView(){
     return Row(
       children: [
         Expanded(child: dropDownView2()),
@@ -186,36 +198,9 @@ class _AdmittedDetailScreenState extends State<AdmittedDetailScreen> {
         )
       ],
     );
- }
+  }
 
- Widget dropDownView(){
-    return Theme(
-      data: themeData,
-      child: Container(
-        decoration: BoxDecoration(border: Border.all(width: 0.5)),
-        padding: const EdgeInsets.only(left: 10),
-        child: DropdownButton(
-            dropdownColor: Colors.white,
-            underline: Container(),
-
-            isExpanded: true,
-            hint: const Text("Select observation"),
-
-            value: selectedObservation,
-            items: observationList.map((e) {
-                return DropdownMenuItem(
-                    value: e,
-                    child: Text(e.name));
-              }).toList(),
-            onChanged: (dynamic value){
-              selectedObservation = value;
-              setState(() {});
-            }),
-      ),
-    );
- }
-
- Widget dropDownView2(){
+  Widget dropDownView2(){
     return Theme(
       data: themeData,
       child: Container(
@@ -240,16 +225,16 @@ class _AdmittedDetailScreenState extends State<AdmittedDetailScreen> {
             }),
       ),
     );
- }
+  }
 
- Widget addButton({Function()? onTap}){
+  Widget addButton({Function()? onTap}){
    return CommonButton(
        buttonName: "Add",
        onTap: onTap
    );
- }
+  }
 
- Widget observationData(){
+  Widget observationData(){
    return Column(
      children: observationListNew.map((e) {
        return Container(
@@ -283,16 +268,31 @@ class _AdmittedDetailScreenState extends State<AdmittedDetailScreen> {
                  const SizedBox(width: 10,),
                  InkWell(
                    onTap: (){
-                     setState(() {});
+                     FocusScope.of(context).requestFocus(FocusNode());
+
                    },
-                   child: const Icon(Icons.add,size: 20,),
+                   child: const Icon(Icons.check,size: 20,),
                  ),
                  const SizedBox(width: 10,),
                  InkWell(
                    onTap: (){
-                     FocusScope.of(context).requestFocus(FocusNode());
+                     ObservationModel observation = ObservationModel(
+                         icon: selectedObservation?.icon ?? "",
+                         name: selectedObservation?.name ?? "",
+                         value: observationController.text.trim(),
+                         priority: selectedObservation?.priority ?? 0,
+                         note: "note note note",
+                         values: Map.castFrom(selectedObservation?.values ?? {})
+                     );
+                     observationDataModel.observation = observationListNew;
+                     observationListNew.add(observation);
+
+
+                     MyPrint.printOnConsole("observationListNewobservationListNew: ${observationListNew}");
+                     MyPrint.printOnConsole("selectedObservation?.values: ${selectedObservation?.values}");
+                     setState(() {});
                    },
-                   child: const Icon(Icons.check,size: 20,),
+                   child: const Icon(Icons.add,size: 20,),
                  ),
                  const SizedBox(width: 10,),
                  InkWell(
@@ -310,32 +310,86 @@ class _AdmittedDetailScreenState extends State<AdmittedDetailScreen> {
                  child: ListView(
                    physics: const NeverScrollableScrollPhysics(),
                    shrinkWrap: true,
-                   children: e.values.keys.map((e){
+                   children: List.generate(
+                       e.values.keys.length, (index) {
                      return Container(
                        margin: EdgeInsets.only(bottom: 8),
                        child: Row(
                          children: [
-                           Text("$e : "),
+                           Text("${e.values.keys.toList()[index]} : "),
                            const SizedBox(width: 10,),
-                           Expanded(child: TextFormField(
+                           Expanded(
+                               child: TextFormField(
+                                 controller:e.values.values.toList()[index],
+                               onChanged: (String? val){
+                               // dataValue[element] = val;
+                               // e.values[element] = val;
+                               // if(e.value.c){
+
+                               // if(!tempList.contains(e)){
+                               // }
+                               // if(observationListNew.indexO33f(e))
+
+                               // if(e.value == e.v) {
+                               // if(e.value == observationListNew[listIndex].value){
+                               //   observationListNew[listIndex].values[e.values.keys.toList()[index]] = val;
+                               // }
+                               // }
+                               // }
+                             },
                              decoration: InputDecoration(
-                               contentPadding: EdgeInsets.zero
+                                 contentPadding: EdgeInsets.zero
                              ),
-                           ))
+                            ),
+                           )
                          ],
                        ),
                      );
-                   }).toList(),
+                  })
+
+                   // e.values.keys.map((element){
+                   //   // textEditingController = TextEditingController();
+                   //   return Container(
+                   //     margin: EdgeInsets.only(bottom: 8),
+                   //     child: Row(
+                   //       children: [
+                   //         Text("$element : "),
+                   //         const SizedBox(width: 10,),
+                   //         Expanded(child: TextFormField(
+                   //           onChanged: (String? val){
+                   //              MyPrint.printOnConsole("innnn:");
+                   //              // dataValue[element] = val;
+                   //               // e.values[element] = val;
+                   //             // if(e.value.c){
+                   //               e.values[element] = val;
+                   //             // }
+                   //           },
+                   //           decoration: InputDecoration(
+                   //             contentPadding: EdgeInsets.zero
+                   //           ),
+                   //         ))
+                   //       ],
+                   //     ),
+                   //   );
+                   // }).toList(),
                  )
-             )
+             ),
+             /*saveButton(onTap:(){
+               MyPrint.printOnConsole("sduhfijs : ${observationListNew}");
+               // observationListNew.where((element) =>)
+
+               setState(() {
+
+               });
+             })*/
            ],
          ),
        );
      }).toList(),
    );
- }
+  }
 
- Widget medicationData(){
+  Widget medicationData(){
    return Column(
      children: medicationList.map((e) {
        return Row(
@@ -347,10 +401,10 @@ class _AdmittedDetailScreenState extends State<AdmittedDetailScreen> {
        );
      }).toList(),
    );
- }
+  }
 
- Widget saveButton(){
-    return CommonButton(buttonName: "Save", onTap: () async {
+  Widget saveButton({Function()? onTap}){
+    return CommonButton(buttonName: "Save", onTap: onTap ?? () async {
       observationDataModel.createdTime = Timestamp.now();
       observationsDataList.add(observationDataModel);
       admitModel.observationDataList = observationsDataList;
@@ -359,5 +413,5 @@ class _AdmittedDetailScreenState extends State<AdmittedDetailScreen> {
       await saveData();
 
     });
- }
+  }
 }
