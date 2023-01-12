@@ -24,10 +24,21 @@ class Styles {
 
   //region CustomColors
      static const Color cardColor = Color(0xfff0f0f0);
+     static const Color secondaryColor = Color(0xff084EAD);
+     static const Color myPrimaryColor = Color(0xff4C508F);
+     static const Color textGrey = Color(0xff676767);
 
 
   //endregion//
 
+
+  //region ShimmerColors
+
+  static Color shimmerHighlightColor = Color(0xfff2f2f2);
+  static Color shimmerBaseColor = Color(0xffb6b6b6);
+  static Color shimmerContainerColor = Color(0xffc2c2c2);
+
+  //endregion
 
 
 

@@ -10,6 +10,7 @@ class CommonText extends StatelessWidget {
   int? maxLines;
   TextOverflow? textOverFlow;
   TextDecoration? textDecoration;
+  double height;
 
 
   CommonText(
@@ -21,6 +22,7 @@ class CommonText extends StatelessWidget {
         this.maxLines,
         this.textDecoration,
         this.textOverFlow,
+        this.height = 1
         });
 
   @override
@@ -31,7 +33,7 @@ class CommonText extends StatelessWidget {
       maxLines: maxLines,
       overflow: textOverFlow,
       style: TextStyle(
-        //height: 1,
+        height: height,
         decoration: textDecoration,
         fontSize: fontSize,
         fontWeight: fontWeight,

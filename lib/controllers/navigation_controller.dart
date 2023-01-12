@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hms_models/hms_models.dart';
 import 'package:patient/views/common/screens/notification_screen.dart';
+import 'package:patient/views/treatment_history/screens/treatment_history_details_screen.dart';
 import 'package:patient/views/treatment_history/screens/treatment_history_screen.dart';
 
 import '../views/about_us/screens/about_us_screen.dart';
@@ -97,6 +98,21 @@ class NavigationController {
         page =  AdmitDetailsScreen();
         break;
       }
+      case TreatmentHistoryDetailsScreen.routeName: {
+        VisitModel? visitModel;
+        dynamic arguments = settings.arguments;
+
+        if(arguments is Map) {
+          Map<String,dynamic> map = ParsingHelper.parseMapMethod<dynamic,dynamic,String,dynamic>(arguments);
+          if(map["visitModel"] is VisitModel){
+            visitModel = map["visitModel"];
+          }
+        }
+        page =  TreatmentHistoryDetailsScreen(visitModel);
+        break;
+      }
+
+
       case TreatmentActivityDetailScreen.routeName: {
         page = const TreatmentActivityDetailScreen();
         break;

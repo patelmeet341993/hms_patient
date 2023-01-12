@@ -8,6 +8,7 @@ import 'package:patient/views/common/componants/common_bold_text.dart';
 import 'package:patient/views/common/componants/common_button.dart';
 import 'package:patient/views/common/componants/common_text.dart';
 import 'package:patient/views/common/componants/qr_view_dialog.dart';
+import 'package:patient/views/common/components/Treatment_timeline_log_master_widget.dart';
 import 'package:patient/views/common/screens/notification_screen.dart';
 import 'package:patient/views/homescreen/components/visit_treatment_activity_widget.dart';
 import 'package:patient/views/treatment_history/screens/treatment_history_screen.dart';
@@ -96,39 +97,36 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState {
   @override
   Widget build(BuildContext context) {
     themeData = Theme.of(context);
-    return Container(
-      color: themeData.backgroundColor,
-      child: SafeArea(
-        child: GestureDetector(
-           onTap: (){
-             FocusScope.of(context).requestFocus(FocusNode());
-           },
-          child: Scaffold(
-            resizeToAvoidBottomInset: false,
-            body: Consumer2<PatientProvider, VisitProvider>(
-              builder: (context, PatientProvider patientProvider, VisitProvider visitProvider, _) {
-                visitModel = visitProvider.visitModel ?? VisitModel();
-                newPatientProvider = patientProvider;
-                PatientModel? patientModel = patientProvider.getCurrentPatient();
-                userId = patientModel?.id ?? "";
+    return SafeArea(
+      child: GestureDetector(
+         onTap: (){
+           FocusScope.of(context).requestFocus(FocusNode());
+         },
+        child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          body: Consumer2<PatientProvider, VisitProvider>(
+            builder: (context, PatientProvider patientProvider, VisitProvider visitProvider, _) {
+              visitModel = visitProvider.visitModel ?? VisitModel();
+              newPatientProvider = patientProvider;
+              PatientModel? patientModel = patientProvider.getCurrentPatient();
+              userId = patientModel?.id ?? "";
 
-                // return VisitTreatmentActivity(visitId: "65235a50657811ed879e93dbff774310", );
-                  return Column(
-                  children: [
-                    const SizedBox(height: 10,),
-                    getTopBar(isOpen: true,name: "Saraswati Clinic"),
-                    Expanded(
-                      child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 20,),
-                          child: !(patientModel?.isProfileComplete ?? false)
-                              ? getForUserFirstTime()
-                              : getMainPage(),
-                      ),
+              // return VisitTreatmentActivity(visitId: "65235a50657811ed879e93dbff774310", );
+                return Column(
+                children: [
+                  const SizedBox(height: 10,),
+                  getTopBar(isOpen: true,name: "Saraswati Clinic"),
+                  Expanded(
+                    child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 20,),
+                        child: !(patientModel?.isProfileComplete ?? false)
+                            ? getForUserFirstTime()
+                            : getMainPage(),
                     ),
-                  ],
-                );
-              }
-            ),
+                  ),
+                ],
+              );
+            }
           ),
         ),
       ),
@@ -420,9 +418,9 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     CommonText(text: "${patientMetaModel.name}",color: Colors.white,fontSize: 17),
-                    const SizedBox(height: 2,),
+                    const SizedBox(height: 7,),
                     CommonText(text: "${patientMetaModel.gender}   ${calculateAge(patientMetaModel.dateOfBirth?.toDate() ?? DateTime.now())} years old",color: Colors.white,),
-                    const SizedBox(height: 2,),
+                    const SizedBox(height: 7,),
                     CommonText(text: DatePresentation.ddMMMMyyyyTimeStamp(patientMetaModel.dateOfBirth ?? Timestamp.now()),color: Colors.white,),
                   ],
                 ),
@@ -488,8 +486,10 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           getProfileInfoBody(),
-          getVisitTreatmentActivity()
-          // VisitTreatmentActivity(visitId: "65235a50657811ed879e93dbff774310")
+
+
+          getVisitTreatmentActivity(),
+           VisitTreatmentActivity(visitId: "65235a50657811ed879e93dbff774310")
         ],
       ),
     );
@@ -538,9 +538,9 @@ class _VisitScreenState extends State<VisitScreen> with MySafeState {
   Widget getAdmitContainer(){
     return  InkWell(
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) => AdmitDetailsScreen(visitModel: visitModel,)));
+       // Navigator.push(context, MaterialPageRoute(builder: (context) => AdmitDetailsScreen(visitModel: visitModel,)));
 
-        //  Navigator.pushNamed(NavigationController.mainScreenNavigator.currentContext!,AdmitDetailsScreen.routeName);
+          Navigator.pushNamed(NavigationController.mainScreenNavigator.currentContext!,AdmitDetailsScreen.routeName);
       },
       child: Container(
 

@@ -58,10 +58,11 @@ class _VisitTreatmentActivityState extends State<VisitTreatmentActivity> {
 
     return Column(
             children: [
+              SizedBox(height: 10,),
               Row(
                 children: [
                   CommonBoldText(text: "$titleString Treatment Activity",textAlign: TextAlign.start,fontSize: 15,color: Colors.black.withOpacity(.9)),
-                  const SizedBox(width: 10,),
+                  const SizedBox(width: 15,),
                   Container(
                       padding: const EdgeInsets.symmetric(horizontal: 5),
                       decoration: BoxDecoration(
@@ -282,61 +283,74 @@ class _VisitTreatmentActivityState extends State<VisitTreatmentActivity> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Visibility(
+                  visible: visitModel.pharmaBilling?.paymentStatus == PaymentStatus.pending,
+                  child:  Text(
+                    '• Online',style: themeData.textTheme.subtitle2?.copyWith(fontWeight: FontWeight.w600,fontSize: 12,letterSpacing: 0.3, color: Colors.green),
+                  ),
+                ),
                 Text(treatmentActivityModel.treatmentActivityStatus, style: themeData.textTheme.subtitle1,),
                 const SizedBox(height: 2,),
                 Row(
                   children: [
-                    Container(
-                        child: Text("Total amount: ${visitModel.pharmaBilling?.totalAmount ?? 0}", style: themeData.textTheme.subtitle2?.copyWith(fontWeight: FontWeight.w600,letterSpacing: 0.2,height: 1),)),
-                    Visibility(
-                      visible:  visitModel.pharmaBilling?.paymentStatus == PaymentStatus.paid,
-                      child: Container(
-                        margin: const EdgeInsets.only(left: 10),
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        decoration: BoxDecoration(
-                            color: Colors.green.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(10)
-                        ),
-                        child: Text(PaymentStatus.paid,style: themeData.textTheme.subtitle2?.copyWith(fontWeight: FontWeight.w600,fontSize: 12,letterSpacing: 0.3, color: Colors.green),
-                        ),
-                      ),
-                    )
+                    Text("Total amount: ${visitModel.pharmaBilling?.totalAmount ?? 0}", style: themeData.textTheme.subtitle2?.copyWith(fontWeight: FontWeight.w600,letterSpacing: 0.2,height: 1),),
+                    // Visibility(
+                    //   //visible:  visitModel.pharmaBilling?.paymentStatus == PaymentStatus.paid,
+                    //   visible:  false,
+                    //   child: Container(
+                    //     margin: const EdgeInsets.only(left: 10),
+                    //     padding: const EdgeInsets.symmetric(horizontal: 10),
+                    //     decoration: BoxDecoration(
+                    //         color: Colors.green.withOpacity(0.1),
+                    //         borderRadius: BorderRadius.circular(10)
+                    //     ),
+                    //     child: Text(PaymentStatus.paid,style: themeData.textTheme.subtitle2?.copyWith(fontWeight: FontWeight.w600,fontSize: 12,letterSpacing: 0.3, color: Colors.green),
+                    //     ),
+                    //   ),
+                    // )
                   ],
                 ),
                 const SizedBox(height: 3,),
-                updatedDateTimeText(treatmentActivityModel.updatedTime ?? treatmentActivityModel.createdTime!)
+                updatedDateTimeText(treatmentActivityModel.updatedTime ?? treatmentActivityModel.createdTime!),
               ],
             ),
           ),
-          Visibility(
-            visible: visitModel.pharmaBilling?.paymentStatus == PaymentStatus.pending,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // CommonButton(verticalPadding:2, buttonName: "Cash", onTap: (){}),
-                // const SizedBox(width: 10,),
-                CommonButton(verticalPadding: 2,buttonName: "Online", onTap: (){}),
-              ],
-            ),
-          ),
-          Visibility(
-            visible:  visitModel.pharmaBilling?.paymentStatus == PaymentStatus.paid,
-            child: Container(
-              margin: const EdgeInsets.only(left: 10),
-              padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 5),
-              decoration: BoxDecoration(
-                  color: themeData.primaryColor.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(10)
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text("Invoice ",style: themeData.textTheme.subtitle2?.copyWith(fontWeight: FontWeight.w600,fontSize: 12,letterSpacing: 0.3,color: themeData.primaryColor),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Visibility(
+                visible:  visitModel.pharmaBilling?.paymentStatus == PaymentStatus.paid,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Text(
+                    '• ${PaymentStatus.paid}',
+                    style: themeData.textTheme.subtitle2?.copyWith(fontWeight: FontWeight.w600,
+                        fontSize: 12,letterSpacing: 0.3, color: Colors.green),
                   ),
-                  Icon(FontAwesomeIcons.fileInvoice,size: 13, color: themeData.primaryColor,)
-                ],
+                ),
               ),
-            ),
+              Visibility(
+                visible:  visitModel.pharmaBilling?.paymentStatus == PaymentStatus.paid,
+                child: Container(
+                  margin: const EdgeInsets.only(left: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 2),
+                  decoration: BoxDecoration(
+                      color: themeData.primaryColor.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(10)
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text("Invoice ",style: themeData.textTheme.subtitle2?.copyWith(fontWeight: FontWeight.w600,fontSize: 12,letterSpacing: 0.3,color: themeData.primaryColor),
+                      ),
+                      Icon(FontAwesomeIcons.fileInvoice,size: 13, color: themeData.primaryColor,)
+                    ],
+                  ),
+                ),
+              ),
+            ],
           )
         ],
       ),

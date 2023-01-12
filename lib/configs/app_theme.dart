@@ -62,7 +62,7 @@ class AppTheme {
 
   static TextStyle getTextStyleWithFontFamily({TextStyle? textStyle}) {
     // return (textStyle ?? TextStyle()).copyWith(fontFamily: "Mono");
-    return GoogleFonts.catamaran(textStyle: textStyle);
+    return GoogleFonts.catamaran(textStyle: textStyle,);
   }
 
   //App Bar Text

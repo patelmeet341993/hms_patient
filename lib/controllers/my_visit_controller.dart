@@ -4,13 +4,14 @@ import 'package:hms_models/hms_models.dart';
 import 'package:patient/providers/patient_provider.dart';
 import 'package:patient/providers/visit_provider.dart';
 
+import '../configs/constants.dart';
 import 'navigation_controller.dart';
 
 class MyVisitController {
   late VisitProvider _visitProvider;
 
-  MyVisitController({VisitProvider? visitProvider}){
-    _visitProvider = (visitProvider ?? VisitProvider());
+  MyVisitController({required VisitProvider visitProvider}){
+    _visitProvider = (visitProvider);
   }
 
   VisitProvider getProvider() => _visitProvider;
@@ -144,4 +145,82 @@ class MyVisitController {
       MyPrint.printOnConsole(s);
     }
   }
+
+
+  Future<void> getVisitListFromFirebase({required String patientId,bool isRefresh = true,bool isNotify = true}) async{
+
+    VisitProvider paginationVisitProvider = getProvider();
+
+    try{
+      MyPrint.printOnConsole("Inside the Method");
+
+      if(!isRefresh && paginationVisitProvider.visitListLength > 0) {
+        MyPrint.printOnConsole("Returning Cached Data");
+        paginationVisitProvider.visitList;
+      }
+
+      if (isRefresh) {
+        MyPrint.printOnConsole("Refresh");
+        paginationVisitProvider.setHasMoreVisits = true; // flag for more products available or not
+        paginationVisitProvider.setLastDocument = null; // flag for last document from where next 10 records to be fetched
+        paginationVisitProvider.setIsVisitLoading(false, isNotify: isNotify);
+        paginationVisitProvider.setVisitList([], isNotify: isNotify);
+      }
+
+      if (!paginationVisitProvider.getHasMoreVisits) {
+        MyPrint.printOnConsole('No More Visits');
+        return;
+      }
+      if (paginationVisitProvider.getIsVisitLoading)  return;
+
+      paginationVisitProvider.setIsVisitLoading(true, isNotify: isNotify);
+
+      Timestamp startTime = Timestamp.fromDate(DateTime(_visitProvider.visitsByYear, 1,0,0,0,0,0,0));
+      Timestamp endTime = Timestamp.fromDate(DateTime(_visitProvider.visitsByYear, 12,31,23,59,59,0,0));
+
+      Query<Map<String, dynamic>> query = FirebaseNodes.visitsCollectionReference
+          .limit(AppConstants.visitDocumentLimitForPagination)
+          .where('patientId',isEqualTo: patientId.trim())
+          .where('createdTime',isGreaterThanOrEqualTo:startTime )
+          .where('createdTime',isLessThanOrEqualTo:endTime )
+          .orderBy("createdTime", descending: true);
+
+      //For Last Document
+      DocumentSnapshot<Map<String, dynamic>>? snapshot = paginationVisitProvider.getLastDocument;
+      if(snapshot != null) {
+        MyPrint.printOnConsole("LastDocument not null");
+        query = query.startAfterDocument(snapshot);
+      }
+      else {
+        MyPrint.printOnConsole("LastDocument null");
+      }
+
+      QuerySnapshot<Map<String, dynamic>> querySnapshot = await query.get();
+      MyPrint.printOnConsole("Documents Length in Firestore for Admin Users:${querySnapshot.docs.length}");
+
+      if (querySnapshot.docs.length < AppConstants.visitDocumentLimitForPagination) paginationVisitProvider.setHasMoreVisits = false;
+
+      if(querySnapshot.docs.isNotEmpty) paginationVisitProvider.setLastDocument = querySnapshot.docs[querySnapshot.docs.length - 1];
+
+      List<VisitModel> list = [];
+      for (DocumentSnapshot<Map<String, dynamic>> documentSnapshot in querySnapshot.docs) {
+        if((documentSnapshot.data() ?? {}).isNotEmpty) {
+          VisitModel newsModel = VisitModel.fromMap(documentSnapshot.data()!);
+          list.add(newsModel);
+        }
+      }
+      paginationVisitProvider.addAllVisitList(list, isNotify: false);
+      paginationVisitProvider.setIsVisitLoading(false);
+      MyPrint.printOnConsole("Final Visit Length From Firestore:${list.length}");
+      MyPrint.printOnConsole("Final Visit Length in Provider:${paginationVisitProvider.visitListLength}");
+
+
+
+    }catch(e,s){
+      MyPrint.printOnConsole("Error in get Visit List form Firebase in visit Controller $e");
+      MyPrint.printOnConsole(s);
+    }
+  }
+
+
 }

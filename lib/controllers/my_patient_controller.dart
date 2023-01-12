@@ -47,7 +47,7 @@ class MyPatientController {
            MyVisitController(visitProvider: Provider.of<VisitProvider>(NavigationController.mainScreenNavigator.currentContext!,listen: false)).getVisitModel(key,isListen: true);
         });
 
-      MyPrint.printOnConsole("visittttt");
+      MyPrint.printOnConsole("visittttt patiend model : ${patientModel.toMap()}");
 
       }
       else {
